@@ -7,11 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.3.1] - 2025-01-XX
 
+### Added
+- **Dynamic Version Management System** - Comprehensive scripts for automated version handling across all documentation
+- **Version Extraction Script** (`scripts/extract-version.sh`) - Dynamically extracts version from template and current dates
+- **Documentation Update Script** (`scripts/update-versions.sh`) - Automatically updates version references in README.md  
+- **Master Version Management** (`scripts/manage-versions.sh`) - Unified interface for version show/check/sync/update operations
+
 ### Changed
 - **Separated Repository Instructions** - `.github/copilot-instructions.md` now contains repository-specific instructions for maintaining the template repository
 - **Clarified Template Usage** - `template.md` remains the clean template for ioBroker adapter developers to copy
 - **Updated Documentation** - README.md now correctly references `template.md` for adapter developers
 - **Improved Repository Focus** - Repository-specific copilot instructions focus on template maintenance, quality assurance, and community contribution guidelines
+- **Fixed Version Consistency** - Updated template.md from 0.3.0 to 0.3.1 to match repository development version
 
 ### Fixed
 - **GitHub Copilot Duplicate Execution** - Added HTML comment block to `template.md` to prevent GitHub Copilot from processing it as active instructions (Fixes #11)
@@ -19,14 +26,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Copilot Processing Conflict** - Resolved issue where both `.github/copilot-instructions.md` and `template.md` were being detected as active instruction files
 
 ### Enhanced
+- **Eliminated Static Version References** - All version numbers and dates are now dynamically generated from template source
+- **Cross-Documentation Consistency** - Automated validation ensures all files reference the same version
+- **Date Management** - Automatic current date insertion eliminates stale date references (e.g., "January 2025" → current month/year)
 - Version checking script continues to work with new structure
 - Clear separation between template maintenance (this repository) and adapter development (template usage)
 - Better documentation workflow for template contributors vs adapter developers
 
 ### Documentation
+- **Version Management Guide** - Added comprehensive section explaining the new dynamic version system
 - README.md updated to reference correct template file (`template.md` instead of `.github/copilot-instructions.md`)
-- Download URLs updated throughout documentation
+- Download URLs updated throughout documentation  
 - Version checking script updated to reference correct remote template
+- Detailed usage instructions for all new version management scripts
 
 ## [0.3.0] - 2025-01-XX
 

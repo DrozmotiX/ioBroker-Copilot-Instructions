@@ -45,7 +45,7 @@ cd your-iobroker-adapter
 # Use the following prompt in your editor:
 # "Merge my existing .github/copilot-instructions.md with the ioBroker template 
 # from https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/blob/main/template.md
-# Keep project-specific content and add version: 0.3.0
+# Keep project-specific content and add version: 0.3.1"
 # NOTE: Exclude the HTML comment block at the top of the template"
 ```
 
@@ -74,16 +74,16 @@ git push
 To ensure you're using the latest best practices and that your local copy stays synchronized with improvements:
 
 ### Current Version
-- **Latest Version:** v0.3.0
+- **Latest Version:** v0.3.1
 - **Template Location:** [`template.md`](template.md)
-- **Last Updated:** January 2025
+- **Last Updated:** September 2025
 
 ### Version Checking
 
 You can validate your local template version by checking the version header in your `.github/copilot-instructions.md` file:
 
 ```markdown
-**Version:** 0.3.0
+**Version:** 0.3.1
 **Template Source:** https://github.com/DrozmotiX/ioBroker-Copilot-Instructions
 ```
 
@@ -107,6 +107,30 @@ You can use the provided script to check your template version:
 # Download and run the version check script
 curl -s https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/scripts/check-template-version.sh | bash
 ```
+
+#### Version Management for Repository Maintainers
+
+This repository includes comprehensive version management scripts that automatically handle version consistency across all documentation:
+
+```bash
+# Show current versions across all files
+./scripts/manage-versions.sh show
+
+# Check for version inconsistencies
+./scripts/manage-versions.sh check
+
+# Sync documentation with current template version (updates dates and versions dynamically)
+./scripts/manage-versions.sh sync
+
+# Update to a new version across all files
+./scripts/manage-versions.sh update 0.3.2
+```
+
+These scripts ensure that:
+- Version numbers are dynamically pulled from the template
+- Documentation dates stay current
+- All cross-references remain consistent
+- Manual version updates are no longer needed
 
 #### GitHub Action for Continuous Monitoring
 
