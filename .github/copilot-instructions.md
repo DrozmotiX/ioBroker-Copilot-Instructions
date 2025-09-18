@@ -1,607 +1,123 @@
-# ioBroker Adapter Development with GitHub Copilot
-
-**Version:** 0.3.0
-**Template Source:** https://github.com/DrozmotiX/ioBroker-Copilot-Instructions
-
-This file contains instructions and best practices for GitHub Copilot when working on ioBroker adapter development.
-
-## Project Context
-
-You are working on an ioBroker adapter. ioBroker is an integration platform for the Internet of Things, focused on building smart home and industrial IoT solutions. Adapters are plugins that connect ioBroker to external systems, devices, or services.
-
-## Testing
-
-### Unit Testing
-- Use Jest as the primary testing framework for ioBroker adapters
-- Create tests for all adapter main functions and helper methods
-- Test error handling scenarios and edge cases
-- Mock external API calls and hardware dependencies
-- For adapters connecting to APIs/devices not reachable by internet, provide example data files to allow testing of functionality without live connections
-- Example test structure:
-  ```javascript
-  describe('AdapterName', () => {
-    let adapter;
-    
-    beforeEach(() => {
-      // Setup test adapter instance
-    });
-    
-    test('should initialize correctly', () => {
-      // Test adapter initialization
-    });
-  });
-  ```
-
-### Integration Testing
-
-**IMPORTANT**: Use the official `@iobroker/testing` framework for all integration tests. This is the ONLY correct way to test ioBroker adapters.
-
-**Official Documentation**: https://github.com/ioBroker/testing
-
-#### Framework Structure
-Integration tests MUST follow this exact pattern:
-
-```javascript
-const path = require('path');
-const { tests } = require('@iobroker/testing');
-
-// Define test coordinates or configuration
-const TEST_COORDINATES = '52.520008,13.404954'; // Berlin
-
-// Use tests.integration() with defineAdditionalTests
-tests.integration(path.join(__dirname, '..'), {
-    defineAdditionalTests({ suite }) {
-        suite('Test adapter with specific configuration', (getHarness) => {
-            let harness;
-
-            before(() => {
-                harness = getHarness();
-            });
-
-            it('should configure and start adapter', () => new Promise(async (resolve) => {
-                // Get adapter object and configure
-                harness.objects.getObject('system.adapter.brightsky.0', async (err, obj) => {
-                    if (err) {
-                        console.error('Error getting adapter object:', err);
-                        resolve();
-                        return;
-                    }
-
-                    // Configure adapter properties
-                    obj.native.position = TEST_COORDINATES;
-                    obj.native.createCurrently = true;
-                    obj.native.createHourly = true;
-                    obj.native.createDaily = true;
-                    // ... other configuration
-
-                    // Set the updated configuration
-                    harness.objects.setObject(obj._id, obj);
-
-                    // Start adapter and wait
-                    await harness.startAdapterAndWait();
-
-                    // Wait for adapter to process data
-                    setTimeout(() => {
-                        // Verify states were created
-                        harness.states.getState('brightsky.0.info.connection', (err, state) => {
-                            if (state && state.val === true) {
-                                console.log('✅ Adapter started successfully');
-                            }
-                            resolve();
-                        });
-                    }, 15000); // Allow time for API calls
-                });
-            })).timeout(30000);
-        });
-    }
-});
-```
-
-#### Testing Both Success AND Failure Scenarios
-
-**IMPORTANT**: For every "it works" test, implement corresponding "it doesn't work and fails" tests. This ensures proper error handling and validates that your adapter fails gracefully when expected.
-
-```javascript
-// Example: Testing successful configuration
-it('should configure and start adapter with valid configuration', () => new Promise(async (resolve) => {
-    // ... successful configuration test as shown above
-})).timeout(30000);
-
-// Example: Testing failure scenarios
-it('should fail gracefully with invalid configuration', () => new Promise(async (resolve) => {
-    harness.objects.getObject('system.adapter.brightsky.0', async (err, obj) => {
-        if (err) {
-            console.error('Error getting adapter object:', err);
-            resolve();
-            return;
-        }
-
-        // Configure with INVALID data to test failure handling
-        obj.native.position = 'invalid-coordinates'; // This should cause failure
-        obj.native.createCurrently = true;
-
-        harness.objects.setObject(obj._id, obj);
-
-        try {
-            await harness.startAdapterAndWait();
-            
-            setTimeout(() => {
-                // Verify adapter handled the error properly
-                harness.states.getState('brightsky.0.info.connection', (err, state) => {
-                    if (state && state.val === false) {
-                        console.log('✅ Adapter properly failed with invalid configuration');
-                    } else {
-                        console.log('❌ Adapter should have failed but connection shows true');
-                    }
-                    resolve();
-                });
-            }, 15000);
-        } catch (error) {
-            console.log('✅ Adapter correctly threw error with invalid configuration:', error.message);
-            resolve();
-        }
-    });
-})).timeout(30000);
-
-// Example: Testing missing required configuration
-it('should fail when required configuration is missing', () => new Promise(async (resolve) => {
-    harness.objects.getObject('system.adapter.brightsky.0', async (err, obj) => {
-        if (err) {
-            console.error('Error getting adapter object:', err);
-            resolve();
-            return;
-        }
-
-        // Remove required configuration to test failure
-        delete obj.native.position; // This should cause failure
-
-        harness.objects.setObject(obj._id, obj);
-
-        try {
-            await harness.startAdapterAndWait();
-            
-            setTimeout(() => {
-                harness.states.getState('brightsky.0.info.connection', (err, state) => {
-                    if (!state || state.val === false) {
-                        console.log('✅ Adapter properly failed with missing required configuration');
-                    } else {
-                        console.log('❌ Adapter should have failed but connection shows true');
-                    }
-                    resolve();
-                });
-            }, 10000);
-        } catch (error) {
-            console.log('✅ Adapter correctly threw error with missing configuration:', error.message);
-            resolve();
-        }
-    });
-})).timeout(30000);
-```
-
-#### Advanced State Access Patterns
-
-For testing adapters that create multiple states, use bulk state access methods to efficiently verify large numbers of states:
-
-```javascript
-it('should create and verify multiple states', () => new Promise(async (resolve, reject) => {
-    // Configure and start adapter first...
-    harness.objects.getObject('system.adapter.tagesschau.0', async (err, obj) => {
-        if (err) {
-            console.error('Error getting adapter object:', err);
-            reject(err);
-            return;
-        }
-
-        // Configure adapter as needed
-        obj.native.someConfig = 'test-value';
-        harness.objects.setObject(obj._id, obj);
-
-        await harness.startAdapterAndWait();
-
-        // Wait for adapter to create states
-        setTimeout(() => {
-            // Access bulk states using pattern matching
-            harness.dbConnection.getStateIDs('tagesschau.0.*').then(stateIds => {
-                if (stateIds && stateIds.length > 0) {
-                    harness.states.getStates(stateIds, (err, allStates) => {
-                        if (err) {
-                            console.error('❌ Error getting states:', err);
-                            reject(err); // Properly fail the test instead of just resolving
-                            return;
-                        }
-
-                        // Verify states were created and have expected values
-                        const expectedStates = ['tagesschau.0.info.connection', 'tagesschau.0.articles.0.title'];
-                        let foundStates = 0;
-                        
-                        for (const stateId of expectedStates) {
-                            if (allStates[stateId]) {
-                                foundStates++;
-                                console.log(`✅ Found expected state: ${stateId}`);
-                            } else {
-                                console.log(`❌ Missing expected state: ${stateId}`);
-                            }
-                        }
-
-                        if (foundStates === expectedStates.length) {
-                            console.log('✅ All expected states were created successfully');
-                            resolve();
-                        } else {
-                            reject(new Error(`Only ${foundStates}/${expectedStates.length} expected states were found`));
-                        }
-                    });
-                } else {
-                    reject(new Error('No states found matching pattern tagesschau.0.*'));
-                }
-            }).catch(reject);
-        }, 20000); // Allow more time for multiple state creation
-    });
-})).timeout(45000);
-```
-
-#### Key Integration Testing Rules
-
-1. **NEVER test API URLs directly** - Let the adapter handle API calls
-2. **ALWAYS use the harness** - `getHarness()` provides the testing environment  
-3. **Configure via objects** - Use `harness.objects.setObject()` to set adapter configuration
-4. **Start properly** - Use `harness.startAdapterAndWait()` to start the adapter
-5. **Check states** - Use `harness.states.getState()` to verify results
-6. **Use timeouts** - Allow time for async operations with appropriate timeouts
-7. **Test real workflow** - Initialize → Configure → Start → Verify States
-
-#### Workflow Dependencies
-Integration tests should run ONLY after lint and adapter tests pass:
-
-```yaml
-integration-tests:
-  needs: [check-and-lint, adapter-tests]
-  runs-on: ubuntu-latest
-  steps:
-    - name: Run integration tests
-      run: npx mocha test/integration-*.js --exit
-```
-
-#### What NOT to Do
-❌ Direct API testing: `axios.get('https://api.example.com')`
-❌ Mock adapters: `new MockAdapter()`  
-❌ Direct internet calls in tests
-❌ Bypassing the harness system
-
-#### What TO Do
-✅ Use `@iobroker/testing` framework
-✅ Configure via `harness.objects.setObject()`
-✅ Start via `harness.startAdapterAndWait()`
-✅ Test complete adapter lifecycle
-✅ Verify states via `harness.states.getState()`
-✅ Allow proper timeouts for async operations
-
-### API Testing with Credentials
-For adapters that connect to external APIs requiring authentication, implement comprehensive credential testing:
-
-#### Password Encryption for Integration Tests
-When creating integration tests that need encrypted passwords (like those marked as `encryptedNative` in io-package.json):
-
-1. **Read system secret**: Use `harness.objects.getObjectAsync("system.config")` to get `obj.native.secret`
-2. **Apply XOR encryption**: Implement the encryption algorithm:
-   ```javascript
-   async function encryptPassword(harness, password) {
-       const systemConfig = await harness.objects.getObjectAsync("system.config");
-       if (!systemConfig || !systemConfig.native || !systemConfig.native.secret) {
-           throw new Error("Could not retrieve system secret for password encryption");
-       }
-       
-       const secret = systemConfig.native.secret;
-       let result = '';
-       for (let i = 0; i < password.length; ++i) {
-           result += String.fromCharCode(secret[i % secret.length].charCodeAt(0) ^ password.charCodeAt(i));
-       }
-       return result;
-   }
-   ```
-3. **Store encrypted password**: Set the encrypted result in adapter config, not the plain text
-4. **Result**: Adapter will properly decrypt and use credentials, enabling full API connectivity testing
-
-#### Demo Credentials Testing Pattern
-- Use provider demo credentials when available (e.g., `demo@api-provider.com` / `demo`)
-- Create separate test file (e.g., `test/integration-demo.js`) for credential-based tests
-- Add npm script: `"test:integration-demo": "mocha test/integration-demo --exit"`
-- Implement clear success/failure criteria with recognizable log messages
-- Expected success pattern: Look for specific adapter initialization messages
-- Test should fail clearly with actionable error messages for debugging
-
-#### Enhanced Test Failure Handling
-```javascript
-it("Should connect to API with demo credentials", async () => {
-    // ... setup and encryption logic ...
-    
-    const connectionState = await harness.states.getStateAsync("adapter.0.info.connection");
-    
-    if (connectionState && connectionState.val === true) {
-        console.log("✅ SUCCESS: API connection established");
-        return true;
-    } else {
-        throw new Error("API Test Failed: Expected API connection to be established with demo credentials. " +
-            "Check logs above for specific API errors (DNS resolution, 401 Unauthorized, network issues, etc.)");
-    }
-}).timeout(120000); // Extended timeout for API calls
-```
-
-## README Updates
-
-### Required Sections
-When updating README.md files, ensure these sections are present and well-documented:
-
-1. **Installation** - Clear npm/ioBroker admin installation steps
-2. **Configuration** - Detailed configuration options with examples
-3. **Usage** - Practical examples and use cases
-4. **Changelog** - Version history and changes (use "## **WORK IN PROGRESS**" section for ongoing changes)
-5. **License** - License information (typically MIT for ioBroker adapters)
-6. **Support** - Links to issues, discussions, and community support
-
-### Documentation Standards
-- Use clear, concise language
-- Include code examples for configuration
-- Add screenshots for admin interface when applicable
-- Maintain multilingual support (at minimum English and German)
-- When creating PRs, add entries to README under "## **WORK IN PROGRESS**" section following ioBroker release script standard
-- Always reference related issues in commits and PR descriptions (e.g., "solves #xx" or "fixes #xx")
-
-### Mandatory README Updates for PRs
-For **every PR or new feature**, always add a user-friendly entry to README.md:
-
-- Add entries under `### __WORK IN PROGRESS__` section before committing
-- Use format: `* (author) **TYPE**: Description of user-visible change`
-- Types: **NEW** (features), **FIXED** (bugs), **ENHANCED** (improvements), **TESTING** (test additions), **CI/CD** (automation)
-- Focus on user impact, not technical implementation details
-- Example: `* (DutchmanNL) **FIXED**: Adapter now properly validates login credentials instead of always showing "credentials missing"`
-
-### Documentation Workflow Standards
-- **Mandatory README updates**: Establish requirement to update README.md for every PR/feature
-- **Standardized documentation**: Create consistent format and categories for changelog entries
-- **Enhanced development workflow**: Integrate documentation requirements into standard development process
-
-## Dependency Updates
-
-### Package Management
-- Always use `npm` for dependency management in ioBroker adapters
-- Keep dependencies minimal and focused
-- Regularly update dependencies to latest stable versions
-- Use `npm audit` to check for security vulnerabilities
-- Before committing, ensure package.json and package-lock.json are in sync by running `npm install`
-
-### Dependency Best Practices
-- Prefer built-in Node.js modules when possible
-- Use `@iobroker/adapter-core` for adapter base functionality
-- Avoid deprecated packages
-- Document any specific version requirements
-
-## JSON-Config Admin Instructions
-
-### Configuration Schema
-When creating admin configuration interfaces:
-
-- Use JSON-Config format for modern ioBroker admin interfaces
-- Provide clear labels and help text for all configuration options
-- Include input validation and error messages
-- Group related settings logically
-- Example structure:
-  ```json
-  {
-    "type": "panel",
-    "items": {
-      "host": {
-        "type": "text",
-        "label": "Host address",
-        "help": "IP address or hostname of the device"
-      }
-    }
-  }
-  ```
-
-### Admin Interface Guidelines
-- Use consistent naming conventions
-- Provide sensible default values
-- Include validation for required fields
-- Add tooltips for complex configuration options
-- Ensure translations are available for all supported languages (minimum English and German)
-- Write end-user friendly labels and descriptions, avoiding technical jargon where possible
-
-## Best Practices for Dependencies
-
-### HTTP Client Libraries
-- **Preferred:** Use native `fetch` API (available in Node.js 18+)
-- **Alternative:** Use `node-fetch` for older Node.js versions
-- **Avoid:** `axios` unless specific features are required (reduces bundle size)
-
-### Example with fetch:
-```javascript
-try {
-  const response = await fetch('https://api.example.com/data');
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-  }
-  const data = await response.json();
-} catch (error) {
-  this.log.error(`API request failed: ${error.message}`);
-}
-```
-
-### Other Dependency Recommendations
-- **Logging:** Use adapter built-in logging (`this.log.*`)
-- **Scheduling:** Use adapter built-in timers and intervals
-- **File operations:** Use Node.js `fs/promises` for async file operations
-- **Configuration:** Use adapter config system rather than external config libraries
-
-## Error Handling
-
-### Adapter Error Patterns
-- Always catch and log errors appropriately
-- Use adapter log levels (error, warn, info, debug)
-- Provide meaningful, user-friendly error messages that help users understand what went wrong
-- Handle network failures gracefully
-- Implement retry mechanisms where appropriate
-- Always clean up timers, intervals, and other resources in the `unload()` method
-
-### Example Error Handling:
-```javascript
-try {
-  await this.connectToDevice();
-} catch (error) {
-  this.log.error(`Failed to connect to device: ${error.message}`);
-  this.setState('info.connection', false, true);
-  // Implement retry logic if needed
-}
-```
-
-### Timer and Resource Cleanup:
-```javascript
-// In your adapter class
-private connectionTimer?: NodeJS.Timeout;
-
-async onReady() {
-  this.connectionTimer = setInterval(() => {
-    this.checkConnection();
-  }, 30000);
-}
-
-onUnload(callback) {
-  try {
-    // Clean up timers and intervals
-    if (this.connectionTimer) {
-      clearInterval(this.connectionTimer);
-      this.connectionTimer = undefined;
-    }
-    // Close connections, clean up resources
-    callback();
-  } catch (e) {
-    callback();
-  }
-}
-```
-
-## Code Style and Standards
-
-- Follow JavaScript/TypeScript best practices
-- Use async/await for asynchronous operations
-- Implement proper resource cleanup in `unload()` method
-- Use semantic versioning for adapter releases
-- Include proper JSDoc comments for public methods
-
-## CI/CD and Testing Integration
-
-### GitHub Actions for API Testing
-For adapters with external API dependencies, implement separate CI/CD jobs:
-
-```yaml
-# Tests API connectivity with demo credentials (runs separately)
-demo-api-tests:
-  if: contains(github.event.head_commit.message, '[skip ci]') == false
-  
-  runs-on: ubuntu-22.04
-  
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Use Node.js 20.x
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20.x
-        cache: 'npm'
-        
-    - name: Install dependencies
-      run: npm ci
-      
-    - name: Run demo API tests
-      run: npm run test:integration-demo
-```
-
-### CI/CD Best Practices
-- Run credential tests separately from main test suite
-- Use ubuntu-22.04 for consistency
-- Don't make credential tests required for deployment
-- Provide clear failure messages for API connectivity issues
-- Use appropriate timeouts for external API calls (120+ seconds)
-
-### Package.json Script Integration
-Add dedicated script for credential testing:
-```json
-{
-  "scripts": {
-    "test:integration-demo": "mocha test/integration-demo --exit"
-  }
-}
-```
-
-### Practical Example: Complete API Testing Implementation
-Here's a complete example based on lessons learned from the Discovergy adapter:
-
-#### test/integration-demo.js
-```javascript
-const path = require("path");
-const { tests } = require("@iobroker/testing");
-
-// Helper function to encrypt password using ioBroker's encryption method
-async function encryptPassword(harness, password) {
-    const systemConfig = await harness.objects.getObjectAsync("system.config");
-    
-    if (!systemConfig || !systemConfig.native || !systemConfig.native.secret) {
-        throw new Error("Could not retrieve system secret for password encryption");
-    }
-    
-    const secret = systemConfig.native.secret;
-    let result = '';
-    for (let i = 0; i < password.length; ++i) {
-        result += String.fromCharCode(secret[i % secret.length].charCodeAt(0) ^ password.charCodeAt(i));
-    }
-    
-    return result;
-}
-
-// Run integration tests with demo credentials
-tests.integration(path.join(__dirname, ".."), {
-    defineAdditionalTests({ suite }) {
-        suite("API Testing with Demo Credentials", (getHarness) => {
-            let harness;
-            
-            before(() => {
-                harness = getHarness();
-            });
-
-            it("Should connect to API and initialize with demo credentials", async () => {
-                console.log("Setting up demo credentials...");
-                
-                if (harness.isAdapterRunning()) {
-                    await harness.stopAdapter();
-                }
-                
-                const encryptedPassword = await encryptPassword(harness, "demo_password");
-                
-                await harness.changeAdapterConfig("your-adapter", {
-                    native: {
-                        username: "demo@provider.com",
-                        password: encryptedPassword,
-                        // other config options
-                    }
-                });
-
-                console.log("Starting adapter with demo credentials...");
-                await harness.startAdapter();
-                
-                // Wait for API calls and initialization
-                await new Promise(resolve => setTimeout(resolve, 60000));
-                
-                const connectionState = await harness.states.getStateAsync("your-adapter.0.info.connection");
-                
-                if (connectionState && connectionState.val === true) {
-                    console.log("✅ SUCCESS: API connection established");
-                    return true;
-                } else {
-                    throw new Error("API Test Failed: Expected API connection to be established with demo credentials. " +
-                        "Check logs above for specific API errors (DNS resolution, 401 Unauthorized, network issues, etc.)");
-                }
-            }).timeout(120000);
-        });
-    }
-});
-```
+# ioBroker Copilot Instructions Template Repository
+
+**Repository Purpose:** This repository maintains the template and best practices for GitHub Copilot instructions used in ioBroker adapter development.
+
+**Version:** 0.3.1
+
+This file contains instructions specific to maintaining and improving this template repository, not for ioBroker adapter development (that's in `template.md`).
+
+## Repository Context
+
+You are working on the ioBroker Copilot Instructions template repository. This repository:
+
+- Maintains a comprehensive template (`template.md`) for ioBroker adapter developers
+- Provides best practices and standardized instructions for GitHub Copilot 
+- Serves as the authoritative source for ioBroker adapter development patterns
+- Requires careful versioning and documentation of changes
+
+## Key Files Structure
+
+- `template.md` - The main template file that developers copy to their repositories as `.github/copilot-instructions.md`
+- `README.md` - Repository documentation explaining how to use the template  
+- `CHANGELOG.md` - Version history and detailed change documentation
+- `scripts/check-template-version.sh` - Version checking utility for users
+- `.github/copilot-instructions.md` - THIS file - repository-specific instructions
+
+## Template Development Guidelines
+
+### Version Management
+- Always update version numbers in both `template.md` and this file when making changes
+- Document all changes in `CHANGELOG.md` with detailed descriptions
+- Use semantic versioning (MAJOR.MINOR.PATCH)
+- Update version references in README.md and scripts
+
+### Template Content Standards  
+- Focus on practical, actionable guidance for ioBroker adapter developers
+- Include comprehensive examples with real code snippets
+- Maintain sections: Testing, README Updates, Dependency Management, JSON-Config, Error Handling, CI/CD
+- Keep customization points marked with `[CUSTOMIZE]` tags
+- Ensure all recommendations are tested and proven in real adapter projects
+
+### Documentation Quality
+- README.md must clearly explain template usage and integration steps
+- Provide both "merge with existing" and "new repository" workflows
+- Include version checking and update procedures
+- Maintain links to ioBroker community resources and official documentation
+
+### Testing and Validation
+- Test template instructions with real ioBroker adapter projects
+- Validate all code examples for syntax and functionality
+- Ensure version check script works correctly
+- Verify download URLs and curl commands in documentation
+
+## Contributing to the Template
+
+### Making Template Updates
+- Focus changes on improving adapter development experience
+- Base recommendations on proven practices from real ioBroker adapter projects  
+- Consider both beginner and advanced adapter developers
+- Maintain backward compatibility when possible
+- Update examples to reflect current Node.js and ioBroker versions
+
+### Adding New Sections
+- Research the topic thoroughly within ioBroker ecosystem context
+- Provide practical examples and code snippets
+- Include both "what to do" and "what not to do" guidance
+- Consider impact on existing adapter projects using the template
+- Document the rationale for additions in CHANGELOG.md
+
+### Code Examples Standards
+- Use modern JavaScript/TypeScript syntax (ES2020+)
+- Follow ioBroker adapter patterns and conventions
+- Include error handling and edge cases
+- Test examples in real adapter development environments
+- Prefer `@iobroker/testing` framework patterns for integration tests
+
+### Community Feedback Integration
+- Monitor ioBroker forums and GitHub issues for common development challenges
+- Incorporate lessons learned from adapter developers
+- Address frequently asked questions in template guidance
+- Consider feedback from both new and experienced developers
+
+## Repository Maintenance
+
+### Issue Management
+- Template improvement requests should reference specific adapter development challenges
+- Bug reports should include which section of template is problematic
+- Feature requests should align with ioBroker community needs
+- Close duplicate or outdated issues promptly
+
+### Pull Request Guidelines  
+- PRs must update version numbers appropriately
+- Include detailed CHANGELOG.md entries for user-facing changes
+- Test changes against multiple ioBroker adapter projects when possible
+- Update README.md if usage instructions change
+- Verify version check script continues to work
+
+### Release Process
+- Increment version number in template.md and this file
+- Update CHANGELOG.md with comprehensive change description
+- Update README.md version references
+- Test download URLs and integration scripts
+- Announce significant changes to ioBroker community
+
+## Quality Assurance
+
+### Content Validation
+- Ensure all URLs and links are functional
+- Verify code examples compile and run correctly  
+- Test integration instructions with fresh ioBroker adapter projects
+- Validate version check script against current and previous versions
+- Check that customization tags `[CUSTOMIZE]` are appropriately placed
+
+### Documentation Consistency
+- Maintain consistent formatting and style across all files
+- Use the same terminology throughout (adapter vs. plugin, etc.)
+- Keep examples realistic and based on actual adapter development scenarios
+- Ensure version numbers are synchronized across all files
+
+### Breaking Changes
+- Document breaking changes clearly in CHANGELOG.md
+- Provide migration guidance when template structure changes significantly  
+- Consider deprecation warnings before removing functionality
+- Test impact on existing adapter projects using previous versions

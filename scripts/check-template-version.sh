@@ -10,7 +10,7 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(dirname "$SCRIPT_DIR")"
 LOCAL_TEMPLATE="$REPO_ROOT/.github/copilot-instructions.md"
-REMOTE_TEMPLATE_URL="https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/.github/copilot-instructions.md"
+REMOTE_TEMPLATE_URL="https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/template.md"
 
 echo "🔍 Checking ioBroker Copilot template version..."
 
