@@ -37,7 +37,7 @@ Your contributions help make adapter development better for the entire ioBroker 
 3. **Customize**: Review and modify sections marked with `[CUSTOMIZE]` for your specific adapter
 4. **Verify**: Test that Copilot provides enhanced ioBroker-specific suggestions
 
-**Current Version:** v0.4.0 | **Template:** [`template.md`](template.md) | **Last Updated:** September 2025
+![Version](https://img.shields.io/github/package-json/v/DrozmotiX/ioBroker-Copilot-Instructions?label=Current%20Version) | **Template:** [`template.md`](template.md) | ![Last Updated](https://img.shields.io/github/last-commit/DrozmotiX/ioBroker-Copilot-Instructions?label=Last%20Updated)
 
 ## 📚 Documentation
 
