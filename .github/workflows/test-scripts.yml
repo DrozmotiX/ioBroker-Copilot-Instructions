@@ -22,6 +22,7 @@ jobs:
     - name: Make all scripts executable
       run: |
         chmod +x scripts/*.sh
+        chmod +x tests/*.sh
         
     - name: Run script tests
       run: ./tests/test-runner.sh
@@ -59,7 +60,7 @@ jobs:
         
     - name: Upload test report
       if: always()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: script-test-report
         path: test-report.md
