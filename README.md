@@ -16,7 +16,7 @@ This repository provides comprehensive guidance and best practices for leveragin
 
 [ioBroker](https://www.iobroker.net/) is a powerful integration platform for the Internet of Things (IoT), designed to connect various smart home devices, services, and systems into a unified automation platform. Adapters are the core components that enable ioBroker to communicate with different technologies and services.
 
-## 🛠️ Prerequisites & Basic GitHub Copilot Setup
+## Prerequisites and Basic GitHub Copilot Setup
 
 Before using this template, ensure you have GitHub Copilot properly set up in your repository. If you're new to GitHub Copilot, follow these steps:
 
