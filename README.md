@@ -70,7 +70,7 @@ git push
 To ensure you're using the latest best practices and that your local copy stays synchronized with improvements:
 
 ### Current Version
-- **Latest Version:** v0.1.0
+- **Latest Version:** v0.2.0
 - **Template Location:** [`.github/copilot-instructions.md`](.github/copilot-instructions.md)
 - **Last Updated:** January 2025
 
@@ -79,7 +79,7 @@ To ensure you're using the latest best practices and that your local copy stays 
 You can validate your local template version by checking the version header in your `.github/copilot-instructions.md` file:
 
 ```markdown
-**Version:** 0.1.0
+**Version:** 0.2.0
 **Template Source:** https://github.com/DrozmotiX/ioBroker-Copilot-Instructions
 ```
 
@@ -140,12 +140,17 @@ The Copilot instruction template covers:
 - Integration testing patterns
 - Mocking strategies for ioBroker adapters
 - Error handling test scenarios
+- **API testing with credentials** - Password encryption and demo credential patterns
+- **Enhanced test failure handling** - Clear, actionable error messages for debugging
+- **CI/CD integration** - Separate jobs for credential-based API testing
 
 ### 📖 README Standards
 - Required documentation sections
 - Multi-language support guidelines
 - Configuration documentation patterns
 - User-friendly examples and usage instructions
+- **Mandatory PR documentation** - WORK IN PROGRESS section requirements
+- **Standardized changelog format** - Consistent categorization and user-focused descriptions
 
 ### 📦 Dependency Management
 - Best practices for npm package management

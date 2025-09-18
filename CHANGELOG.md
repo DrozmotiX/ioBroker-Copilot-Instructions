@@ -5,6 +5,32 @@ All notable changes to the ioBroker Copilot Instructions template will be docume
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2025-01-08
+
+### Added
+- **API Testing with Credentials** comprehensive section with password encryption methodology
+- Password encryption implementation using ioBroker's XOR cipher with system secret
+- Demo credentials testing patterns for API endpoint validation  
+- Enhanced test failure handling with clear, actionable error messages
+- Mandatory README update requirements for every PR/feature
+- Standardized documentation workflow with WORK IN PROGRESS section format
+- CI/CD integration patterns for separate credential testing jobs
+- GitHub Actions workflow examples for API connectivity testing
+- Extended timeout recommendations for API calls (120+ seconds)
+- Package.json script integration guidance for credential testing
+
+### Enhanced
+- Integration testing section with detailed credential testing methodology
+- Documentation standards with mandatory PR update requirements
+- Error handling patterns with specific examples for API testing
+- Testing framework guidance with practical code examples
+
+### Documentation
+- Comprehensive password encryption algorithm with step-by-step implementation
+- Clear success/failure criteria patterns for API testing
+- CI/CD best practices for external API dependencies
+- Enhanced documentation workflow standards and requirements
+
 ## [0.1.0] - 2025-01-08
 
 ### Added
@@ -30,4 +56,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Contributing guidelines
 - Support and community links
 
+[0.2.0]: https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/releases/tag/v0.2.0
 [0.1.0]: https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/releases/tag/v0.1.0

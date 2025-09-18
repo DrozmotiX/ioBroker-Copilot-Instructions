@@ -1,6 +1,6 @@
 # ioBroker Adapter Development with GitHub Copilot
 
-**Version:** 0.1.0
+**Version:** 0.2.0
 **Template Source:** https://github.com/DrozmotiX/ioBroker-Copilot-Instructions
 
 This file contains instructions and best practices for GitHub Copilot when working on ioBroker adapter development.
@@ -38,6 +38,57 @@ You are working on an ioBroker adapter. ioBroker is an integration platform for 
 - Test configuration validation and error handling
 - Ensure proper cleanup of resources
 
+### API Testing with Credentials
+For adapters that connect to external APIs requiring authentication, implement comprehensive credential testing:
+
+#### Password Encryption for Integration Tests
+When creating integration tests that need encrypted passwords (like those marked as `encryptedNative` in io-package.json):
+
+1. **Read system secret**: Use `harness.objects.getObjectAsync("system.config")` to get `obj.native.secret`
+2. **Apply XOR encryption**: Implement the encryption algorithm:
+   ```javascript
+   async function encryptPassword(harness, password) {
+       const systemConfig = await harness.objects.getObjectAsync("system.config");
+       if (!systemConfig || !systemConfig.native || !systemConfig.native.secret) {
+           throw new Error("Could not retrieve system secret for password encryption");
+       }
+       
+       const secret = systemConfig.native.secret;
+       let result = '';
+       for (let i = 0; i < password.length; ++i) {
+           result += String.fromCharCode(secret[i % secret.length].charCodeAt(0) ^ password.charCodeAt(i));
+       }
+       return result;
+   }
+   ```
+3. **Store encrypted password**: Set the encrypted result in adapter config, not the plain text
+4. **Result**: Adapter will properly decrypt and use credentials, enabling full API connectivity testing
+
+#### Demo Credentials Testing Pattern
+- Use provider demo credentials when available (e.g., `demo@api-provider.com` / `demo`)
+- Create separate test file (e.g., `test/integration-demo.js`) for credential-based tests
+- Add npm script: `"test:integration-demo": "mocha test/integration-demo --exit"`
+- Implement clear success/failure criteria with recognizable log messages
+- Expected success pattern: Look for specific adapter initialization messages
+- Test should fail clearly with actionable error messages for debugging
+
+#### Enhanced Test Failure Handling
+```javascript
+it("Should connect to API with demo credentials", async () => {
+    // ... setup and encryption logic ...
+    
+    const connectionState = await harness.states.getStateAsync("adapter.0.info.connection");
+    
+    if (connectionState && connectionState.val === true) {
+        console.log("✅ SUCCESS: API connection established");
+        return true;
+    } else {
+        throw new Error("API Test Failed: Expected API connection to be established with demo credentials. " +
+            "Check logs above for specific API errors (DNS resolution, 401 Unauthorized, network issues, etc.)");
+    }
+}).timeout(120000); // Extended timeout for API calls
+```
+
 ## README Updates
 
 ### Required Sections
@@ -57,6 +108,20 @@ When updating README.md files, ensure these sections are present and well-docume
 - Maintain multilingual support (at minimum English and German)
 - When creating PRs, add entries to README under "## **WORK IN PROGRESS**" section following ioBroker release script standard
 - Always reference related issues in commits and PR descriptions (e.g., "solves #xx" or "fixes #xx")
+
+### Mandatory README Updates for PRs
+For **every PR or new feature**, always add a user-friendly entry to README.md:
+
+- Add entries under `### __WORK IN PROGRESS__` section before committing
+- Use format: `* (author) **TYPE**: Description of user-visible change`
+- Types: **NEW** (features), **FIXED** (bugs), **ENHANCED** (improvements), **TESTING** (test additions), **CI/CD** (automation)
+- Focus on user impact, not technical implementation details
+- Example: `* (DutchmanNL) **FIXED**: Adapter now properly validates login credentials instead of always showing "credentials missing"`
+
+### Documentation Workflow Standards
+- **Mandatory README updates**: Establish requirement to update README.md for every PR/feature
+- **Standardized documentation**: Create consistent format and categories for changelog entries
+- **Enhanced development workflow**: Integrate documentation requirements into standard development process
 
 ## Dependency Updates
 
@@ -184,3 +249,122 @@ onUnload(callback) {
 - Implement proper resource cleanup in `unload()` method
 - Use semantic versioning for adapter releases
 - Include proper JSDoc comments for public methods
+
+## CI/CD and Testing Integration
+
+### GitHub Actions for API Testing
+For adapters with external API dependencies, implement separate CI/CD jobs:
+
+```yaml
+# Tests API connectivity with demo credentials (runs separately)
+demo-api-tests:
+  if: contains(github.event.head_commit.message, '[skip ci]') == false
+  
+  runs-on: ubuntu-22.04
+  
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Use Node.js 20.x
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20.x
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run demo API tests
+      run: npm run test:integration-demo
+```
+
+### CI/CD Best Practices
+- Run credential tests separately from main test suite
+- Use ubuntu-22.04 for consistency
+- Don't make credential tests required for deployment
+- Provide clear failure messages for API connectivity issues
+- Use appropriate timeouts for external API calls (120+ seconds)
+
+### Package.json Script Integration
+Add dedicated script for credential testing:
+```json
+{
+  "scripts": {
+    "test:integration-demo": "mocha test/integration-demo --exit"
+  }
+}
+```
+
+### Practical Example: Complete API Testing Implementation
+Here's a complete example based on lessons learned from the Discovergy adapter:
+
+#### test/integration-demo.js
+```javascript
+const path = require("path");
+const { tests } = require("@iobroker/testing");
+
+// Helper function to encrypt password using ioBroker's encryption method
+async function encryptPassword(harness, password) {
+    const systemConfig = await harness.objects.getObjectAsync("system.config");
+    
+    if (!systemConfig || !systemConfig.native || !systemConfig.native.secret) {
+        throw new Error("Could not retrieve system secret for password encryption");
+    }
+    
+    const secret = systemConfig.native.secret;
+    let result = '';
+    for (let i = 0; i < password.length; ++i) {
+        result += String.fromCharCode(secret[i % secret.length].charCodeAt(0) ^ password.charCodeAt(i));
+    }
+    
+    return result;
+}
+
+// Run integration tests with demo credentials
+tests.integration(path.join(__dirname, ".."), {
+    defineAdditionalTests({ suite }) {
+        suite("API Testing with Demo Credentials", (getHarness) => {
+            let harness;
+            
+            before(() => {
+                harness = getHarness();
+            });
+
+            it("Should connect to API and initialize with demo credentials", async () => {
+                console.log("Setting up demo credentials...");
+                
+                if (harness.isAdapterRunning()) {
+                    await harness.stopAdapter();
+                }
+                
+                const encryptedPassword = await encryptPassword(harness, "demo_password");
+                
+                await harness.changeAdapterConfig("your-adapter", {
+                    native: {
+                        username: "demo@provider.com",
+                        password: encryptedPassword,
+                        // other config options
+                    }
+                });
+
+                console.log("Starting adapter with demo credentials...");
+                await harness.startAdapter();
+                
+                // Wait for API calls and initialization
+                await new Promise(resolve => setTimeout(resolve, 60000));
+                
+                const connectionState = await harness.states.getStateAsync("your-adapter.0.info.connection");
+                
+                if (connectionState && connectionState.val === true) {
+                    console.log("✅ SUCCESS: API connection established");
+                    return true;
+                } else {
+                    throw new Error("API Test Failed: Expected API connection to be established with demo credentials. " +
+                        "Check logs above for specific API errors (DNS resolution, 401 Unauthorized, network issues, etc.)");
+                }
+            }).timeout(120000);
+        });
+    }
+});
+```
