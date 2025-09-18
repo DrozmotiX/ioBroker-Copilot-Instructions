@@ -2,15 +2,16 @@
 
 > A comprehensive template and best practices library for using GitHub Copilot in ioBroker adapter development
 
-## 🎯 Goal of this Repository
+## 🎯 About This Repository
 
-This repository provides comprehensive guidance and best practices for leveraging GitHub Copilot in ioBroker adapter development. By using these standardized instructions, developers can:
+This repository serves the ioBroker community by providing standardized GitHub Copilot instructions for adapter development. We maintain templates and best practices to help developers create better ioBroker adapters more efficiently.
 
-- **Accelerate development** with intelligent code suggestions tailored for ioBroker patterns
-- **Maintain consistency** across different adapter projects within the ioBroker ecosystem
-- **Follow established patterns** and avoid common pitfalls in adapter development
-- **Improve code quality** through proven ioBroker best practices
-- **Reduce learning curve** for new ioBroker adapter developers
+**What this template provides:**
+- **Standardized patterns** for consistent ioBroker adapter development
+- **Proven best practices** from experienced community developers
+- **GitHub Copilot integration** that understands ioBroker conventions
+- **Community-driven improvements** based on real-world usage
+- **Version-controlled templates** with automated updates
 
 ## 🤝 Join Our Community
 
