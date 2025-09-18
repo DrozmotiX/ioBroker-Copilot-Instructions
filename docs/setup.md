@@ -36,22 +36,69 @@ This guide walks you through setting up GitHub Copilot for ioBroker adapter deve
    ls -la .github/copilot-instructions.md
    ```
 
-3. **If you don't have a copilot-instructions.md file, let Copilot create one**
-   - Open any code file in your repository in your preferred editor
-   - Start typing: `// This is an ioBroker adapter for`
-   - GitHub Copilot will automatically create basic instructions when you commit changes to `.github/copilot-instructions.md`
-
-4. **If your existing config seems corrupt, start fresh**
-   ```bash
-   # Remove existing file if needed
-   rm .github/copilot-instructions.md
+3. **Initial template setup** 
+   If you don't have a copilot-instructions.md file yet:
    
-   # Let Copilot create a new one by starting development work
+   **Option A: Use automated setup** (Recommended)
+   - Create an issue using the [copy-paste template](../templates/copy-paste-template.md)
+   - GitHub Copilot will create the complete template for you
+   
+   **Option B: Manual template download**
+   ```bash
+   # Download the template
+   curl -o .github/copilot-instructions.md https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/template.md
+   # Remove template comment block
+   sed -i '/^<!--$/,/^-->$/d' .github/copilot-instructions.md
    ```
+   
+   **Important**: After initial setup, always add your project-specific content in `[CUSTOMIZE]` sections:
+   ```markdown
+   ## [CUSTOMIZE] Project-Specific Instructions
+   
+   ### My Adapter Specific Patterns
+   - Custom authentication flow for [YourService] API
+   - Specific error handling for [YourDevice] 
+   - Project-specific logging patterns
+   
+   **Note:** This section is preserved during template updates
+   ```
+
+4. **For existing configurations**
+   If your existing config needs updates, use the automated update process instead of replacing the file
 
 ## Template Integration
 
-**Automated template merging** - Always combine with existing instructions, never replace entirely.
+**🤖 Fully Automated Updates** - Use GitHub Copilot to handle template updates automatically while preserving all custom sections.
+
+### Option A: Automated Issue-Based Updates (Recommended)
+
+**Best for**: Regular updates and team collaboration
+
+1. **Create an automated update issue**
+   - Go to your repository's Issues
+   - Create new issue with title: "🤖 Update ioBroker Copilot Instructions Template"  
+   - Use content from [`templates/copy-paste-template.md`](../templates/copy-paste-template.md)
+   - GitHub Copilot will automatically handle the merge
+
+2. **Benefits of issue-based automation**
+   - Creates audit trail of template updates
+   - Allows team review before applying changes
+   - Preserves all `[CUSTOMIZE]` sections automatically
+   - Tracks version history in issues
+
+### Option B: Direct Editor Integration
+
+**Best for**: Quick updates during development
+
+1. **Prompt GitHub Copilot for smart merging**
+   In your editor, use this prompt:
+   ```
+   "Merge the ioBroker template from https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/blob/main/template.md 
+   with my existing .github/copilot-instructions.md. Preserve all [CUSTOMIZE] sections and project-specific 
+   context while adding the latest ioBroker best practices. Update the version to the latest available."
+   ```
+
+2. **For comprehensive automation**: Use the full template from [`templates/automated-template-update.md`](../templates/automated-template-update.md)
 
 ### Step 1: Prepare for Template Integration
 
@@ -76,12 +123,12 @@ This guide walks you through setting up GitHub Copilot for ioBroker adapter deve
    ```
    "Merge the ioBroker template from https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/blob/main/template.md 
    with my existing .github/copilot-instructions.md. Preserve all [CUSTOMIZE] sections and project-specific 
-   context while adding the latest ioBroker best practices. Update the version to 0.4.0."
+   context while adding the latest ioBroker best practices. Update the version to the latest available."
    ```
 
 2. **Verify version tracking**
    Ensure your updated file includes:
-   - Current template version (0.4.0)
+   - Current template version (latest available)
    - Template source reference
    - Your custom sections intact
    - Project-specific context preserved
@@ -89,7 +136,7 @@ This guide walks you through setting up GitHub Copilot for ioBroker adapter deve
 3. **Commit with version control**
    ```bash
    git add .github/copilot-instructions.md
-   git commit -m "Update Copilot instructions to template v0.4.0, preserve custom sections"
+   git commit -m "Update Copilot instructions to latest template version, preserve custom sections"
    ```
 
 ### Step 3: Custom Section Management

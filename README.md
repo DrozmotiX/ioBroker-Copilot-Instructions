@@ -33,10 +33,12 @@ Your contributions help make adapter development better for the entire ioBroker 
 
 **For experienced Copilot users:**
 
-1. **Use Copilot for Smart Integration**: Instead of simply copying the template, use GitHub Copilot to intelligently merge it with your existing setup
-2. **Prompt Copilot**: "Merge the ioBroker template from https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/blob/main/template.md with my existing .github/copilot-instructions.md, maintaining project-specific context and adding version tracking"
-3. **Customize**: Review and modify sections marked with `[CUSTOMIZE]` for your specific adapter
-4. **Verify**: Test that Copilot provides enhanced ioBroker-specific suggestions
+1. **🚀 Automated Updates** (Recommended): Create an issue with the [automated update template](templates/copy-paste-template.md) to let GitHub Copilot handle everything
+2. **🎯 Manual Integration**: Use GitHub Copilot to intelligently merge the template with your existing setup
+3. **🛠️ Customize**: Review and modify sections marked with `[CUSTOMIZE]` for your specific adapter
+4. **✅ Verify**: Test that Copilot provides enhanced ioBroker-specific suggestions
+
+**Quick automation**: Copy-paste from [this template](templates/copy-paste-template.md) into a new issue in your repository.
 
 ![Version](https://img.shields.io/github/package-json/v/DrozmotiX/ioBroker-Copilot-Instructions?label=Current%20Version) | **Template:** [`template.md`](template.md) | ![Last Updated](https://img.shields.io/github/last-commit/DrozmotiX/ioBroker-Copilot-Instructions?label=Last%20Updated)
 
@@ -44,6 +46,7 @@ Your contributions help make adapter development better for the entire ioBroker 
 
 ### 🛠️ For Developers
 - **[Setup Guide](docs/setup.md)** - Complete GitHub Copilot setup and template integration
+- **[Automated Updates Guide](docs/automated-updates.md)** - Automated template updates with GitHub Copilot
 - **[Testing Guide](docs/testing.md)** - Validate your template integration and Copilot functionality
 
 ### 🔧 For Repository Maintainers  
@@ -61,15 +64,45 @@ Check if your template is up-to-date:
 curl -s https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/scripts/check-template-version.sh | bash
 ```
 
-### Updating Your Template
+### Automated Template Updates
 
-To update to the latest version:
+🤖 **Use GitHub Copilot to automatically update your template** - This is now the recommended approach that preserves all your custom sections:
 
-1. **Check for updates** in this repository
-2. **Compare versions** between your local copy and the latest release
-3. **Download the new template** and replace your local version
-4. **Review changes** to understand what improvements were made
-5. **Test** to ensure compatibility with your project
+#### Quick Update (Copy-Paste Method)
+1. **Create an issue in your repository** with title: "🤖 Update ioBroker Copilot Instructions Template"
+2. **Copy-paste this content**:
+   ```markdown
+   **GitHub Copilot**: Please help me update my ioBroker Copilot instructions template to the latest version while preserving all custom sections.
+
+   ## Task
+   Update `.github/copilot-instructions.md` using this prompt:
+   
+   "Merge the ioBroker template from https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/blob/main/template.md with my existing .github/copilot-instructions.md. 
+   
+   REQUIREMENTS:
+   1. Preserve ALL [CUSTOMIZE] sections exactly as they are
+   2. Keep all project-specific context and custom instructions
+   3. Add latest ioBroker best practices from the new template
+   4. Update version to match latest template version
+   5. Maintain Template Source reference
+   
+   Show me the changes before applying them."
+   
+   ## Validation
+   After update, confirm:
+   - [ ] All [CUSTOMIZE] sections preserved
+   - [ ] Version updated to latest
+   - [ ] Custom content intact
+   - [ ] Template structure complete
+   ```
+3. **Let GitHub Copilot handle the merge** automatically while preserving your customizations
+4. **Review and apply** the proposed changes
+
+📚 **For detailed automation instructions**: See [Automated Updates Guide](docs/automated-updates.md)
+
+#### Alternative Templates
+- **Full automation**: Use [`templates/automated-template-update.md`](templates/automated-template-update.md) for comprehensive workflow
+- **Quick copy-paste**: Use [`templates/copy-paste-template.md`](templates/copy-paste-template.md) for simple updates
 
 ### Version Information
 
