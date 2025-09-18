@@ -8,6 +8,8 @@ assignees: []
 
 # Automated ioBroker Copilot Template Update Request
 
+**Prerequisites**: This assumes GitHub Copilot is already active in your repository. If not, first create an issue with title "🤖 Setup GitHub Copilot" and content "GitHub Copilot: Please help me set up GitHub Copilot for this repository."
+
 **GitHub Copilot**: Please help me validate and update my ioBroker adapter's Copilot instructions template while preserving all custom sections.
 
 ## 🔍 Current State Analysis
@@ -25,7 +27,7 @@ assignees: []
 ### Primary Tasks
 - [ ] **Merge latest template** from https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/blob/main/template.md
 - [ ] **Preserve ALL custom sections** marked with `[CUSTOMIZE]` tags 
-- [ ] **Maintain project-specific context** and existing customizations
+- [ ] **Maintain project-specific context** not covered by standard template
 - [ ] **Update version tracking** to the latest template version
 - [ ] **Validate template structure** ensures all required sections are present
 
@@ -37,7 +39,7 @@ Use this exact prompt for the merge operation:
 
 CRITICAL REQUIREMENTS:
 1. Preserve ALL [CUSTOMIZE] sections and their content exactly as they are
-2. Maintain any project-specific context and custom instructions
+2. Maintain any project-specific context not already covered in the template
 3. Add the latest ioBroker best practices from the new template
 4. Update the version number to match the latest template version
 5. Keep the Template Source reference up-to-date
@@ -70,8 +72,8 @@ Show me what changes will be made before applying them."
 
 **⚠️ IMPORTANT**: This update must preserve:
 - All `[CUSTOMIZE]` sections and their exact content
-- Project-specific adapter context and instructions
-- Any custom configuration or setup instructions
+- Project-specific adapter context not already in the standard template
+- Any custom configuration or setup instructions unique to your adapter
 - Existing version tracking information structure
 
 **✅ SUCCESS CRITERIA**: 

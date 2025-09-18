@@ -40,7 +40,8 @@ This guide walks you through setting up GitHub Copilot for ioBroker adapter deve
    If you don't have a copilot-instructions.md file yet:
    
    **Option A: Use automated setup** (Recommended)
-   - Create an issue using the [copy-paste template](../templates/copy-paste-template.md)
+   - **First ensure GitHub Copilot is active**: Create an issue with title "🤖 Setup GitHub Copilot" and content "GitHub Copilot: Please help me set up GitHub Copilot for this repository."
+   - After Copilot responds and is working, create another issue using the [copy-paste template](../templates/copy-paste-template.md)
    - GitHub Copilot will create the complete template for you
    
    **Option B: Manual template download**
@@ -57,10 +58,10 @@ This guide walks you through setting up GitHub Copilot for ioBroker adapter deve
    
    ### My Adapter Specific Patterns
    - Custom authentication flow for [YourService] API
-   - Specific error handling for [YourDevice] 
-   - Project-specific logging patterns
+   - Adapter-specific device discovery patterns
+   - Unique error codes specific to your service
    
-   **Note:** This section is preserved during template updates
+   **Note:** This section is preserved during template updates and should contain only content not already covered in the standard template
    ```
 
 4. **For existing configurations**

@@ -4,6 +4,8 @@ This guide provides fully automated methods to validate and update your ioBroker
 
 ## 🚀 Quick Start (Copy-Paste Method)
 
+**Prerequisites**: Ensure GitHub Copilot is active in your repository first. If you haven't set up GitHub Copilot yet, create an issue in your repository with the title "🤖 Setup GitHub Copilot" and content "GitHub Copilot: Please help me set up GitHub Copilot for this repository and create initial .github/copilot-instructions.md file."
+
 The fastest way to update your template:
 
 ### Step 1: Create an Issue in Your Repository
@@ -86,21 +88,21 @@ Your custom sections are automatically preserved when using the automation promp
 
 ### Automatically Preserved Content
 - All sections marked with `[CUSTOMIZE]`
-- Project-specific adapter context
-- Custom error handling patterns
-- Unique API integration instructions
-- Adapter-specific testing requirements
+- Project-specific adapter context not covered by template
+- Custom service integrations and authentication patterns
+- Unique error handling specific to your adapter's requirements
+- Adapter-specific testing scenarios beyond standard patterns
 
 ### Example Custom Section
 ```markdown
 ## [CUSTOMIZE] Project-Specific Instructions
 
 ### My Adapter Specific Patterns
-- Custom authentication flow for MyService API
-- Specific error codes handling for device XYZ
-- Project-specific logging patterns
+- Custom authentication flow for [YourService] API
+- Adapter-specific device discovery patterns
+- Unique error codes and recovery procedures specific to your service
 
-**Note:** This section is preserved during template updates
+**Note:** This section is preserved during template updates and should contain only content not already covered in the standard template
 ```
 
 ## ✅ Validation Steps

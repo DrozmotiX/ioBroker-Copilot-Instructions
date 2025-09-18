@@ -9,6 +9,8 @@ Copy and paste this content when creating a new issue in your ioBroker adapter r
 ## Issue Content:
 
 ```markdown
+**Prerequisites**: Ensure GitHub Copilot is active in your repository. If not set up yet, create an issue first: "🤖 Setup GitHub Copilot" with content "GitHub Copilot: Please help me set up GitHub Copilot for this repository."
+
 **GitHub Copilot**: Please help me update my ioBroker Copilot instructions template to the latest version while preserving all custom sections.
 
 ## Task
@@ -19,7 +21,7 @@ Update `.github/copilot-instructions.md` using this prompt:
 
 REQUIREMENTS:
 1. Preserve ALL [CUSTOMIZE] sections exactly as they are
-2. Keep all project-specific context and custom instructions
+2. Keep all project-specific context not already covered in the standard template
 3. Add latest ioBroker best practices from the new template
 4. Update version to match latest template version
 5. Maintain Template Source reference
