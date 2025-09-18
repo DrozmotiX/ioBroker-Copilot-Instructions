@@ -2,8 +2,35 @@
 
 This guide is specifically for maintainers of the ioBroker Copilot Instructions repository. It covers version management, testing infrastructure, and repository maintenance procedures.
 
+## 💬 Community Support & AI-Powered Development
+
+**Join the AI Revolution in ioBroker Development!**
+
+Using GitHub Copilot with ioBroker adapter development isn't just about writing code faster – it's about transforming how we build and maintain adapters. Our community is actively exploring and sharing the benefits:
+
+### 🚀 Why AI-Assisted Development is Game-Changing:
+- **Accelerated Development**: Write adapter code 3-5x faster with intelligent suggestions
+- **Best Practice Enforcement**: Copilot learns from our template patterns and suggests ioBroker-compliant code
+- **Reduced Learning Curve**: New developers can immediately write quality adapter code
+- **Consistent Code Quality**: AI helps maintain uniform patterns across the entire ecosystem
+- **Error Prevention**: Smart suggestions help avoid common pitfalls and bugs
+
+### 🎯 Easy Setup, Immediate Benefits:
+Setting up GitHub Copilot for ioBroker development takes just minutes, but the productivity gains last forever. The template handles all the complexity – just integrate it once and let AI supercharge your adapter development.
+
+### 🤝 Join Our Growing Community:
+- **[ioBroker Community Forum - AI meets ioBroker](https://forum.iobroker.net/topic/82238/ki-trifft-iobroker-ein-gemeinsames-abenteuer/4)** - Share experiences, success stories, and collaborate on improving AI-assisted adapter development
+- Exchange tips, tricks, and real-world examples
+- Get help with setup and advanced configurations
+- Contribute to making AI development even better for everyone
+
+**Ready to experience the future of ioBroker development?** The setup is simple, the benefits are immediate, and the community is here to support you!
+
+---
+
 ## 📋 Table of Contents
 
+- [Community Support & AI-Powered Development](#-community-support--ai-powered-development)
 - [Version Management](#version-management)
 - [Automated Testing Infrastructure](#automated-testing-infrastructure)
 - [Development Guidelines](#development-guidelines)
@@ -223,8 +250,3 @@ chmod +x scripts/*.sh tests/*.sh
 ---
 
 **For general usage information**, return to the [main README](../README.md) or consult the [setup guide](setup.md) for template integration instructions.
-
-## 💬 Community Support
-
-Join our community discussion about AI-powered ioBroker development:
-- **[ioBroker Community Forum - AI meets ioBroker](https://forum.iobroker.net/topic/82238/ki-trifft-iobroker-ein-gemeinsames-abenteuer/4)** - Share experiences, ask questions, and collaborate on improving AI-assisted adapter development
