@@ -22,10 +22,10 @@ This repository provides comprehensive guidance and best practices for leveragin
 
 **For experienced Copilot users:**
 
-1. **Download the template**: Get the latest [`template.md`](template.md)
-2. **Integrate**: Save as `.github/copilot-instructions.md` in your adapter repository  
-3. **Customize**: Modify sections marked with `[CUSTOMIZE]`
-4. **Verify**: Test that Copilot provides ioBroker-specific suggestions
+1. **Use Copilot for Smart Integration**: Instead of simply copying the template, use GitHub Copilot to intelligently merge it with your existing setup
+2. **Prompt Copilot**: "Merge the ioBroker template from https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/blob/main/template.md with my existing .github/copilot-instructions.md, maintaining project-specific context and adding version tracking"
+3. **Customize**: Review and modify sections marked with `[CUSTOMIZE]` for your specific adapter
+4. **Verify**: Test that Copilot provides enhanced ioBroker-specific suggestions
 
 **Current Version:** v0.4.0 | **Template:** [`template.md`](template.md) | **Last Updated:** September 2025
 

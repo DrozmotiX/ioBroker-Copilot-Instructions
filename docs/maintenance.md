@@ -223,3 +223,8 @@ chmod +x scripts/*.sh tests/*.sh
 ---
 
 **For general usage information**, return to the [main README](../README.md) or consult the [setup guide](setup.md) for template integration instructions.
+
+## 💬 Community Support
+
+Join our community discussion about AI-powered ioBroker development:
+- **[ioBroker Community Forum - AI meets ioBroker](https://forum.iobroker.net/topic/82238/ki-trifft-iobroker-ein-gemeinsames-abenteuer/4)** - Share experiences, ask questions, and collaborate on improving AI-assisted adapter development
