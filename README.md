@@ -82,6 +82,17 @@ To update to the latest version:
 
 ### Automated Validation
 
+#### Quick Version Check Script
+
+You can use the provided script to check your template version:
+
+```bash
+# Download and run the version check script
+curl -s https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/scripts/check-template-version.sh | bash
+```
+
+#### GitHub Action for Continuous Monitoring
+
 You can set up a GitHub Action to periodically check if your template is up-to-date:
 
 ```yaml
