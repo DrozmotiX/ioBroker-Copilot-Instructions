@@ -150,7 +150,7 @@ cd your-iobroker-adapter
 # Use the following prompt in your editor:
 # "Merge my existing .github/copilot-instructions.md with the ioBroker template 
 # from https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/blob/main/template.md
-# Keep project-specific content and add version: 0.3.1"
+# Keep project-specific content and add version: 0.4.0"
 # NOTE: Exclude the HTML comment block at the top of the template"
 ```
 
@@ -205,7 +205,7 @@ After completing the integration, verify everything is working correctly:
 To ensure you're using the latest best practices and that your local copy stays synchronized with improvements:
 
 ### Current Version
-- **Latest Version:** v0.3.1
+- **Latest Version:** v0.4.0
 - **Template Location:** [`template.md`](template.md)
 - **Last Updated:** September 2025
 
@@ -214,7 +214,7 @@ To ensure you're using the latest best practices and that your local copy stays 
 You can validate your local template version by checking the version header in your `.github/copilot-instructions.md` file:
 
 ```markdown
-**Version:** 0.3.1
+**Version:** 0.4.0
 **Template Source:** https://github.com/DrozmotiX/ioBroker-Copilot-Instructions
 ```
 
@@ -262,6 +262,34 @@ These scripts ensure that:
 - Documentation dates stay current
 - All cross-references remain consistent
 - Manual version updates are no longer needed
+
+### Automated Testing Infrastructure
+
+This repository includes a comprehensive automated testing framework that ensures all scripts and automations work correctly:
+
+```bash
+# Run all tests (54 total tests)
+./tests/test-runner.sh
+
+# Run specific test file
+./tests/test-runner.sh tests/test-extract-version.sh
+
+# Tests are automatically run in CI/CD via GitHub Actions
+```
+
+**Test Coverage:**
+- **Unit Tests**: Individual script functions and parameter validation
+- **Integration Tests**: Cross-script workflows and end-to-end scenarios  
+- **Error Handling Tests**: Missing files, invalid parameters, network failures
+- **Consistency Tests**: Version synchronization and file state validation
+
+**Key Features:**
+- **Isolated Test Environments**: Each test run uses temporary directories to prevent interference
+- **Comprehensive Reporting**: Color-coded output with detailed error messages and debugging information
+- **CI/CD Integration**: Automated testing on all repository changes via `.github/workflows/test-scripts.yml`
+- **Developer Friendly**: Simple commands with clear documentation in `TESTING.md`
+
+All repository scripts are thoroughly tested to prevent regressions and ensure reliability for the ioBroker community.
 
 #### GitHub Action for Continuous Monitoring
 
@@ -347,8 +375,17 @@ We welcome contributions to improve these instructions! Please:
 1. Fork this repository
 2. Create a feature branch
 3. Make your improvements
-4. Test with real ioBroker adapter development
-5. Submit a pull request with a clear description of changes
+4. **Run the test suite**: `./tests/test-runner.sh` to ensure all tests pass
+5. **Update documentation**: Add changelog entries and update README if needed
+6. Test with real ioBroker adapter development
+7. Submit a pull request with a clear description of changes
+
+### Development Guidelines
+
+- All new scripts must have corresponding tests in the `tests/` directory
+- Changes to existing scripts require updating relevant test cases
+- Follow the testing patterns documented in `TESTING.md`
+- Ensure all 54 tests pass before submitting PRs
 
 ## 🙏 Acknowledgments
 

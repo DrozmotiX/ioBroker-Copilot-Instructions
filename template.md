@@ -33,7 +33,7 @@ sed -i '/^<!--$/,/^-->$/d' .github/copilot-instructions.md
 
 # ioBroker Adapter Development with GitHub Copilot
 
-**Version:** 0.3.1
+**Version:** 0.4.0
 **Template Source:** https://github.com/DrozmotiX/ioBroker-Copilot-Instructions
 
 This file contains instructions and best practices for GitHub Copilot when working on ioBroker adapter development.

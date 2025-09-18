@@ -2,7 +2,7 @@
 
 **Repository Purpose:** This repository maintains the template and best practices for GitHub Copilot instructions used in ioBroker adapter development.
 
-**Version:** 0.3.1
+**Version:** 0.4.0
 
 This file contains instructions specific to maintaining and improving this template repository, not for ioBroker adapter development (that's in `template.md`).
 
@@ -20,10 +20,14 @@ You are working on the ioBroker Copilot Instructions template repository. This r
 - `template.md` - The main template file that developers copy to their repositories as `.github/copilot-instructions.md`
 - `README.md` - Repository documentation explaining how to use the template  
 - `CHANGELOG.md` - Version history and detailed change documentation
+- `TESTING.md` - Automated testing infrastructure documentation
 - `scripts/check-template-version.sh` - Version checking utility for users
 - `scripts/manage-versions.sh` - Master version management script (show/check/sync/update commands)
 - `scripts/extract-version.sh` - Dynamic version extraction from template and current dates
 - `scripts/update-versions.sh` - Automated documentation synchronization script
+- `tests/test-runner.sh` - Main test execution framework for all scripts
+- `tests/test-*.sh` - Comprehensive test suites for each script and integration scenarios
+- `.github/workflows/test-scripts.yml` - GitHub Actions workflow for continuous testing
 - `.github/copilot-instructions.md` - THIS file - repository-specific instructions
 
 ## Template Development Guidelines
@@ -54,6 +58,42 @@ You are working on the ioBroker Copilot Instructions template repository. This r
 - Validate all code examples for syntax and functionality
 - Ensure version management scripts work correctly (`manage-versions.sh`, `extract-version.sh`, `update-versions.sh`)
 - Verify download URLs and curl commands in documentation
+- **Run automated test suite before any changes**: `./tests/test-runner.sh`
+- **All scripts must have corresponding tests** in the `tests/` directory
+- **New functionality requires new test cases** to prevent regressions
+
+### Automated Testing Requirements
+When adding new scripts or modifying existing ones, you **MUST**:
+
+1. **Create/Update Tests**: Add comprehensive test cases in the appropriate `test-<script-name>.sh` file
+2. **Test All Functions**: Cover success scenarios, error conditions, and edge cases
+3. **Validate Dependencies**: Ensure tests check for required files and dependencies
+4. **Test Integration**: Add integration tests if scripts interact with other components
+5. **Run Full Suite**: Execute `./tests/test-runner.sh` to verify all tests pass
+6. **Update Documentation**: Modify `TESTING.md` if adding new testing patterns
+
+#### Test Categories Required:
+- **Unit Tests**: Individual function and command-line option testing
+- **Integration Tests**: Script interaction and workflow testing  
+- **Error Handling Tests**: Missing files, invalid parameters, network failures
+- **Consistency Tests**: Version synchronization and file state validation
+
+#### Test Framework Usage:
+```bash
+# Run all tests
+./tests/test-runner.sh
+
+# Run specific test file  
+./tests/test-runner.sh tests/test-extract-version.sh
+
+# Add new test to existing file
+run_test_with_output \
+    "Test description" \
+    "command to test" \
+    "expected output pattern"
+```
+
+GitHub Copilot will automatically validate if new test cases should be created or existing ones removed when new functionality is added.
 
 ## Contributing to the Template
 
@@ -93,13 +133,16 @@ You are working on the ioBroker Copilot Instructions template repository. This r
 - Close duplicate or outdated issues promptly
 
 ### Pull Request Guidelines  
-- **ALWAYS update CHANGELOG.md** - Every PR that introduces new functionality, fixes issues, or makes changes must include a detailed changelog entry with issue references (e.g., "Fixes #11")
-- PRs must update version numbers appropriately
-- Include detailed CHANGELOG.md entries for user-facing changes
+- **ALWAYS update CHANGELOG.md** - Every PR that introduces new functionality, fixes issues, or makes changes must include a detailed changelog entry with issue references (e.g., "Fixes #16")
+- **ALWAYS update README.md** - When adding new functionality, infrastructure, or changing how users interact with the repository, update the relevant sections of README.md
+- PRs must update version numbers appropriately using the dynamic version management system
+- Include detailed CHANGELOG.md entries for user-facing changes with specific details about what was added/changed/fixed
 - Test changes against multiple ioBroker adapter projects when possible
-- Update README.md if usage instructions change
+- Update README.md if usage instructions, new features, or repository structure changes
 - Verify dynamic version management system continues to work (`./scripts/manage-versions.sh check`)
+- **Run the complete test suite** (`./tests/test-runner.sh`) to ensure all tests pass
 - Reference the specific issue number in both commit messages and changelog entries
+- **Document new testing requirements** in TESTING.md when adding new scripts or functionality
 
 ### Release Process
 - Use dynamic version management: `./scripts/manage-versions.sh update X.Y.Z`
