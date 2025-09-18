@@ -63,7 +63,7 @@ tests.integration(path.join(__dirname, '..'), {
                 harness.objects.getObject('system.adapter.brightsky.0', async (err, obj) => {
                     if (err) {
                         console.error('Error getting adapter object:', err);
-                        resolve();
+                        reject();
                         return;
                     }
 
@@ -86,8 +86,10 @@ tests.integration(path.join(__dirname, '..'), {
                         harness.states.getState('brightsky.0.info.connection', (err, state) => {
                             if (state && state.val === true) {
                                 console.log('✅ Adapter started successfully');
+                                resolve();
+                                return;
                             }
-                            resolve();
+                            reject(); // Fail the test if connection state is not true, but remember async operations may take time
                         });
                     }, 15000); // Allow time for API calls
                 });
@@ -148,7 +150,7 @@ it('should fail when required configuration is missing', () => new Promise(async
     harness.objects.getObject('system.adapter.brightsky.0', async (err, obj) => {
         if (err) {
             console.error('Error getting adapter object:', err);
-            resolve();
+            reject();
             return;
         }
 
