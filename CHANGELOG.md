@@ -5,6 +5,24 @@ All notable changes to the ioBroker Copilot Instructions template will be docume
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2025-01-XX
+
+### Changed
+- **Separated Repository Instructions** - `.github/copilot-instructions.md` now contains repository-specific instructions for maintaining the template repository
+- **Clarified Template Usage** - `template.md` remains the clean template for ioBroker adapter developers to copy
+- **Updated Documentation** - README.md now correctly references `template.md` for adapter developers
+- **Improved Repository Focus** - Repository-specific copilot instructions focus on template maintenance, quality assurance, and community contribution guidelines
+
+### Enhanced
+- Version checking script continues to work with new structure
+- Clear separation between template maintenance (this repository) and adapter development (template usage)
+- Better documentation workflow for template contributors vs adapter developers
+
+### Documentation
+- README.md updated to reference correct template file (`template.md` instead of `.github/copilot-instructions.md`)
+- Download URLs updated throughout documentation
+- Version checking script updated to reference correct remote template
+
 ## [0.3.0] - 2025-01-XX
 
 ### Added

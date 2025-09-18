@@ -26,9 +26,9 @@ This repository provides comprehensive guidance and best practices for leveragin
    - Add the template version reference to track updates
 
 2. **New Repository Setup**
-   - Download the latest version of [`.github/copilot-instructions.md`](.github/copilot-instructions.md)
-   - Place it in your adapter repository's `.github/` folder
-   - Customize with your specific adapter requirements
+   - Download the latest version of [`template.md`](template.md)
+   - Save it as `.github/copilot-instructions.md` in your adapter repository's `.github/` folder
+   - Customize sections marked with `[CUSTOMIZE]` for your specific adapter requirements
 
 3. **Enable GitHub Copilot**
    - Ensure GitHub Copilot is enabled for your repository
@@ -44,8 +44,8 @@ cd your-iobroker-adapter
 # Ask GitHub Copilot to merge the instructions
 # Use the following prompt in your editor:
 # "Merge my existing .github/copilot-instructions.md with the ioBroker template 
-# from https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/blob/main/.github/copilot-instructions.md
-# Keep project-specific content and add version: 0.1.0"
+# from https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/blob/main/template.md
+# Keep project-specific content and add version: 0.3.0"
 ```
 
 **For new repositories:**
@@ -57,7 +57,7 @@ cd your-iobroker-adapter
 mkdir -p .github
 
 # Download the latest template
-curl -o .github/copilot-instructions.md https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/.github/copilot-instructions.md
+curl -o .github/copilot-instructions.md https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/template.md
 
 # Commit the changes
 git add .github/copilot-instructions.md
@@ -71,7 +71,7 @@ To ensure you're using the latest best practices and that your local copy stays 
 
 ### Current Version
 - **Latest Version:** v0.3.0
-- **Template Location:** [`.github/copilot-instructions.md`](.github/copilot-instructions.md)
+- **Template Location:** [`template.md`](template.md)
 - **Last Updated:** January 2025
 
 ### Version Checking
@@ -124,7 +124,7 @@ jobs:
       - name: Check template version
         run: |
           CURRENT_VERSION=$(grep "Version:" .github/copilot-instructions.md | head -1 | sed 's/.*Version:\s*//')
-          LATEST_VERSION=$(curl -s https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/.github/copilot-instructions.md | grep "Version:" | head -1 | sed 's/.*Version:\s*//')
+          LATEST_VERSION=$(curl -s https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/template.md | grep "Version:" | head -1 | sed 's/.*Version:\s*//')
           if [ "$CURRENT_VERSION" != "$LATEST_VERSION" ]; then
             echo "Template is outdated. Current: $CURRENT_VERSION, Latest: $LATEST_VERSION"
             exit 1
