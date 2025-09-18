@@ -6,11 +6,21 @@
 
 This repository provides comprehensive guidance and best practices for leveraging GitHub Copilot in ioBroker adapter development. By using these standardized instructions, developers can:
 
-- **Accelerate development** with AI-powered code suggestions tailored for ioBroker
-- **Maintain consistency** across different adapter projects
-- **Follow established patterns** and avoid common pitfalls
-- **Improve code quality** through proven best practices
+- **Accelerate development** with intelligent code suggestions tailored for ioBroker patterns
+- **Maintain consistency** across different adapter projects within the ioBroker ecosystem
+- **Follow established patterns** and avoid common pitfalls in adapter development
+- **Improve code quality** through proven ioBroker best practices
 - **Reduce learning curve** for new ioBroker adapter developers
+
+## 🤝 Join Our Community
+
+**Help us improve ioBroker adapter development together!**
+
+- **[ioBroker Community Forum](https://forum.iobroker.net/topic/82238/ki-trifft-iobroker-ein-gemeinsames-abenteuer/4)** - Share experiences and collaborate on improving adapter development
+- **[Submit Issues](https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/issues)** - Report bugs, suggest improvements, or request new features
+- **[GitHub Discussions](https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/discussions)** - Share ideas, ask questions, and collaborate on best practices
+
+Your contributions help make adapter development better for the entire ioBroker community!
 
 ## 🚀 What is ioBroker?
 
