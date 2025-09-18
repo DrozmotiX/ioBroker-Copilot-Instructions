@@ -70,7 +70,7 @@ git push
 To ensure you're using the latest best practices and that your local copy stays synchronized with improvements:
 
 ### Current Version
-- **Latest Version:** v0.2.0
+- **Latest Version:** v0.3.0
 - **Template Location:** [`.github/copilot-instructions.md`](.github/copilot-instructions.md)
 - **Last Updated:** January 2025
 
@@ -79,7 +79,7 @@ To ensure you're using the latest best practices and that your local copy stays 
 You can validate your local template version by checking the version header in your `.github/copilot-instructions.md` file:
 
 ```markdown
-**Version:** 0.2.0
+**Version:** 0.3.0
 **Template Source:** https://github.com/DrozmotiX/ioBroker-Copilot-Instructions
 ```
 
@@ -190,6 +190,12 @@ We welcome contributions to improve these instructions! Please:
 3. Make your improvements
 4. Test with real ioBroker adapter development
 5. Submit a pull request with a clear description of changes
+
+## 🙏 Acknowledgments
+
+- **@ticaki** - For providing comprehensive lessons learned and best practices for ioBroker integration testing framework
+- **ioBroker Community** - For continuous feedback and real-world testing scenarios
+- **GitHub Copilot Team** - For enabling AI-powered development assistance
 
 ## 📄 License
 

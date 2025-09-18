@@ -13,7 +13,7 @@ This is the template file that should be copied to your ioBroker adapter reposit
 
 # ioBroker Adapter Development with GitHub Copilot
 
-**Version:** 0.2.0
+**Version:** 0.3.0
 **Template Source:** https://github.com/DrozmotiX/ioBroker-Copilot-Instructions
 
 This file contains instructions and best practices for GitHub Copilot when working on ioBroker adapter development.
@@ -110,6 +110,87 @@ tests.integration(path.join(__dirname, '..'), {
         });
     }
 });
+```
+
+#### Testing Both Success AND Failure Scenarios
+
+**IMPORTANT**: For every "it works" test, implement corresponding "it doesn't work and fails" tests. This ensures proper error handling and validates that your adapter fails gracefully when expected.
+
+```javascript
+// Example: Testing successful configuration
+it('should configure and start adapter with valid configuration', () => new Promise(async (resolve) => {
+    // ... successful configuration test as shown above
+})).timeout(30000);
+
+// Example: Testing failure scenarios
+it('should fail gracefully with invalid configuration', () => new Promise(async (resolve) => {
+    harness.objects.getObject('system.adapter.brightsky.0', async (err, obj) => {
+        if (err) {
+            console.error('Error getting adapter object:', err);
+            resolve();
+            return;
+        }
+
+        // Configure with INVALID data to test failure handling
+        obj.native.position = 'invalid-coordinates'; // This should cause failure
+        obj.native.createCurrently = true;
+
+        harness.objects.setObject(obj._id, obj);
+
+        try {
+            await harness.startAdapterAndWait();
+            
+            setTimeout(() => {
+                // Verify adapter handled the error properly
+                harness.states.getState('brightsky.0.info.connection', (err, state) => {
+                    if (state && state.val === false) {
+                        console.log('✅ Adapter properly failed with invalid configuration');
+                    } else {
+                        console.log('❌ Adapter should have failed but connection shows true');
+                    }
+                    resolve();
+                });
+            }, 15000);
+        } catch (error) {
+            console.log('✅ Adapter correctly threw error with invalid configuration:', error.message);
+            resolve();
+        }
+    });
+})).timeout(30000);
+
+// Example: Testing missing required configuration
+it('should fail when required configuration is missing', () => new Promise(async (resolve) => {
+    harness.objects.getObject('system.adapter.brightsky.0', async (err, obj) => {
+        if (err) {
+            console.error('Error getting adapter object:', err);
+            resolve();
+            return;
+        }
+
+        // Remove required configuration to test failure
+        delete obj.native.position; // This should cause failure
+
+        harness.objects.setObject(obj._id, obj);
+
+        try {
+            await harness.startAdapterAndWait();
+            
+            setTimeout(() => {
+                harness.states.getState('brightsky.0.info.connection', (err, state) => {
+                    if (!state || state.val === false) {
+                        console.log('✅ Adapter properly failed with missing required configuration');
+                    } else {
+                        console.log('❌ Adapter should have failed but connection shows true');
+                    }
+                    resolve();
+                });
+            }, 10000);
+        } catch (error) {
+            console.log('✅ Adapter correctly threw error with missing configuration:', error.message);
+            resolve();
+        }
+    });
+})).timeout(30000);
 ```
 
 #### Key Integration Testing Rules
