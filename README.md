@@ -45,7 +45,7 @@ cd your-iobroker-adapter
 # Use the following prompt in your editor:
 # "Merge my existing .github/copilot-instructions.md with the ioBroker template 
 # from https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/blob/main/template.md
-# Keep project-specific content and add version: 0.3.1"
+# Keep project-specific content and add version: 0.4.0"
 # NOTE: Exclude the HTML comment block at the top of the template"
 ```
 
@@ -74,7 +74,7 @@ git push
 To ensure you're using the latest best practices and that your local copy stays synchronized with improvements:
 
 ### Current Version
-- **Latest Version:** v0.3.1
+- **Latest Version:** v0.4.0
 - **Template Location:** [`template.md`](template.md)
 - **Last Updated:** September 2025
 
@@ -83,7 +83,7 @@ To ensure you're using the latest best practices and that your local copy stays 
 You can validate your local template version by checking the version header in your `.github/copilot-instructions.md` file:
 
 ```markdown
-**Version:** 0.3.1
+**Version:** 0.4.0
 **Template Source:** https://github.com/DrozmotiX/ioBroker-Copilot-Instructions
 ```
 
