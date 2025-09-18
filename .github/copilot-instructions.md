@@ -21,15 +21,20 @@ You are working on the ioBroker Copilot Instructions template repository. This r
 - `README.md` - Repository documentation explaining how to use the template  
 - `CHANGELOG.md` - Version history and detailed change documentation
 - `scripts/check-template-version.sh` - Version checking utility for users
+- `scripts/manage-versions.sh` - Master version management script (show/check/sync/update commands)
+- `scripts/extract-version.sh` - Dynamic version extraction from template and current dates
+- `scripts/update-versions.sh` - Automated documentation synchronization script
 - `.github/copilot-instructions.md` - THIS file - repository-specific instructions
 
 ## Template Development Guidelines
 
 ### Version Management
-- Always update version numbers in both `template.md` and this file when making changes
+- Use the dynamic version management system (`scripts/manage-versions.sh`) for all version updates
+- Update versions with: `./scripts/manage-versions.sh update X.Y.Z` (automatically updates all files)
 - Document all changes in `CHANGELOG.md` with detailed descriptions
 - Use semantic versioning (MAJOR.MINOR.PATCH)
-- Update version references in README.md and scripts
+- Validate consistency with: `./scripts/manage-versions.sh check`
+- Sync documentation with: `./scripts/manage-versions.sh sync` when needed
 
 ### Template Content Standards  
 - Focus on practical, actionable guidance for ioBroker adapter developers
@@ -47,7 +52,7 @@ You are working on the ioBroker Copilot Instructions template repository. This r
 ### Testing and Validation
 - Test template instructions with real ioBroker adapter projects
 - Validate all code examples for syntax and functionality
-- Ensure version check script works correctly
+- Ensure version management scripts work correctly (`manage-versions.sh`, `extract-version.sh`, `update-versions.sh`)
 - Verify download URLs and curl commands in documentation
 
 ## Contributing to the Template
@@ -93,13 +98,13 @@ You are working on the ioBroker Copilot Instructions template repository. This r
 - Include detailed CHANGELOG.md entries for user-facing changes
 - Test changes against multiple ioBroker adapter projects when possible
 - Update README.md if usage instructions change
-- Verify version check script continues to work
+- Verify dynamic version management system continues to work (`./scripts/manage-versions.sh check`)
 - Reference the specific issue number in both commit messages and changelog entries
 
 ### Release Process
-- Increment version number in template.md and this file
+- Use dynamic version management: `./scripts/manage-versions.sh update X.Y.Z`
 - Update CHANGELOG.md with comprehensive change description
-- Update README.md version references
+- Verify all changes with: `./scripts/manage-versions.sh check`
 - Test download URLs and integration scripts
 - Announce significant changes to ioBroker community
 
@@ -109,14 +114,14 @@ You are working on the ioBroker Copilot Instructions template repository. This r
 - Ensure all URLs and links are functional
 - Verify code examples compile and run correctly  
 - Test integration instructions with fresh ioBroker adapter projects
-- Validate version check script against current and previous versions
+- Validate dynamic version management system against current and previous versions
 - Check that customization tags `[CUSTOMIZE]` are appropriately placed
 
 ### Documentation Consistency
 - Maintain consistent formatting and style across all files
 - Use the same terminology throughout (adapter vs. plugin, etc.)
 - Keep examples realistic and based on actual adapter development scenarios
-- Ensure version numbers are synchronized across all files
+- Version numbers are automatically synchronized across all files via dynamic version management scripts
 
 ### Breaking Changes
 - Document breaking changes clearly in CHANGELOG.md
