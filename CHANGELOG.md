@@ -5,13 +5,19 @@ All notable changes to the ioBroker Copilot Instructions template will be docume
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.3.1] - 2025-01-XX
+## [0.4.0] - 2025-09-XX - Automated Version handling & validation by GitHub actions
 
 ### Added
 - **Dynamic Version Management System** - Comprehensive scripts for automated version handling across all documentation
 - **Version Extraction Script** (`scripts/extract-version.sh`) - Dynamically extracts version from template and current dates
 - **Documentation Update Script** (`scripts/update-versions.sh`) - Automatically updates version references in README.md  
 - **Master Version Management** (`scripts/manage-versions.sh`) - Unified interface for version show/check/sync/update operations
+- **Comprehensive Automated Testing Infrastructure** - Complete test framework for all repository scripts with 54 tests (Fixes #16)
+  - **Test Runner** (`tests/test-runner.sh`) - Main test execution framework with isolated environments and detailed reporting
+  - **Script-Specific Test Suites** - Dedicated test files for each script covering unit, integration, and error scenarios
+  - **GitHub Actions Workflow** (`.github/workflows/test-scripts.yml`) - Automated CI/CD testing on push, PRs, and scheduled runs
+  - **Testing Documentation** (`TESTING.md`) - Comprehensive guide for test framework usage and maintenance
+  - **Test Coverage** - 9 tests for extract-version.sh, 13 for manage-versions.sh, 11 for update-versions.sh, 11 for check-template-version.sh, 10 integration tests
 
 ### Changed
 - **Separated Repository Instructions** - `.github/copilot-instructions.md` now contains repository-specific instructions for maintaining the template repository
@@ -29,6 +35,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Eliminated Static Version References** - All version numbers and dates are now dynamically generated from template source
 - **Cross-Documentation Consistency** - Automated validation ensures all files reference the same version
 - **Date Management** - Automatic current date insertion eliminates stale date references (e.g., "January 2025" → current month/year)
+- **Automated Testing Requirements** - Updated Copilot instructions with mandatory testing guidelines for new functionality
+- **Quality Assurance Through Testing** - Comprehensive test coverage prevents regressions and ensures script reliability
+- **CI/CD Integration** - Automated testing on all repository changes maintains code quality
 - Version checking script continues to work with new structure
 - Clear separation between template maintenance (this repository) and adapter development (template usage)
 - Better documentation workflow for template contributors vs adapter developers
