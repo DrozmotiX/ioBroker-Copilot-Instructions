@@ -1,0 +1,87 @@
+{
+    "common": {
+        "name": "basic-adapter",
+        "version": "1.0.0",
+        "news": {
+            "1.0.0": {
+                "en": "Initial release",
+                "de": "Erste Veröffentlichung"
+            }
+        },
+        "title": "Basic Adapter Template",
+        "titleLang": {
+            "en": "Basic Adapter Template",
+            "de": "Basis Adapter Vorlage"
+        },
+        "desc": {
+            "en": "Template for creating basic ioBroker adapters",
+            "de": "Vorlage für einfache ioBroker Adapter"
+        },
+        "authors": [
+            "Your Name <your.email@example.com>"
+        ],
+        "keywords": [
+            "template",
+            "example",
+            "basic"
+        ],
+        "license": "MIT",
+        "platform": "Javascript/Node.js",
+        "main": "main.js",
+        "icon": "basic-adapter.png",
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/your-org/iobroker.basic-adapter/main/admin/basic-adapter.png",
+        "readme": "https://github.com/your-org/iobroker.basic-adapter/blob/main/README.md",
+        "loglevel": "info",
+        "mode": "daemon",
+        "type": "general",
+        "compact": true,
+        "connectionType": "local",
+        "dataSource": "poll",
+        "tier": 3,
+        "adminUI": {
+            "config": "json"
+        },
+        "dependencies": [
+            {
+                "js-controller": ">=4.0.0"
+            }
+        ],
+        "globalDependencies": [
+            {
+                "admin": ">=5.0.0"
+            }
+        ]
+    },
+    "native": {
+        "host": "localhost",
+        "port": 80,
+        "updateInterval": 30000,
+        "username": "",
+        "password": ""
+    },
+    "objects": [],
+    "instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": "Information"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "role": "indicator.connected",
+                "name": "Connection Status",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        }
+    ]
+}

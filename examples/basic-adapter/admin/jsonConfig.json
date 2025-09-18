@@ -1,0 +1,55 @@
+{
+    "type": "tabs",
+    "items": {
+        "connection": {
+            "type": "panel",
+            "label": "Connection Settings",
+            "icon": "mdi:connection",
+            "items": {
+                "host": {
+                    "type": "text",
+                    "label": "Host",
+                    "required": true,
+                    "default": "localhost",
+                    "help": "IP address or hostname of the device"
+                },
+                "port": {
+                    "type": "number",
+                    "label": "Port",
+                    "required": true,
+                    "default": 80,
+                    "min": 1,
+                    "max": 65535,
+                    "help": "Port number for communication"
+                },
+                "updateInterval": {
+                    "type": "slider",
+                    "label": "Update Interval",
+                    "min": 5000,
+                    "max": 300000,
+                    "step": 5000,
+                    "unit": "ms",
+                    "default": 30000,
+                    "help": "How often to poll for data updates"
+                }
+            }
+        },
+        "authentication": {
+            "type": "panel",
+            "label": "Authentication",
+            "icon": "mdi:account-key",
+            "items": {
+                "username": {
+                    "type": "text",
+                    "label": "Username",
+                    "placeholder": "Enter username"
+                },
+                "password": {
+                    "type": "password",
+                    "label": "Password",
+                    "placeholder": "Enter password"
+                }
+            }
+        }
+    }
+}
