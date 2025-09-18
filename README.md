@@ -25,6 +25,12 @@ This repository provides a comprehensive set of GitHub Copilot instructions spec
 - **[Troubleshooting](docs/troubleshooting.md)** - Common issues and solutions
 - **[Examples](examples/)** - Code examples and templates
 
+## Versioning
+
+All templates and examples follow semantic versioning (semver) principles. See **[VERSIONS.md](VERSIONS.md)** for complete version tracking and changelog information.
+
+**Current Version**: 0.1.0 (Initial Release)
+
 ## References
 
 - **ioBroker Project**: https://www.iobroker.net/

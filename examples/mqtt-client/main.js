@@ -1,9 +1,13 @@
 /**
  * MQTT Client ioBroker Adapter Example
+ * Version: 0.1.0
  * 
  * This example demonstrates how to create an ioBroker adapter that
  * communicates with MQTT brokers, handling subscriptions, publishing,
  * and proper connection management.
+ * 
+ * @version 0.1.0
+ * @since 0.1.0
  */
 
 'use strict';

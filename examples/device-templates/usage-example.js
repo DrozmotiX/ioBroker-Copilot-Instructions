@@ -1,9 +1,13 @@
 /**
  * Example usage of Device Templates
+ * Version: 0.1.0
  * 
  * This file demonstrates how to use the device template classes
  * in your ioBroker adapter to create properly structured devices
  * that are compatible with the type detector.
+ * 
+ * @version 0.1.0
+ * @since 0.1.0
  */
 
 'use strict';

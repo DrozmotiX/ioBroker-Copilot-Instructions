@@ -34,6 +34,10 @@ When adding new examples:
 4. Ensure code follows ioBroker standards
 5. Update this index file
 
+## Versioning
+
+All examples and templates are versioned following semantic versioning (semver) principles. Check individual file headers for version information or see the main [VERSIONS.md](../VERSIONS.md) file for complete version tracking.
+
 ## Getting Started
 
 1. Copy the relevant example to your project

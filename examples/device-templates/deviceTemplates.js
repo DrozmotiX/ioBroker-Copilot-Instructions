@@ -1,9 +1,13 @@
 /**
  * Device Templates for ioBroker Adapters
+ * Version: 0.1.0
  * 
  * This file contains template classes for common device types that are
  * compatible with the ioBroker type detector. Use these as base classes
  * or examples for creating device objects in your adapter.
+ * 
+ * @version 0.1.0
+ * @since 0.1.0
  */
 
 'use strict';

@@ -1,9 +1,13 @@
 /**
  * Basic ioBroker Adapter Template
+ * Version: 0.1.0
  * 
  * This example demonstrates the fundamental structure and patterns
  * for creating an ioBroker adapter with proper error handling,
  * state management, and lifecycle management.
+ * 
+ * @version 0.1.0
+ * @since 0.1.0
  */
 
 'use strict';

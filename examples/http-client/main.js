@@ -1,9 +1,13 @@
 /**
  * HTTP Client ioBroker Adapter Example
+ * Version: 0.1.0
  * 
  * This example demonstrates how to create an ioBroker adapter that
  * communicates with HTTP/REST APIs with proper error handling,
  * authentication, and data processing.
+ * 
+ * @version 0.1.0
+ * @since 0.1.0
  */
 
 'use strict';

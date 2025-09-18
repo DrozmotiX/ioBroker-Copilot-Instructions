@@ -1,4 +1,10 @@
 {
+    "_version": "0.1.0",
+    "_templateInfo": {
+        "name": "Basic Adapter JSON Config",
+        "version": "0.1.0",
+        "description": "JSON configuration template for basic ioBroker adapter admin interface"
+    },
     "type": "tabs",
     "items": {
         "connection": {

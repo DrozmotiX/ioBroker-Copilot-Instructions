@@ -1,11 +1,11 @@
 {
     "common": {
         "name": "basic-adapter",
-        "version": "1.0.0",
+        "version": "0.1.0",
         "news": {
-            "1.0.0": {
-                "en": "Initial release",
-                "de": "Erste Veröffentlichung"
+            "0.1.0": {
+                "en": "Initial template release",
+                "de": "Erste Template-Veröffentlichung"
             }
         },
         "title": "Basic Adapter Template",

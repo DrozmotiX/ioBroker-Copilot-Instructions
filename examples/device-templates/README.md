@@ -1,5 +1,7 @@
 # Device Templates
 
+**Version: 0.1.0**
+
 This directory contains ready-to-use device template classes for common ioBroker device types. These templates are designed to be compatible with the ioBroker type detector and follow best practices for object structure and naming conventions.
 
 ## Available Templates

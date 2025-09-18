@@ -1,3 +1,11 @@
+/**
+ * Basic Adapter Test Suite
+ * Version: 0.1.0
+ * 
+ * @version 0.1.0
+ * @since 0.1.0
+ */
+
 const { expect } = require('chai');
 const sinon = require('sinon');
 
