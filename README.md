@@ -132,6 +132,34 @@ These scripts ensure that:
 - All cross-references remain consistent
 - Manual version updates are no longer needed
 
+### Automated Testing Infrastructure
+
+This repository includes a comprehensive automated testing framework that ensures all scripts and automations work correctly:
+
+```bash
+# Run all tests (54 total tests)
+./tests/test-runner.sh
+
+# Run specific test file
+./tests/test-runner.sh tests/test-extract-version.sh
+
+# Tests are automatically run in CI/CD via GitHub Actions
+```
+
+**Test Coverage:**
+- **Unit Tests**: Individual script functions and parameter validation
+- **Integration Tests**: Cross-script workflows and end-to-end scenarios  
+- **Error Handling Tests**: Missing files, invalid parameters, network failures
+- **Consistency Tests**: Version synchronization and file state validation
+
+**Key Features:**
+- **Isolated Test Environments**: Each test run uses temporary directories to prevent interference
+- **Comprehensive Reporting**: Color-coded output with detailed error messages and debugging information
+- **CI/CD Integration**: Automated testing on all repository changes via `.github/workflows/test-scripts.yml`
+- **Developer Friendly**: Simple commands with clear documentation in `TESTING.md`
+
+All repository scripts are thoroughly tested to prevent regressions and ensure reliability for the ioBroker community.
+
 #### GitHub Action for Continuous Monitoring
 
 You can set up a GitHub Action to periodically check if your template is up-to-date:
@@ -216,8 +244,17 @@ We welcome contributions to improve these instructions! Please:
 1. Fork this repository
 2. Create a feature branch
 3. Make your improvements
-4. Test with real ioBroker adapter development
-5. Submit a pull request with a clear description of changes
+4. **Run the test suite**: `./tests/test-runner.sh` to ensure all tests pass
+5. **Update documentation**: Add changelog entries and update README if needed
+6. Test with real ioBroker adapter development
+7. Submit a pull request with a clear description of changes
+
+### Development Guidelines
+
+- All new scripts must have corresponding tests in the `tests/` directory
+- Changes to existing scripts require updating relevant test cases
+- Follow the testing patterns documented in `TESTING.md`
+- Ensure all 54 tests pass before submitting PRs
 
 ## 🙏 Acknowledgments
 

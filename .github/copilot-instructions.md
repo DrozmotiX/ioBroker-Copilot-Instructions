@@ -133,13 +133,16 @@ GitHub Copilot will automatically validate if new test cases should be created o
 - Close duplicate or outdated issues promptly
 
 ### Pull Request Guidelines  
-- **ALWAYS update CHANGELOG.md** - Every PR that introduces new functionality, fixes issues, or makes changes must include a detailed changelog entry with issue references (e.g., "Fixes #11")
-- PRs must update version numbers appropriately
-- Include detailed CHANGELOG.md entries for user-facing changes
+- **ALWAYS update CHANGELOG.md** - Every PR that introduces new functionality, fixes issues, or makes changes must include a detailed changelog entry with issue references (e.g., "Fixes #16")
+- **ALWAYS update README.md** - When adding new functionality, infrastructure, or changing how users interact with the repository, update the relevant sections of README.md
+- PRs must update version numbers appropriately using the dynamic version management system
+- Include detailed CHANGELOG.md entries for user-facing changes with specific details about what was added/changed/fixed
 - Test changes against multiple ioBroker adapter projects when possible
-- Update README.md if usage instructions change
+- Update README.md if usage instructions, new features, or repository structure changes
 - Verify dynamic version management system continues to work (`./scripts/manage-versions.sh check`)
+- **Run the complete test suite** (`./tests/test-runner.sh`) to ensure all tests pass
 - Reference the specific issue number in both commit messages and changelog entries
+- **Document new testing requirements** in TESTING.md when adding new scripts or functionality
 
 ### Release Process
 - Use dynamic version management: `./scripts/manage-versions.sh update X.Y.Z`
