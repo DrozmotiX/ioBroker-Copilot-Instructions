@@ -17,8 +17,9 @@ echo "🔍 Checking ioBroker Copilot template version..."
 # Check if local template exists
 if [[ ! -f "$LOCAL_TEMPLATE" ]]; then
     echo "❌ Local template not found at $LOCAL_TEMPLATE"
-    echo "💡 Run the following command to download the template:"
+    echo "💡 Run the following commands to download the template:"
     echo "   mkdir -p .github && curl -o .github/copilot-instructions.md $REMOTE_TEMPLATE_URL"
+    echo "   sed -i '/^<!--\$/,/^-->\$/d' .github/copilot-instructions.md"
     exit 1
 fi
 
@@ -55,6 +56,7 @@ else
     echo ""
     echo "💡 To update your template, run:"
     echo "   curl -o .github/copilot-instructions.md $REMOTE_TEMPLATE_URL"
+    echo "   sed -i '/^<!--\$/,/^-->\$/d' .github/copilot-instructions.md"
     echo ""
     echo "📚 For more information, visit:"
     echo "   https://github.com/DrozmotiX/ioBroker-Copilot-Instructions"
