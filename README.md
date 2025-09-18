@@ -137,7 +137,7 @@ The Copilot instruction template covers:
 
 ### 🧪 Testing Guidelines
 - Unit testing with Jest framework
-- Integration testing patterns
+- **Official @iobroker/testing framework** - Complete integration testing patterns following official guidelines
 - Mocking strategies for ioBroker adapters
 - Error handling test scenarios
 - **API testing with credentials** - Password encryption and demo credential patterns
