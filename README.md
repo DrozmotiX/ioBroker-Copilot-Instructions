@@ -20,22 +20,35 @@ This repository provides comprehensive guidance and best practices for leveragin
 
 ### Quick Start
 
-1. **Copy the Copilot Instructions**
+1. **Integrate Copilot Instructions (Recommended)**
+   - If you already have a `.github/copilot-instructions.md` file, merge the content from this template rather than replacing it
+   - Use GitHub Copilot to help you merge the instructions: "Merge my existing copilot instructions with the template from https://github.com/DrozmotiX/ioBroker-Copilot-Instructions maintaining project-specific context"
+   - Add the template version reference to track updates
+
+2. **New Repository Setup**
    - Download the latest version of [`.github/copilot-instructions.md`](.github/copilot-instructions.md)
    - Place it in your adapter repository's `.github/` folder
-   - Commit the file to your repository
+   - Customize with your specific adapter requirements
 
-2. **Enable GitHub Copilot**
+3. **Enable GitHub Copilot**
    - Ensure GitHub Copilot is enabled for your repository
    - The instructions will automatically be used by Copilot when working in your codebase
 
-3. **Customize if Needed**
-   - Modify the instructions to match your specific adapter requirements
-   - Add project-specific context or constraints
-   - Update version references when using newer templates
-
 ### Integration Steps
 
+**For repositories with existing Copilot instructions:**
+```bash
+# Navigate to your ioBroker adapter repository
+cd your-iobroker-adapter
+
+# Ask GitHub Copilot to merge the instructions
+# Use the following prompt in your editor:
+# "Merge my existing .github/copilot-instructions.md with the ioBroker template 
+# from https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/blob/main/.github/copilot-instructions.md
+# Keep project-specific content and add version: 0.1.0"
+```
+
+**For new repositories:**
 ```bash
 # Navigate to your ioBroker adapter repository
 cd your-iobroker-adapter
@@ -57,7 +70,7 @@ git push
 To ensure you're using the latest best practices and that your local copy stays synchronized with improvements:
 
 ### Current Version
-- **Latest Version:** v1.0.0
+- **Latest Version:** v0.1.0
 - **Template Location:** [`.github/copilot-instructions.md`](.github/copilot-instructions.md)
 - **Last Updated:** January 2025
 
@@ -66,7 +79,7 @@ To ensure you're using the latest best practices and that your local copy stays 
 You can validate your local template version by checking the version header in your `.github/copilot-instructions.md` file:
 
 ```markdown
-**Version:** 1.0.0
+**Version:** 0.1.0
 **Template Source:** https://github.com/DrozmotiX/ioBroker-Copilot-Instructions
 ```
 
