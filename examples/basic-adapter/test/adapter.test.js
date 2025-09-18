@@ -47,8 +47,10 @@ class MockAdapter {
 }
 
 // Import the adapter class
-const BasicAdapter = require('../main.js');
-
+let BasicAdapter = require('../main.js');
+if (typeof BasicAdapter === 'function' && !BasicAdapter.prototype.validateConfig) {
+    BasicAdapter = BasicAdapter();
+}
 describe('Basic Adapter Tests', () => {
     let adapter;
 
