@@ -134,6 +134,10 @@ GitHub Copilot will automatically validate if new test cases should be created o
 
 ### Pull Request Guidelines  
 - **ALWAYS update CHANGELOG.md** - Every PR that introduces new functionality, fixes issues, or makes changes must include a detailed changelog entry with issue references (e.g., "Fixes #16")
+  - Add entries under `## **WORK IN PROGRESS**` section following AlCalzone release-script standard
+  - Use format: `- (author) **TYPE**: Description of user-visible change (Fixes #XX)`
+  - Types: **NEW** (features), **FIXED** (bugs), **ENHANCED** (improvements), **TESTING** (test additions), **CI/CD** (automation)
+  - Focus on user impact, not technical implementation details
 - **ALWAYS update README.md** - When adding new functionality, infrastructure, or changing how users interact with the repository, update the relevant sections of README.md
 - PRs must update version numbers appropriately using the dynamic version management system
 - Include detailed CHANGELOG.md entries for user-facing changes with specific details about what was added/changed/fixed

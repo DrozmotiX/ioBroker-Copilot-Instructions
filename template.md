@@ -369,7 +369,7 @@ When updating README.md files, ensure these sections are present and well-docume
 1. **Installation** - Clear npm/ioBroker admin installation steps
 2. **Configuration** - Detailed configuration options with examples
 3. **Usage** - Practical examples and use cases
-4. **Changelog** - Version history and changes (use "## **WORK IN PROGRESS**" section for ongoing changes)
+4. **Changelog** - Version history and changes (use "## **WORK IN PROGRESS**" section for ongoing changes following AlCalzone release-script standard)
 5. **License** - License information (typically MIT for ioBroker adapters)
 6. **Support** - Links to issues, discussions, and community support
 
@@ -384,7 +384,7 @@ When updating README.md files, ensure these sections are present and well-docume
 ### Mandatory README Updates for PRs
 For **every PR or new feature**, always add a user-friendly entry to README.md:
 
-- Add entries under `### __WORK IN PROGRESS__` section before committing
+- Add entries under `## **WORK IN PROGRESS**` section before committing
 - Use format: `* (author) **TYPE**: Description of user-visible change`
 - Types: **NEW** (features), **FIXED** (bugs), **ENHANCED** (improvements), **TESTING** (test additions), **CI/CD** (automation)
 - Focus on user impact, not technical implementation details
@@ -394,6 +394,53 @@ For **every PR or new feature**, always add a user-friendly entry to README.md:
 - **Mandatory README updates**: Establish requirement to update README.md for every PR/feature
 - **Standardized documentation**: Create consistent format and categories for changelog entries
 - **Enhanced development workflow**: Integrate documentation requirements into standard development process
+
+### Changelog Management with AlCalzone Release-Script
+Follow the [AlCalzone release-script](https://github.com/AlCalzone/release-script) standard for changelog management:
+
+#### Format Requirements
+- Always use `## **WORK IN PROGRESS**` as the placeholder for new changes
+- Add all PR/commit changes under this section until ready for release
+- Never modify version numbers manually - only when merging to main branch
+- Maintain this format in README.md or CHANGELOG.md:
+
+```markdown
+# Changelog
+
+<!--
+  Placeholder for the next version (at the beginning of the line):
+  ## **WORK IN PROGRESS**
+-->
+
+## **WORK IN PROGRESS**
+
+-   Did some changes
+-   Did some more changes
+
+## v0.1.0 (2023-01-01)
+Initial release
+```
+
+#### Workflow Process
+- **During Development**: All changes go under `## **WORK IN PROGRESS**`
+- **For Every PR**: Add user-facing changes to the WORK IN PROGRESS section
+- **Before Merge**: Version number and date are only added when merging to main
+- **Release Process**: The release-script automatically converts the placeholder to the actual version
+
+#### Change Entry Format
+Use this consistent format for changelog entries:
+- `- (author) **TYPE**: User-friendly description of the change`
+- Types: **NEW** (features), **FIXED** (bugs), **ENHANCED** (improvements)
+- Focus on user impact, not technical implementation details
+- Reference related issues: "fixes #XX" or "solves #XX"
+
+#### Example Entry
+```markdown
+## **WORK IN PROGRESS**
+
+- (DutchmanNL) **FIXED**: Adapter now properly validates login credentials instead of always showing "credentials missing" (fixes #25)
+- (DutchmanNL) **NEW**: Added support for device discovery to simplify initial setup
+```
 
 ## Dependency Updates
 
