@@ -20,6 +20,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Improved Repository Focus** - Repository-specific copilot instructions focus on template maintenance, quality assurance, and community contribution guidelines
 - **Fixed Version Consistency** - Updated template.md from 0.3.0 to 0.3.1 to match repository development version
 
+### Fixed
+- **GitHub Copilot Duplicate Execution** - Added HTML comment block to `template.md` to prevent GitHub Copilot from processing it as active instructions (Fixes #11)
+- **Template Installation Process** - Updated README.md and version check script with sed commands to remove template comment block during installation
+- **Copilot Processing Conflict** - Resolved issue where both `.github/copilot-instructions.md` and `template.md` were being detected as active instruction files
+
 ### Enhanced
 - **Eliminated Static Version References** - All version numbers and dates are now dynamically generated from template source
 - **Cross-Documentation Consistency** - Automated validation ensures all files reference the same version

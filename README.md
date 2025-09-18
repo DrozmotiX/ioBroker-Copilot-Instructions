@@ -46,6 +46,7 @@ cd your-iobroker-adapter
 # "Merge my existing .github/copilot-instructions.md with the ioBroker template 
 # from https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/blob/main/template.md
 # Keep project-specific content and add version: 0.3.1"
+# NOTE: Exclude the HTML comment block at the top of the template"
 ```
 
 **For new repositories:**
@@ -58,6 +59,9 @@ mkdir -p .github
 
 # Download the latest template
 curl -o .github/copilot-instructions.md https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/template.md
+
+# Remove the template comment block at the top (lines starting with <!--)
+sed -i '/^<!--$/,/^-->$/d' .github/copilot-instructions.md
 
 # Commit the changes
 git add .github/copilot-instructions.md

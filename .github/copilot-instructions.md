@@ -88,11 +88,13 @@ You are working on the ioBroker Copilot Instructions template repository. This r
 - Close duplicate or outdated issues promptly
 
 ### Pull Request Guidelines  
+- **ALWAYS update CHANGELOG.md** - Every PR that introduces new functionality, fixes issues, or makes changes must include a detailed changelog entry with issue references (e.g., "Fixes #11")
 - PRs must update version numbers appropriately
 - Include detailed CHANGELOG.md entries for user-facing changes
 - Test changes against multiple ioBroker adapter projects when possible
 - Update README.md if usage instructions change
 - Verify version check script continues to work
+- Reference the specific issue number in both commit messages and changelog entries
 
 ### Release Process
 - Increment version number in template.md and this file
