@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Updated Documentation** - README.md now correctly references `template.md` for adapter developers
 - **Improved Repository Focus** - Repository-specific copilot instructions focus on template maintenance, quality assurance, and community contribution guidelines
 
+### Fixed
+- **GitHub Copilot Duplicate Execution** - Added HTML comment block to `template.md` to prevent GitHub Copilot from processing it as active instructions (Fixes #11)
+- **Template Installation Process** - Updated README.md and version check script with sed commands to remove template comment block during installation
+- **Copilot Processing Conflict** - Resolved issue where both `.github/copilot-instructions.md` and `template.md` were being detected as active instruction files
+
 ### Enhanced
 - Version checking script continues to work with new structure
 - Clear separation between template maintenance (this repository) and adapter development (template usage)
