@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Eliminated Static Version References** - All version numbers and dates are now dynamically generated from template source
 - **Cross-Documentation Consistency** - Automated validation ensures all files reference the same version
 - **Date Management** - Automatic current date insertion eliminates stale date references (e.g., "January 2025" → current month/year)
+- **AlCalzone Release-Script Changelog Compliance** - Standardized all WORK IN PROGRESS references to use correct `## **WORK IN PROGRESS**` format and added comprehensive changelog management guidance (Fixes #20)
 - **Automated Testing Requirements** - Updated Copilot instructions with mandatory testing guidelines for new functionality
 - **Quality Assurance Through Testing** - Comprehensive test coverage prevents regressions and ensures script reliability
 - **CI/CD Integration** - Automated testing on all repository changes maintains code quality
