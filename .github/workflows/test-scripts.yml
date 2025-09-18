@@ -1,0 +1,68 @@
+name: Automated Script Testing
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Run tests daily at 2 AM UTC to catch any issues
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    # Allow manual trigger
+
+jobs:
+  test-scripts:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Make test runner executable
+      run: chmod +x tests/test-runner.sh
+      
+    - name: Make all scripts executable
+      run: |
+        chmod +x scripts/*.sh
+        
+    - name: Run script tests
+      run: ./tests/test-runner.sh
+      
+    - name: Verify script functionality
+      run: |
+        echo "🔍 Verifying script functionality..."
+        ./scripts/manage-versions.sh show
+        ./scripts/extract-version.sh template
+        ./scripts/check-template-version.sh
+        
+    - name: Test version consistency
+      run: |
+        echo "🔍 Testing version consistency..."
+        if ! ./scripts/manage-versions.sh check; then
+          echo "❌ Version inconsistency detected!"
+          exit 1
+        else
+          echo "✅ All versions are consistent"
+        fi
+        
+    # Optional: Create artifact with test results
+    - name: Create test report
+      if: always()
+      run: |
+        echo "# Test Report - $(date)" > test-report.md
+        echo "" >> test-report.md
+        echo "## Script Status" >> test-report.md
+        echo "" >> test-report.md
+        ./scripts/manage-versions.sh show >> test-report.md 2>&1 || true
+        echo "" >> test-report.md
+        echo "## Version Check" >> test-report.md
+        echo "" >> test-report.md
+        ./scripts/manage-versions.sh check >> test-report.md 2>&1 || true
+        
+    - name: Upload test report
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: script-test-report
+        path: test-report.md
