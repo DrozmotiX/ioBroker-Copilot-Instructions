@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## **WORK IN PROGRESS**
 
+- (copilot) **ENHANCED**: Reorganized README into focused documentation files by instruction type for better user experience (Fixes #22)
+- (copilot) **NEW**: Created separate docs/ directory with setup.md, maintenance.md, and testing.md for clear audience targeting
+- (copilot) **ENHANCED**: Promoted intelligent Copilot-assisted template merging instead of 1:1 copying for better version control
+- (copilot) **NEW**: Added comprehensive community support section with forum and GitHub contribution guidelines
+- (copilot) **ENHANCED**: Made organization-specific setup instructions collapsible to reduce clutter for individual users
 - (copilot) **ENHANCED**: Standardized changelog format inconsistencies to align with AlCalzone release-script standard - fixed mixed WORK IN PROGRESS formatting and added comprehensive changelog management documentation (Fixes #20)
 
 ## [0.4.0] - 2025-09-XX - Automated Version handling & validation by GitHub actions

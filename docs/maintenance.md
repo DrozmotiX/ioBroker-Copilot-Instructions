@@ -2,35 +2,36 @@
 
 This guide is specifically for maintainers of the ioBroker Copilot Instructions repository. It covers version management, testing infrastructure, and repository maintenance procedures.
 
-## 💬 Community Support & AI-Powered Development
+## 💬 Community Support & Development
 
-**Join the AI Revolution in ioBroker Development!**
+**Join the ioBroker Copilot Instructions Community!**
 
-Using GitHub Copilot with ioBroker adapter development isn't just about writing code faster – it's about transforming how we build and maintain adapters. Our community is actively exploring and sharing the benefits:
+This repository serves the ioBroker community by providing standardized GitHub Copilot instructions for adapter development. We're continuously improving these templates based on real-world usage and community feedback.
 
-### 🚀 Why AI-Assisted Development is Game-Changing:
-- **Accelerated Development**: Write adapter code 3-5x faster with intelligent suggestions
-- **Best Practice Enforcement**: Copilot learns from our template patterns and suggests ioBroker-compliant code
-- **Reduced Learning Curve**: New developers can immediately write quality adapter code
-- **Consistent Code Quality**: AI helps maintain uniform patterns across the entire ecosystem
-- **Error Prevention**: Smart suggestions help avoid common pitfalls and bugs
+### 🏠 Why Join Our Community:
+- **Share Experiences**: Learn from other developers using Copilot for ioBroker adapter development
+- **Collaborate on Improvements**: Help refine templates and best practices
+- **Get Support**: Quick help with setup and troubleshooting
+- **Accelerated Development**: Write adapter code faster with intelligent suggestions
+- **Best Practice Enforcement**: Ensure your adapters follow ioBroker conventions
 
-### 🎯 Easy Setup, Immediate Benefits:
-Setting up GitHub Copilot for ioBroker development takes just minutes, but the productivity gains last forever. The template handles all the complexity – just integrate it once and let AI supercharge your adapter development.
+### 🤝 How to Contribute & Participate:
+- **[ioBroker Community Forum](https://forum.iobroker.net/topic/82238/ki-trifft-iobroker-ein-gemeinsames-abenteuer/4)** - Join discussions about improving adapter development with AI assistance
+- **[Submit Issues](https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/issues)** - Report bugs, suggest improvements, or request new features
+- **[GitHub Discussions](https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/discussions)** - Share ideas, ask questions, and collaborate on best practices
+- **Share Success Stories**: Help others by sharing what works well in your adapter projects
+- **Contribute Templates**: Suggest improvements to existing instructions or propose new patterns
 
-### 🤝 Join Our Growing Community:
-- **[ioBroker Community Forum - AI meets ioBroker](https://forum.iobroker.net/topic/82238/ki-trifft-iobroker-ein-gemeinsames-abenteuer/4)** - Share experiences, success stories, and collaborate on improving AI-assisted adapter development
-- Exchange tips, tricks, and real-world examples
-- Get help with setup and advanced configurations
-- Contribute to making AI development even better for everyone
+### 🎯 Easy Setup, Lasting Benefits:
+Setting up GitHub Copilot with our ioBroker templates takes just minutes. The templates handle the complexity while you focus on building great adapters.
 
-**Ready to experience the future of ioBroker development?** The setup is simple, the benefits are immediate, and the community is here to support you!
+**Ready to improve your ioBroker development experience?** The setup is straightforward, the community is supportive, and your contributions help everyone!
 
 ---
 
 ## 📋 Table of Contents
 
-- [Community Support & AI-Powered Development](#-community-support--ai-powered-development)
+- [Community Support & Development](#-community-support--development)
 - [Version Management](#version-management)
 - [Automated Testing Infrastructure](#automated-testing-infrastructure)
 - [Development Guidelines](#development-guidelines)
