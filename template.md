@@ -13,7 +13,7 @@ This is the template file that should be copied to your ioBroker adapter reposit
 
 # ioBroker Adapter Development with GitHub Copilot
 
-**Version:** 0.2.0
+**Version:** 0.3.0
 **Template Source:** https://github.com/DrozmotiX/ioBroker-Copilot-Instructions
 
 This file contains instructions and best practices for GitHub Copilot when working on ioBroker adapter development.
@@ -48,10 +48,247 @@ You are working on an ioBroker adapter. ioBroker is an integration platform for 
   ```
 
 ### Integration Testing
-- Test adapter startup and shutdown procedures
-- Validate state management and object creation
-- Test configuration validation and error handling
-- Ensure proper cleanup of resources
+
+**IMPORTANT**: Use the official `@iobroker/testing` framework for all integration tests. This is the ONLY correct way to test ioBroker adapters.
+
+**Official Documentation**: https://github.com/ioBroker/testing
+
+#### Framework Structure
+Integration tests MUST follow this exact pattern:
+
+```javascript
+const path = require('path');
+const { tests } = require('@iobroker/testing');
+
+// Define test coordinates or configuration
+const TEST_COORDINATES = '52.520008,13.404954'; // Berlin
+
+// Use tests.integration() with defineAdditionalTests
+tests.integration(path.join(__dirname, '..'), {
+    defineAdditionalTests({ suite }) {
+        suite('Test adapter with specific configuration', (getHarness) => {
+            let harness;
+
+            before(() => {
+                harness = getHarness();
+            });
+
+            it('should configure and start adapter', () => new Promise(async (resolve) => {
+                // Get adapter object and configure
+                harness.objects.getObject('system.adapter.brightsky.0', async (err, obj) => {
+                    if (err) {
+                        console.error('Error getting adapter object:', err);
+                        resolve();
+                        return;
+                    }
+
+                    // Configure adapter properties
+                    obj.native.position = TEST_COORDINATES;
+                    obj.native.createCurrently = true;
+                    obj.native.createHourly = true;
+                    obj.native.createDaily = true;
+                    // ... other configuration
+
+                    // Set the updated configuration
+                    harness.objects.setObject(obj._id, obj);
+
+                    // Start adapter and wait
+                    await harness.startAdapterAndWait();
+
+                    // Wait for adapter to process data
+                    setTimeout(() => {
+                        // Verify states were created
+                        harness.states.getState('brightsky.0.info.connection', (err, state) => {
+                            if (state && state.val === true) {
+                                console.log('✅ Adapter started successfully');
+                            }
+                            resolve();
+                        });
+                    }, 15000); // Allow time for API calls
+                });
+            })).timeout(30000);
+        });
+    }
+});
+```
+
+#### Testing Both Success AND Failure Scenarios
+
+**IMPORTANT**: For every "it works" test, implement corresponding "it doesn't work and fails" tests. This ensures proper error handling and validates that your adapter fails gracefully when expected.
+
+```javascript
+// Example: Testing successful configuration
+it('should configure and start adapter with valid configuration', () => new Promise(async (resolve) => {
+    // ... successful configuration test as shown above
+})).timeout(30000);
+
+// Example: Testing failure scenarios
+it('should fail gracefully with invalid configuration', () => new Promise(async (resolve) => {
+    harness.objects.getObject('system.adapter.brightsky.0', async (err, obj) => {
+        if (err) {
+            console.error('Error getting adapter object:', err);
+            resolve();
+            return;
+        }
+
+        // Configure with INVALID data to test failure handling
+        obj.native.position = 'invalid-coordinates'; // This should cause failure
+        obj.native.createCurrently = true;
+
+        harness.objects.setObject(obj._id, obj);
+
+        try {
+            await harness.startAdapterAndWait();
+            
+            setTimeout(() => {
+                // Verify adapter handled the error properly
+                harness.states.getState('brightsky.0.info.connection', (err, state) => {
+                    if (state && state.val === false) {
+                        console.log('✅ Adapter properly failed with invalid configuration');
+                    } else {
+                        console.log('❌ Adapter should have failed but connection shows true');
+                    }
+                    resolve();
+                });
+            }, 15000);
+        } catch (error) {
+            console.log('✅ Adapter correctly threw error with invalid configuration:', error.message);
+            resolve();
+        }
+    });
+})).timeout(30000);
+
+// Example: Testing missing required configuration
+it('should fail when required configuration is missing', () => new Promise(async (resolve) => {
+    harness.objects.getObject('system.adapter.brightsky.0', async (err, obj) => {
+        if (err) {
+            console.error('Error getting adapter object:', err);
+            resolve();
+            return;
+        }
+
+        // Remove required configuration to test failure
+        delete obj.native.position; // This should cause failure
+
+        harness.objects.setObject(obj._id, obj);
+
+        try {
+            await harness.startAdapterAndWait();
+            
+            setTimeout(() => {
+                harness.states.getState('brightsky.0.info.connection', (err, state) => {
+                    if (!state || state.val === false) {
+                        console.log('✅ Adapter properly failed with missing required configuration');
+                    } else {
+                        console.log('❌ Adapter should have failed but connection shows true');
+                    }
+                    resolve();
+                });
+            }, 10000);
+        } catch (error) {
+            console.log('✅ Adapter correctly threw error with missing configuration:', error.message);
+            resolve();
+        }
+    });
+})).timeout(30000);
+```
+
+#### Advanced State Access Patterns
+
+For testing adapters that create multiple states, use bulk state access methods to efficiently verify large numbers of states:
+
+```javascript
+it('should create and verify multiple states', () => new Promise(async (resolve, reject) => {
+    // Configure and start adapter first...
+    harness.objects.getObject('system.adapter.tagesschau.0', async (err, obj) => {
+        if (err) {
+            console.error('Error getting adapter object:', err);
+            reject(err);
+            return;
+        }
+
+        // Configure adapter as needed
+        obj.native.someConfig = 'test-value';
+        harness.objects.setObject(obj._id, obj);
+
+        await harness.startAdapterAndWait();
+
+        // Wait for adapter to create states
+        setTimeout(() => {
+            // Access bulk states using pattern matching
+            harness.dbConnection.getStateIDs('tagesschau.0.*').then(stateIds => {
+                if (stateIds && stateIds.length > 0) {
+                    harness.states.getStates(stateIds, (err, allStates) => {
+                        if (err) {
+                            console.error('❌ Error getting states:', err);
+                            reject(err); // Properly fail the test instead of just resolving
+                            return;
+                        }
+
+                        // Verify states were created and have expected values
+                        const expectedStates = ['tagesschau.0.info.connection', 'tagesschau.0.articles.0.title'];
+                        let foundStates = 0;
+                        
+                        for (const stateId of expectedStates) {
+                            if (allStates[stateId]) {
+                                foundStates++;
+                                console.log(`✅ Found expected state: ${stateId}`);
+                            } else {
+                                console.log(`❌ Missing expected state: ${stateId}`);
+                            }
+                        }
+
+                        if (foundStates === expectedStates.length) {
+                            console.log('✅ All expected states were created successfully');
+                            resolve();
+                        } else {
+                            reject(new Error(`Only ${foundStates}/${expectedStates.length} expected states were found`));
+                        }
+                    });
+                } else {
+                    reject(new Error('No states found matching pattern tagesschau.0.*'));
+                }
+            }).catch(reject);
+        }, 20000); // Allow more time for multiple state creation
+    });
+})).timeout(45000);
+```
+
+#### Key Integration Testing Rules
+
+1. **NEVER test API URLs directly** - Let the adapter handle API calls
+2. **ALWAYS use the harness** - `getHarness()` provides the testing environment  
+3. **Configure via objects** - Use `harness.objects.setObject()` to set adapter configuration
+4. **Start properly** - Use `harness.startAdapterAndWait()` to start the adapter
+5. **Check states** - Use `harness.states.getState()` to verify results
+6. **Use timeouts** - Allow time for async operations with appropriate timeouts
+7. **Test real workflow** - Initialize → Configure → Start → Verify States
+
+#### Workflow Dependencies
+Integration tests should run ONLY after lint and adapter tests pass:
+
+```yaml
+integration-tests:
+  needs: [check-and-lint, adapter-tests]
+  runs-on: ubuntu-latest
+  steps:
+    - name: Run integration tests
+      run: npx mocha test/integration-*.js --exit
+```
+
+#### What NOT to Do
+❌ Direct API testing: `axios.get('https://api.example.com')`
+❌ Mock adapters: `new MockAdapter()`  
+❌ Direct internet calls in tests
+❌ Bypassing the harness system
+
+#### What TO Do
+✅ Use `@iobroker/testing` framework
+✅ Configure via `harness.objects.setObject()`
+✅ Start via `harness.startAdapterAndWait()`
+✅ Test complete adapter lifecycle
+✅ Verify states via `harness.states.getState()`
+✅ Allow proper timeouts for async operations
 
 ### API Testing with Credentials
 For adapters that connect to external APIs requiring authentication, implement comprehensive credential testing:

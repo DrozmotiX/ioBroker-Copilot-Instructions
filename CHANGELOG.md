@@ -5,6 +5,25 @@ All notable changes to the ioBroker Copilot Instructions template will be docume
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2025-01-XX
+
+### Added
+- **Comprehensive Integration Testing Framework** - Official `@iobroker/testing` framework guidelines based on lessons learned from @ticaki
+- **Testing Both Success AND Failure Scenarios** - Added examples for testing error conditions and invalid configurations  
+- **7 Key Integration Testing Rules** - Mandatory rules for proper adapter integration testing
+- **CI/CD Workflow Dependencies** - Proper job sequencing for integration tests
+- **What NOT to Do vs What TO Do** - Clear guidance sections with specific examples
+
+### Enhanced
+- Integration testing section completely rewritten with official framework requirements
+- Added comprehensive examples for both positive and negative test scenarios
+- Improved error handling validation in integration tests
+- Added proper failure scenario testing patterns
+
+### Credits
+- **@ticaki** for providing comprehensive lessons learned and best practices for ioBroker integration testing
+- Community feedback integration for enhanced testing methodology
+
 ## [0.2.0] - 2025-01-08
 
 ### Added
@@ -56,5 +75,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Contributing guidelines
 - Support and community links
 
+[0.3.0]: https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/releases/tag/v0.3.0
 [0.2.0]: https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/releases/tag/v0.2.0
 [0.1.0]: https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/releases/tag/v0.1.0
