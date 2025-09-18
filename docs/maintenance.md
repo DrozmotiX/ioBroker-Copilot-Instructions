@@ -16,7 +16,7 @@ This repository serves the ioBroker community by providing standardized GitHub C
 - **Best Practice Enforcement**: Ensure your adapters follow ioBroker conventions
 
 ### 🤝 How to Contribute & Participate:
-- **[ioBroker Community Forum](https://forum.iobroker.net/topic/82238/ki-trifft-iobroker-ein-gemeinsames-abenteuer/4)** - Join discussions about improving adapter development with AI assistance
+- **[ioBroker Community Forum](https://forum.iobroker.net/topic/82238/ki-trifft-iobroker-ein-gemeinsames-abenteuer)** - Join discussions about improving adapter development with AI assistance
 - **[Submit Issues](https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/issues)** - Report bugs, suggest improvements, or request new features
 - **[GitHub Discussions](https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/discussions)** - Share ideas, ask questions, and collaborate on best practices
 - **Share Success Stories**: Help others by sharing what works well in your adapter projects

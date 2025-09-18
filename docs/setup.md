@@ -1,184 +1,193 @@
 # GitHub Copilot Setup Guide
 
-This guide walks you through setting up GitHub Copilot for ioBroker adapter development, from initial subscription to template integration.
+This guide walks you through setting up GitHub Copilot for ioBroker adapter development, focusing on repository-level Copilot integration and automated template merging.
 
 ## 📋 Table of Contents
 
-- [Prerequisites and Basic GitHub Copilot Setup](#prerequisites-and-basic-github-copilot-setup)
+- [Repository Copilot Setup (Essential)](#repository-copilot-setup-essential)
 - [Template Integration](#template-integration)
+- [Advanced: IDE Setup](#advanced-ide-setup)
 - [Validation and Testing](#validation-and-testing)
 - [Organization-Specific Setup](#organization-specific-setup)
 
-## Prerequisites and Basic GitHub Copilot Setup
+## Repository Copilot Setup (Essential)
 
-Before using this template, ensure you have GitHub Copilot properly set up in your repository. If you're new to GitHub Copilot, follow these steps:
+**For existing ioBroker adapter repositories** - This section covers setting up GitHub Copilot at the repository level, which is essential for all users.
 
-### Step 1: GitHub Copilot Subscription & Installation
+### Step 1: GitHub Copilot Subscription
 
 1. **Subscribe to GitHub Copilot**
    - Visit [GitHub Copilot](https://github.com/features/copilot) and subscribe to GitHub Copilot Individual or Business
    - Ensure your subscription is active and includes your target repository
 
-2. **Install GitHub Copilot Extension**
+### Step 2: Repository Copilot Instructions Setup
+
+1. **Navigate to your existing ioBroker adapter repository**
+   ```bash
+   cd your-existing-iobroker-adapter
+   ```
+
+2. **Ensure you have GitHub Copilot instructions file**
+   ```bash
+   # Create .github directory if it doesn't exist
+   mkdir -p .github
+   
+   # Check if you already have Copilot instructions
+   ls -la .github/copilot-instructions.md
+   ```
+
+3. **If you don't have a copilot-instructions.md file, let Copilot create one**
+   - Open any code file in your repository in your preferred editor
+   - Start typing: `// This is an ioBroker adapter for`
+   - GitHub Copilot will automatically create basic instructions when you commit changes to `.github/copilot-instructions.md`
+
+4. **If your existing config seems corrupt, start fresh**
+   ```bash
+   # Remove existing file if needed
+   rm .github/copilot-instructions.md
+   
+   # Let Copilot create a new one by starting development work
+   ```
+
+## Template Integration
+
+**Automated template merging** - Always combine with existing instructions, never replace entirely.
+
+### Step 1: Prepare for Template Integration
+
+1. **Ensure version tracking in your repository**
+   Your `.github/copilot-instructions.md` should include:
+   ```markdown
+   **Version:** [current-version]
+   **Template Source:** https://github.com/DrozmotiX/ioBroker-Copilot-Instructions
+   **Custom Sections:** [Preserve during updates]
+   ```
+
+2. **Identify your custom sections**
+   - Mark any project-specific instructions with `[CUSTOMIZE]` tags
+   - These will be preserved during template updates
+
+### Step 2: Automated Template Merging
+
+**Use GitHub Copilot to intelligently merge templates** - This preserves your custom content and maintains version control.
+
+1. **Prompt GitHub Copilot for smart merging**
+   In your editor, use this prompt:
+   ```
+   "Merge the ioBroker template from https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/blob/main/template.md 
+   with my existing .github/copilot-instructions.md. Preserve all [CUSTOMIZE] sections and project-specific 
+   context while adding the latest ioBroker best practices. Update the version to 0.4.0."
+   ```
+
+2. **Verify version tracking**
+   Ensure your updated file includes:
+   - Current template version (0.4.0)
+   - Template source reference
+   - Your custom sections intact
+   - Project-specific context preserved
+
+3. **Commit with version control**
+   ```bash
+   git add .github/copilot-instructions.md
+   git commit -m "Update Copilot instructions to template v0.4.0, preserve custom sections"
+   ```
+
+### Step 3: Custom Section Management
+
+**Keep customizations safe** - Always use the custom section approach:
+
+1. **Structure your custom content**
+   ```markdown
+   ## [CUSTOMIZE] Project-Specific Instructions
+   
+   ### My Adapter Specific Patterns
+   - Custom patterns for your adapter
+   - Project-specific error handling
+   - Unique API integrations
+   
+   **Note:** This section is preserved during template updates
+   ```
+
+2. **Version validation**
+   Use the version check script to ensure you're up-to-date:
+   ```bash
+   curl -s https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/scripts/check-template-version.sh | bash
+   ```
+
+## Advanced: IDE Setup
+
+**Optional IDE integration** - For developers who want to use Copilot directly in their development environment.
+
+### IDE Installation & Configuration
+
+1. **Install GitHub Copilot Extension**
    - **VS Code**: Install the [GitHub Copilot extension](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot)
    - **JetBrains IDEs**: Install GitHub Copilot from the plugin marketplace
    - **Vim/Neovim**: Use the [copilot.vim](https://github.com/github/copilot.vim) plugin
    - **Other editors**: Check [GitHub Copilot documentation](https://docs.github.com/en/copilot) for your editor
 
-3. **Authenticate GitHub Copilot**
+2. **Authenticate GitHub Copilot in IDE**
    - Open your editor and sign in to GitHub Copilot when prompted
    - Verify authentication by typing code in any file - you should see Copilot suggestions
 
-### Step 2: Repository Setup & Validation
-
-1. **Enable Copilot for Your Repository**
-   ```bash
-   # Navigate to your ioBroker adapter repository
-   cd your-iobroker-adapter
+3. **Test IDE Integration**
+   ```javascript
+   // Create a file test-copilot.js and start typing this comment:
+   // Function to add two numbers
    
-   # Ensure you're logged into GitHub CLI (optional but recommended)
-   gh auth login
+   // Copilot should suggest a function implementation when you press Enter
    ```
 
-2. **Create Basic GitHub Copilot Structure**
-   ```bash
-   # Create .github directory if it doesn't exist
-   mkdir -p .github
-   
-   # Verify Copilot can access your repository
-   # Open any .js/.ts file and start typing - you should see suggestions
-   ```
-
-3. **Verify Copilot is Working**
-   - Open a JavaScript or TypeScript file in your repository
-   - Start typing a function or comment
-   - You should see grayed-out suggestions from Copilot
-   - Press `Tab` to accept suggestions or `Esc` to dismiss
-
-### Step 3: Test Basic Functionality
-
-Create a simple test to verify Copilot is working with your repository:
-
-```javascript
-// Create a file test-copilot.js and start typing this comment:
-// Function to add two numbers
-
-// Copilot should suggest a function implementation when you press Enter
-```
-
-**Expected behavior:** Copilot should suggest code completions as you type.
-
-### Troubleshooting Basic Setup
+### IDE Troubleshooting
 
 | Problem | Solution |
 |---------|----------|
 | No suggestions appear | Check authentication and subscription status |
-| Repository not accessible | Verify organization settings and permissions |
 | Extension not working | Reinstall Copilot extension and restart editor |
 | Authentication issues | Sign out and sign back in to GitHub Copilot |
 
-**✅ Setup Complete!** Once you have Copilot working and showing suggestions in your repository, you can proceed to integrate the ioBroker template below.
-
-### Quick Reference Checklist
-
-For experienced GitHub Copilot users, here's a quick checklist:
-
-- [ ] GitHub Copilot subscription is active
-- [ ] Copilot extension installed in your editor
-- [ ] Authentication completed (can see suggestions when typing)
-- [ ] Repository permissions configured (for organizations)
-- [ ] Basic functionality tested (suggestions appear in .js/.ts files)
-- [ ] Ready to integrate ioBroker template
-
-**New to GitHub Copilot?** Follow the detailed [Prerequisites & Basic Setup](#prerequisites-and-basic-github-copilot-setup) above.
-
-## Template Integration
-
-### Quick Start
-
-> **⚠️ Prerequisites Required:** Before proceeding, ensure you've completed the [Basic GitHub Copilot Setup](#prerequisites-and-basic-github-copilot-setup) above.
-
-1. **For Existing Copilot Users (Recommended)**
-   - If you already have a `.github/copilot-instructions.md` file, merge the content from this template rather than replacing it
-   - Use GitHub Copilot to help you merge the instructions: "Merge my existing copilot instructions with the template from https://github.com/DrozmotiX/ioBroker-Copilot-Instructions maintaining project-specific context"
-   - Add the template version reference to track updates
-
-2. **For New Copilot Users**
-   - Download the latest version of [`template.md`](../template.md)
-   - Save it as `.github/copilot-instructions.md` in your adapter repository's `.github/` folder
-   - Customize sections marked with `[CUSTOMIZE]` for your specific adapter requirements
-
-3. **Verification & Activation**
-   - Verify GitHub Copilot is working in your repository (should show suggestions when typing)
-   - The ioBroker-specific instructions will automatically be used by Copilot when working in your codebase
-   - Test by opening a JavaScript file and typing ioBroker-related code - you should see relevant suggestions
-
-### Integration Steps
-
-> **⚠️ Important:** Ensure GitHub Copilot is working in your repository before proceeding. If you need setup help, see the [Prerequisites & Basic Setup](#prerequisites-and-basic-github-copilot-setup) section above.
-
-**For repositories with existing Copilot instructions:**
-```bash
-# Navigate to your ioBroker adapter repository
-cd your-iobroker-adapter
-
-# Verify Copilot is working (should show suggestions when you type)
-# Open any .js file and type: // Function to connect to ioBroker
-# You should see Copilot suggestions appear
-
-# Ask GitHub Copilot to merge the instructions
-# Use the following prompt in your editor:
-# "Merge my existing .github/copilot-instructions.md with the ioBroker template 
-# from https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/blob/main/template.md
-# Keep project-specific content and add version: 0.4.0"
-# NOTE: Exclude the HTML comment block at the top of the template"
-```
-
-**For new repositories (first-time Copilot setup):**
-```bash
-# Navigate to your ioBroker adapter repository
-cd your-iobroker-adapter
-
-# Verify basic Copilot setup is complete
-# Open any .js file and start typing - you should see suggestions
-# If no suggestions appear, complete the basic setup first
-
-# Create .github directory if it doesn't exist
-mkdir -p .github
-
-# Download the latest template
-curl -o .github/copilot-instructions.md https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/template.md
-
-# Remove the template comment block at the top (lines starting with <!--)
-sed -i '/^<!--$/,/^-->$/d' .github/copilot-instructions.md
-
-# Commit the changes
-git add .github/copilot-instructions.md
-git commit -m "Add GitHub Copilot instructions for ioBroker development"
-git push
-```
-
 ## Validation and Testing
 
-After completing the integration, verify everything is working correctly:
+After completing the template integration, verify everything is working correctly:
+
+### Repository-Level Testing
 
 ```bash
-# Test that Copilot uses the ioBroker instructions
-# 1. Open any .js or .ts file in your adapter
-# 2. Start typing ioBroker-related code:
-#    Example: // Create new ioBroker adapter instance
-#    Example: this.setState(
-#    Example: // Handle device connection
+# Test that Copilot instructions are properly integrated
+# 1. Check your .github/copilot-instructions.md file exists
+ls -la .github/copilot-instructions.md
 
-# 3. Copilot should now provide ioBroker-specific suggestions
-# 4. Check that suggestions follow the patterns from the template
+# 2. Verify version information is present
+grep "Version:" .github/copilot-instructions.md
+grep "Template Source:" .github/copilot-instructions.md
+
+# 3. Check for custom sections
+grep "\[CUSTOMIZE\]" .github/copilot-instructions.md
 ```
 
-**Expected Results:**
-- Copilot suggestions should be more relevant to ioBroker development
-- Error handling should follow ioBroker patterns
-- Test suggestions should include `@iobroker/testing` framework usage
-- README updates should follow ioBroker documentation standards
+### Development Testing
+
+Test that Copilot provides ioBroker-specific suggestions:
+
+1. **Open any .js or .ts file in your adapter**
+2. **Start typing ioBroker-related code:**
+   - Example: `// Create new ioBroker adapter instance`
+   - Example: `this.setState(`
+   - Example: `// Handle device connection`
+
+3. **Verify enhanced suggestions:**
+   - Copilot should provide ioBroker-specific patterns
+   - Error handling should follow ioBroker best practices
+   - Test suggestions should include `@iobroker/testing` framework usage
+
+### Expected Results
+
+After successful integration, you should observe:
+- **Context-aware suggestions** specific to ioBroker development patterns
+- **Error handling** that follows ioBroker best practices
+- **Test suggestions** that include `@iobroker/testing` framework usage
+- **README updates** that follow ioBroker documentation standards
+- **Dependency management** suggestions aligned with ioBroker ecosystem
 
 ## Organization-Specific Setup
 

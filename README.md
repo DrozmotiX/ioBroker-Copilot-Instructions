@@ -16,7 +16,7 @@ This repository provides comprehensive guidance and best practices for leveragin
 
 **Help us improve ioBroker adapter development together!**
 
-- **[ioBroker Community Forum](https://forum.iobroker.net/topic/82238/ki-trifft-iobroker-ein-gemeinsames-abenteuer/4)** - Share experiences and collaborate on improving adapter development
+- **[ioBroker Community Forum](https://forum.iobroker.net/topic/82238/ki-trifft-iobroker-ein-gemeinsames-abenteuer)** - Share experiences and collaborate on improving adapter development
 - **[Submit Issues](https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/issues)** - Report bugs, suggest improvements, or request new features
 - **[GitHub Discussions](https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/discussions)** - Share ideas, ask questions, and collaborate on best practices
 
