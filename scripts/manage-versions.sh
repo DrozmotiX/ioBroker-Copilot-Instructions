@@ -52,8 +52,13 @@ show_versions() {
     fi
     
     if [[ -f "$README_FILE" ]]; then
-        # README uses GitHub badge for version display, which is automatically updated
-        echo "📖 README uses GitHub badge for version display (auto-updated)"
+        # Attempt to extract version from README badge or version string
+        README_VER=$(grep -Eo 'version-[0-9]+\.[0-9]+\.[0-9]+' "$README_FILE" | head -1 | sed 's/version-//')
+        if [[ -n "$README_VER" ]]; then
+            echo "📖 README version (from badge): $README_VER"
+        else
+            echo "📖 README uses GitHub badge for version display (auto-updated)"
+        fi
     fi
     
     if [[ -f "$PACKAGE_FILE" ]]; then
