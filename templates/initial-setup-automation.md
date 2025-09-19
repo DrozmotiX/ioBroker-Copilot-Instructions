@@ -124,7 +124,7 @@ Source: https://github.com/DrozmotiX/ioBroker-Copilot-Instructions
 
 #### Examples of what NOT to include in [CUSTOMIZE] sections:
    - Generic ioBroker adapter development patterns (already in template)
-   - Standard error handling approaches (already in template) 
+   - Standard error handling approaches (already in template)
    - Basic testing frameworks usage (already in template)
    - Common dependency management (already in template)
 
