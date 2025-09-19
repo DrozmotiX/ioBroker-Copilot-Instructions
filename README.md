@@ -66,15 +66,6 @@ All template operations are now fully automated:
 - **🛡️ Customizations**: Always preserved during updates
 - **📅 Monitoring**: Weekly checks with automatic notifications
 
-### Quick Version Check (Optional)
-
-If you want to manually check your template status:
-
-```bash
-# Download and run the version check script
-curl -s https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/scripts/check-template-version.sh | bash
-```
-
 ### Automated Continuous Monitoring
 
 The [Initial Setup Template](templates/initial-setup-automation.md) automatically configures:
@@ -166,6 +157,33 @@ By integrating GitHub Copilot with these specialized instructions, ioBroker adap
 - **Reduced development time** with intelligent code completion
 - **Knowledge transfer** from experienced to new developers
 - **Quality assurance** through established patterns and practices
+
+## 🔧 Advanced Usage
+
+For advanced users who want more control over the template management process:
+
+### Manual Version Check
+
+If you want to manually check your template status:
+
+```bash
+# Download and run the version check script
+curl -s https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/scripts/check-template-version.sh | bash
+```
+
+This script will:
+- Compare your local template version with the latest available
+- Provide update guidance if your template is outdated
+- Show you what's changed in newer versions
+
+### Repository Maintenance
+
+For repository maintainers who want to contribute or customize the template system:
+
+- **Version Management**: See the [maintenance guide](docs/maintenance.md) for version management scripts
+- **Testing**: Run `./tests/test-runner.sh` for comprehensive testing
+- **Custom Snippets**: Create reusable content in the `snippets/` directory
+- **Centralized Configuration**: Modify `config/metadata.json` for repository-wide settings
 
 ## 🌟 Contributing
 

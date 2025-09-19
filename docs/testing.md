@@ -128,26 +128,10 @@ This script will:
 
 ### Setting Up Automated Checking
 
-Add this GitHub Action to automatically monitor your template version:
-
-```yaml
-# .github/workflows/check-copilot-template.yml
-name: Check Copilot Template Version
-on:
-  schedule:
-    - cron: '0 0 * * 0'  # Weekly check
-  workflow_dispatch:
-
-jobs:
-  check-template:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Check template version
-        run: |
-          CURRENT_VERSION=$(grep "Version:" .github/copilot-instructions.md | head -1 | sed 's/.*Version:\s*//')
-          LATEST_VERSION=$(curl -s https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/template.md | grep "Version:" | head -1 | sed 's/.*Version:\s*//')
-          if [ "$CURRENT_VERSION" != "$LATEST_VERSION" ]; then
+For automated monitoring, see the [GitHub Action template](../snippets/github-action-version-check.yml) which provides:
+- Weekly automated checks
+- Automatic issue creation when updates are available
+- Preservation of custom content during updates
             echo "Template is outdated. Current: $CURRENT_VERSION, Latest: $LATEST_VERSION"
             exit 1
           fi

@@ -11,12 +11,16 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(dirname "$SCRIPT_DIR")"
 TEMPLATE_FILE="$REPO_ROOT/template.md"
 
-# Function to extract template version
+# Source shared utilities
+source "$SCRIPT_DIR/shared-utils.sh"
+
+# Function to extract template version (with fallback to centralized metadata)
 get_template_version() {
     if [[ -f "$TEMPLATE_FILE" ]]; then
         grep "^**Version:**" "$TEMPLATE_FILE" | head -1 | sed 's/.*Version:\*\* *//' | tr -d ' '
     else
-        echo "unknown"
+        # Fallback to centralized metadata
+        get_version
     fi
 }
 
@@ -40,6 +44,9 @@ case "${1:-template}" in
     "template")
         get_template_version
         ;;
+    "metadata")
+        get_version
+        ;;
     "current-year")
         get_current_year
         ;;
@@ -50,8 +57,9 @@ case "${1:-template}" in
         get_current_date
         ;;
     *)
-        echo "Usage: $0 [template|current-year|current-month|current-date]"
+        echo "Usage: $0 [template|metadata|current-year|current-month|current-date]"
         echo "  template     - Extract version from template.md"
+        echo "  metadata     - Get version from centralized metadata"
         echo "  current-year - Get current year"
         echo "  current-month - Get current month name"
         echo "  current-date - Get current date in 'Month YYYY' format"

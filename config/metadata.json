@@ -1,0 +1,20 @@
+{
+  "version": "0.4.0",
+  "repository": {
+    "url": "https://github.com/DrozmotiX/ioBroker-Copilot-Instructions",
+    "raw_base": "https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main"
+  },
+  "template": {
+    "file": "template.md",
+    "target_path": ".github/copilot-instructions.md"
+  },
+  "scripts": {
+    "check_template_version": "scripts/check-template-version.sh",
+    "manage_versions": "scripts/manage-versions.sh"
+  },
+  "automation": {
+    "workflow_file": ".github/workflows/check-copilot-template.yml",
+    "cron_schedule": "0 0 * * 0",
+    "labels": ["template-update", "automation"]
+  }
+}
