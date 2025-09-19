@@ -37,7 +37,7 @@ Your contributions help make adapter development better for the entire ioBroker 
    Title: 🤖 Setup ioBroker GitHub Copilot Instructions
    
    GitHub Copilot: Please help me set up GitHub Copilot instructions for my ioBroker adapter repository using the centralized automation template from:
-   templates/initial-setup-automation.md
+   https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/templates/initial-setup-automation.md
    ```
 2. **Let GitHub Copilot handle everything** using our **centralized automation system**:
    - ✅ Validates existing setup and detects repository status
