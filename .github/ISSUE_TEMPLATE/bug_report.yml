@@ -2,7 +2,7 @@ name: 🐛 Bug Report
 description: Report issues with the current template or setup
 title: "[BUG] "
 labels: ["bug"]
-assignees: []
+assignees: ["copilot"]
 
 body:
   - type: markdown
