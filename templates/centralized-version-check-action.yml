@@ -36,7 +36,10 @@ jobs:
           
           # Get latest version from centralized metadata
           echo "🌐 Fetching latest template version from centralized config..."
-          LATEST_VERSION=$(curl -s https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/config/metadata.json | grep -o '"version"[[:space:]]*:[[:space:]]*"[^"]*"' | head -1 | grep -o '"[0-9.]*"' | tr -d '"' || echo "unknown")
+          LATEST_VERSION=$(curl -s https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/config/metadata.json | jq -r '.version' 2>/dev/null || echo "unknown")
+          if [ -z "$LATEST_VERSION" ] || [ "$LATEST_VERSION" = "null" ]; then
+            LATEST_VERSION="unknown"
+          fi
           echo "📋 Latest available version: $LATEST_VERSION"
           
           # Determine repository status
