@@ -1,0 +1,206 @@
+name: Deploy on Version Change
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'config/metadata.json'
+      - 'template.md'
+      - 'package.json'
+  workflow_dispatch:
+    inputs:
+      force_deploy:
+        description: 'Force deployment regardless of version change'
+        required: false
+        default: 'false'
+        type: boolean
+
+jobs:
+  detect-version-change:
+    runs-on: ubuntu-latest
+    outputs:
+      version_changed: ${{ steps.check-version.outputs.changed }}
+      old_version: ${{ steps.check-version.outputs.old_version }}
+      new_version: ${{ steps.check-version.outputs.new_version }}
+      deploy_needed: ${{ steps.check-version.outputs.deploy_needed }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # Need previous commit to compare
+      
+      - name: Check for version changes
+        id: check-version
+        run: |
+          echo "🔍 Checking for main version changes..."
+          
+          # Get current version from metadata
+          CURRENT_VERSION=$(jq -r '.version' config/metadata.json)
+          echo "Current version: $CURRENT_VERSION"
+          
+          # Get previous version from git (if available)
+          if git show HEAD~1:config/metadata.json >/dev/null 2>&1; then
+            PREVIOUS_VERSION=$(git show HEAD~1:config/metadata.json | jq -r '.version' 2>/dev/null || echo "unknown")
+            echo "Previous version: $PREVIOUS_VERSION"
+          else
+            PREVIOUS_VERSION="unknown"
+            echo "Previous version: unknown (no previous commit)"
+          fi
+          
+          # Set outputs
+          echo "old_version=$PREVIOUS_VERSION" >> $GITHUB_OUTPUT
+          echo "new_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          
+          # Check if deployment is needed
+          DEPLOY_NEEDED="false"
+          
+          if [[ "${{ github.event.inputs.force_deploy }}" == "true" ]]; then
+            echo "🚀 Force deployment requested"
+            DEPLOY_NEEDED="true"
+          elif [[ "$PREVIOUS_VERSION" != "$CURRENT_VERSION" ]]; then
+            echo "🔄 Version changed from $PREVIOUS_VERSION to $CURRENT_VERSION"
+            DEPLOY_NEEDED="true"
+          else
+            echo "⏸️  No version change detected"
+          fi
+          
+          echo "deploy_needed=$DEPLOY_NEEDED" >> $GITHUB_OUTPUT
+          echo "changed=$DEPLOY_NEEDED" >> $GITHUB_OUTPUT
+          
+          if [[ "$DEPLOY_NEEDED" == "true" ]]; then
+            echo "✅ Deployment will proceed"
+          else
+            echo "⏭️  Skipping deployment"
+          fi
+
+  validate-version-policy:
+    needs: detect-version-change
+    if: needs.detect-version-change.outputs.deploy_needed == 'true'
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Validate version increment policy
+        run: |
+          echo "🔍 Validating version increment policy..."
+          
+          OLD_VERSION="${{ needs.detect-version-change.outputs.old_version }}"
+          NEW_VERSION="${{ needs.detect-version-change.outputs.new_version }}"
+          
+          # Make script executable
+          chmod +x scripts/manage-versions.sh
+          
+          # Validate increment policy
+          if ./scripts/manage-versions.sh validate-increment "main" "$OLD_VERSION" "$NEW_VERSION"; then
+            echo "✅ Version increment validation passed"
+          else
+            echo "❌ Version increment validation failed"
+            exit 1
+          fi
+      
+      - name: Validate metadata consistency
+        run: |
+          echo "🔍 Validating metadata and file consistency..."
+          
+          # Run consistency check
+          if ./scripts/manage-versions.sh check; then
+            echo "✅ Version consistency validation passed"
+          else
+            echo "❌ Version consistency validation failed"
+            echo ""
+            echo "💡 Run './scripts/manage-versions.sh sync' to fix inconsistencies"
+            exit 1
+          fi
+
+  deploy-package:
+    needs: [detect-version-change, validate-version-policy]
+    if: needs.detect-version-change.outputs.deploy_needed == 'true'
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository  
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Run test suite
+        run: |
+          echo "🧪 Running complete test suite before deployment..."
+          chmod +x tests/test-runner.sh scripts/*.sh
+          
+          if ./tests/test-runner.sh; then
+            echo "✅ All tests passed"
+          else
+            echo "❌ Tests failed - deployment aborted"
+            exit 1
+          fi
+      
+      - name: Create release tag
+        run: |
+          NEW_VERSION="${{ needs.detect-version-change.outputs.new_version }}"
+          echo "🏷️  Creating release tag v$NEW_VERSION"
+          
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Create annotated tag with version info
+          git tag -a "v$NEW_VERSION" -m "Release version $NEW_VERSION
+
+          Package version: $NEW_VERSION
+          Template version: $NEW_VERSION
+          
+          Automated deployment triggered by version change in config/metadata.json
+          Previous version: ${{ needs.detect-version-change.outputs.old_version }}
+          
+          See CHANGELOG.md for detailed changes."
+          
+          git push origin "v$NEW_VERSION"
+      
+      - name: Generate deployment summary
+        run: |
+          echo "# 🚀 Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Item | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Previous Version | ${{ needs.detect-version-change.outputs.old_version }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| New Version | ${{ needs.detect-version-change.outputs.new_version }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Trigger | ${{ github.event_name }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Git Tag | v${{ needs.detect-version-change.outputs.new_version }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## ✅ Validation Status" >> $GITHUB_STEP_SUMMARY
+          echo "- Version increment policy: ✅ Passed" >> $GITHUB_STEP_SUMMARY
+          echo "- Metadata consistency: ✅ Passed" >> $GITHUB_STEP_SUMMARY
+          echo "- Test suite: ✅ Passed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 📦 Components" >> $GITHUB_STEP_SUMMARY
+          echo "Main template and package versions have been updated to ${{ needs.detect-version-change.outputs.new_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Individual component versions remain independent and can be updated separately using:" >> $GITHUB_STEP_SUMMARY
+          echo '`./scripts/manage-versions.sh update-component <component> <version>`' >> $GITHUB_STEP_SUMMARY
+
+  notify-completion:
+    needs: [detect-version-change, deploy-package]
+    if: always() && needs.detect-version-change.outputs.deploy_needed == 'true'
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Deployment success notification
+        if: needs.deploy-package.result == 'success'
+        run: |
+          echo "🎉 Deployment completed successfully!"
+          echo "New version: ${{ needs.detect-version-change.outputs.new_version }}"
+          echo "Git tag: v${{ needs.detect-version-change.outputs.new_version }}"
+      
+      - name: Deployment failure notification  
+        if: needs.deploy-package.result == 'failure'
+        run: |
+          echo "❌ Deployment failed!"
+          echo "Version: ${{ needs.detect-version-change.outputs.new_version }}"
+          echo "Please check the workflow logs and fix any issues."
+          exit 1

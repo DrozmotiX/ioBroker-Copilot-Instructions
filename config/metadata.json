@@ -1,12 +1,14 @@
 {
   "version": "0.4.0",
+  "warning": "⚠️  CHANGING THE MAIN VERSION ABOVE WILL TRIGGER AUTOMATED PACKAGE UPDATE DEPLOYMENT",
   "repository": {
     "url": "https://github.com/DrozmotiX/ioBroker-Copilot-Instructions",
     "raw_base": "https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main"
   },
   "template": {
     "file": "template.md",
-    "target_path": ".github/copilot-instructions.md"
+    "target_path": ".github/copilot-instructions.md",
+    "version": "0.4.0"
   },
   "scripts": {
     "check_template_version": "scripts/check-template-version.sh",
@@ -19,5 +21,55 @@
       "template-update",
       "automation"
     ]
+  },
+  "components": {
+    "github_actions": {
+      "weekly_version_check": {
+        "file": "templates/weekly-version-check-action.yml",
+        "version": "0.2.1",
+        "description": "GitHub Action for automated template version monitoring"
+      },
+      "github_action_snippet": {
+        "file": "snippets/github-action-version-check.yml",
+        "version": "0.2.0",
+        "description": "Reusable GitHub Action snippet for template checking"
+      }
+    },
+    "templates": {
+      "initial_setup_automation": {
+        "file": "templates/initial-setup-automation.md",
+        "version": "0.3.0",
+        "description": "Automated setup template with GitHub Copilot integration"
+      },
+      "copy_paste_template": {
+        "file": "templates/copy-paste-template.md",
+        "version": "0.2.0",
+        "description": "Quick template update guide for GitHub Copilot"
+      },
+      "automated_template_update": {
+        "file": "templates/automated-template-update.md",
+        "version": "0.2.0",
+        "description": "Automated template update instructions"
+      }
+    },
+    "snippets": {
+      "version_check_command": {
+        "file": "snippets/version-check-command.md",
+        "version": "0.1.0",
+        "description": "Reusable version check command snippet"
+      },
+      "version_management_commands": {
+        "file": "snippets/version-management-commands.md",
+        "version": "0.1.0",
+        "description": "Version management script usage examples"
+      }
+    }
+  },
+  "version_policy": {
+    "main_version_source": "template.version",
+    "main_version_description": "Main package version must always match template version",
+    "component_versioning": "independent",
+    "increment_policy": "must_be_higher_than_previous",
+    "deployment_trigger": "main_version_change"
   }
 }

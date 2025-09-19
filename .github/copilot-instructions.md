@@ -21,24 +21,45 @@ You are working on the ioBroker Copilot Instructions template repository. This r
 - `README.md` - Repository documentation explaining how to use the template  
 - `CHANGELOG.md` - Version history and detailed change documentation
 - `TESTING.md` - Automated testing infrastructure documentation
+- `config/metadata.json` - **CENTRALIZED VERSION REGISTRY** - Contains all component versions and deployment configuration
 - `scripts/check-template-version.sh` - Version checking utility for users
-- `scripts/manage-versions.sh` - Master version management script (show/check/sync/update commands)
+- `scripts/manage-versions.sh` - **Enhanced version management** (show/check/sync/update/update-component/list-components commands)
 - `scripts/extract-version.sh` - Dynamic version extraction from template and current dates
 - `scripts/update-versions.sh` - Automated documentation synchronization script
+- `scripts/shared-utils.sh` - **Enhanced with component version functions** for metadata access
 - `tests/test-runner.sh` - Main test execution framework for all scripts
 - `tests/test-*.sh` - Comprehensive test suites for each script and integration scenarios
+- `tests/test-version-separation.sh` - **NEW** - Tests for multi-component versioning system
 - `.github/workflows/test-scripts.yml` - GitHub Actions workflow for continuous testing
+- `.github/workflows/deploy-on-version-change.yml` - **NEW** - Automated deployment on main version changes
 - `.github/copilot-instructions.md` - THIS file - repository-specific instructions
 
 ## Template Development Guidelines
 
 ### Version Management
-- Use the dynamic version management system (`scripts/manage-versions.sh`) for all version updates
-- Update versions with: `./scripts/manage-versions.sh update X.Y.Z` (automatically updates all files)
+- **Enhanced Multi-Component Versioning**: Repository now supports independent versioning for templates, GitHub Actions, and other components
+- **Main Package Version**: Always tied to template version and triggers automated deployment when changed
+- **Component Updates**: Use `./scripts/manage-versions.sh update-component <component_path> <version>` for individual component versions
+- **Version Policy Enforcement**: All version changes must be incremental (higher than previous version)
+- **Centralized Configuration**: All version information stored in `config/metadata.json` with full component tracking
+- **Main Version Updates**: Use `./scripts/manage-versions.sh update X.Y.Z` (automatically updates template and package versions together)
+- **Version Validation**: Built-in checks ensure main version matches template version and prevents downgrades
+- **Automated Deployment**: Changes to main version trigger deployment workflow automatically
 - Document all changes in `CHANGELOG.md` with detailed descriptions
-- Use semantic versioning (MAJOR.MINOR.PATCH)
+- Use semantic versioning (MAJOR.MINOR.PATCH) for all components
 - Validate consistency with: `./scripts/manage-versions.sh check`
 - Sync documentation with: `./scripts/manage-versions.sh sync` when needed
+
+### GitHub Copilot Review Instructions for Version Changes
+When reviewing PRs that modify versions:
+1. **Always verify main version changes match template version** - these must be identical
+2. **Check that version increments are higher than previous** - prevent downgrades
+3. **Validate component version changes** - ensure they follow semantic versioning
+4. **Confirm CHANGELOG.md is updated** - require detailed change documentation
+5. **Check for deployment readiness** - main version changes trigger automated deployment
+6. **Review version policy compliance** - ensure all changes follow increment requirements
+7. **Validate metadata consistency** - run `./scripts/manage-versions.sh check` mentally
+8. **Component separation compliance** - ensure components use independent versioning appropriately
 
 ### Template Content Standards  
 - Focus on practical, actionable guidance for ioBroker adapter developers

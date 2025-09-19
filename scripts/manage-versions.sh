@@ -32,18 +32,86 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
+# Function to compare versions (returns 0 if v1 > v2, 1 if v1 <= v2)
+version_greater_than() {
+    local v1="$1"
+    local v2="$2"
+    
+    # Handle empty versions
+    if [[ -z "$v1" || -z "$v2" ]]; then
+        return 1
+    fi
+    
+    # Split versions into arrays
+    IFS='.' read -ra V1 <<< "$v1"
+    IFS='.' read -ra V2 <<< "$v2"
+    
+    # Compare each part
+    for i in {0..2}; do
+        local part1=${V1[i]:-0}
+        local part2=${V2[i]:-0}
+        
+        if [[ $part1 -gt $part2 ]]; then
+            return 0
+        elif [[ $part1 -lt $part2 ]]; then
+            return 1
+        fi
+    done
+    
+    # Versions are equal
+    return 1
+}
+
 # Function to show current versions
 show_versions() {
     echo -e "${BLUE}📋 Current Version Status:${NC}"
     echo ""
     
+    # Main version information
+    echo -e "${YELLOW}🏗️  Main Package Version:${NC}"
+    MAIN_VER=$(get_version)
+    echo "   Main version: $MAIN_VER"
+    
     if [[ -f "$TEMPLATE_FILE" ]]; then
         TEMPLATE_VER=$(grep "^**Version:**" "$TEMPLATE_FILE" | head -1 | sed 's/.*Version:\*\* *//' | tr -d ' ')
-        echo "📄 Template version: $TEMPLATE_VER"
+        echo "   Template version: $TEMPLATE_VER"
+        
+        if [[ "$MAIN_VER" != "$TEMPLATE_VER" ]]; then
+            echo -e "   ${RED}⚠️  Main version should match template version${NC}"
+        fi
     else
-        echo -e "${RED}❌ Template file not found${NC}"
+        echo -e "   ${RED}❌ Template file not found${NC}"
     fi
     
+    if [[ -f "$PACKAGE_FILE" ]]; then
+        PACKAGE_VER=$(grep '"version":' "$PACKAGE_FILE" | head -1 | sed 's/.*"version": *"//;s/",\?.*$//' | tr -d ' ')
+        echo "   Package.json version: $PACKAGE_VER"
+    else
+        echo -e "   ${YELLOW}⚠️  Package.json not found${NC}"
+    fi
+    
+    # Component versions
+    echo ""
+    echo -e "${YELLOW}🔧 Component Versions:${NC}"
+    
+    if command -v jq >/dev/null 2>&1 && [[ -f "$METADATA_FILE" ]]; then
+        # GitHub Actions
+        echo -e "${BLUE}  GitHub Actions:${NC}"
+        jq -r '.components.github_actions | to_entries[] | "    \(.key): \(.value.version) (\(.value.description))"' "$METADATA_FILE" 2>/dev/null || echo "    No GitHub Actions found"
+        
+        # Templates  
+        echo -e "${BLUE}  Templates:${NC}"
+        jq -r '.components.templates | to_entries[] | "    \(.key): \(.value.version) (\(.value.description))"' "$METADATA_FILE" 2>/dev/null || echo "    No templates found"
+        
+        # Snippets
+        echo -e "${BLUE}  Snippets:${NC}"
+        jq -r '.components.snippets | to_entries[] | "    \(.key): \(.value.version) (\(.value.description))"' "$METADATA_FILE" 2>/dev/null || echo "    No snippets found"
+    else
+        echo "    Cannot display component versions (jq not available or metadata missing)"
+    fi
+    
+    # Additional status information
+    echo ""
     if [[ -f "$COPILOT_INSTRUCTIONS" ]]; then
         COPILOT_VER=$(grep "^**Version:**" "$COPILOT_INSTRUCTIONS" | head -1 | sed 's/.*Version:\*\* *//' | tr -d ' ')
         echo "🤖 Repository instructions version: $COPILOT_VER"
@@ -59,13 +127,6 @@ show_versions() {
         else
             echo "📖 README uses GitHub badge for version display (auto-updated)"
         fi
-    fi
-    
-    if [[ -f "$PACKAGE_FILE" ]]; then
-        PACKAGE_VER=$(grep '"version":' "$PACKAGE_FILE" | head -1 | sed 's/.*"version": *"//;s/",\?.*$//' | tr -d ' ')
-        echo "📦 Package.json version: $PACKAGE_VER"
-    else
-        echo -e "${YELLOW}⚠️  Package.json not found${NC}"
     fi
     
     # Show metadata version
@@ -141,10 +202,11 @@ update_metadata_version() {
         if command -v jq >/dev/null 2>&1; then
             # Use jq for precise JSON updates
             local TEMP_FILE=$(mktemp)
-            jq ".version = \"$NEW_VERSION\"" "$METADATA_FILE" > "$TEMP_FILE" && mv "$TEMP_FILE" "$METADATA_FILE"
-            echo "✅ Updated metadata.json"
+            # Update both main version and template version together
+            jq ".version = \"$NEW_VERSION\" | .template.version = \"$NEW_VERSION\"" "$METADATA_FILE" > "$TEMP_FILE" && mv "$TEMP_FILE" "$METADATA_FILE"
+            echo "✅ Updated metadata.json (main and template version)"
         else
-            # Fallback sed replacement
+            # Fallback sed replacement for both versions
             sed -i "s/\"version\": \"[0-9]\+\.[0-9]\+\.[0-9]\+\"/\"version\": \"$NEW_VERSION\"/" "$METADATA_FILE"
             echo "✅ Updated metadata.json (using sed)"
         fi
@@ -152,6 +214,83 @@ update_metadata_version() {
         echo "⚠️  Metadata file not found: $METADATA_FILE"
     fi
 }
+# Function to update component version
+update_component_version_cmd() {
+    local COMPONENT_PATH="$1"
+    local NEW_VERSION="$2"
+    
+    if [[ -z "$COMPONENT_PATH" || -z "$NEW_VERSION" ]]; then
+        echo -e "${RED}❌ Usage: update-component <component_path> <new_version>${NC}"
+        echo "Example: update-component github_actions.weekly_version_check 0.3.0"
+        return 1
+    fi
+    
+    # Validate version format
+    if [[ ! "$NEW_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+        echo -e "${RED}❌ Invalid version format. Use semantic versioning (e.g., 0.3.0)${NC}"
+        return 1
+    fi
+    
+    # Get current version for comparison
+    local CURRENT_VERSION=$(get_component_version "$COMPONENT_PATH")
+    if [[ -n "$CURRENT_VERSION" ]]; then
+        if ! version_greater_than "$NEW_VERSION" "$CURRENT_VERSION"; then
+            echo -e "${RED}❌ New version ($NEW_VERSION) must be higher than current version ($CURRENT_VERSION)${NC}"
+            return 1
+        fi
+    fi
+    
+    # Update the component version
+    if update_component_version "$COMPONENT_PATH" "$NEW_VERSION"; then
+        echo -e "${GREEN}✅ Component $COMPONENT_PATH updated to $NEW_VERSION${NC}"
+    else
+        echo -e "${RED}❌ Failed to update component version${NC}"
+        return 1
+    fi
+}
+
+# Function to list all component versions
+list_component_versions() {
+    echo -e "${BLUE}📦 Component Version Listing:${NC}"
+    echo ""
+    
+    if list_components; then
+        echo ""
+        echo -e "${YELLOW}💡 To update a component version:${NC}"
+        echo "   $0 update-component <component_path> <new_version>"
+        echo "   Example: $0 update-component github_actions.weekly_version_check 0.3.0"
+    else
+        echo -e "${RED}❌ Failed to list components${NC}"
+        return 1
+    fi
+}
+
+# Function to validate version increment policy
+validate_version_increment() {
+    local COMPONENT_TYPE="$1"  # main, template, or component_path
+    local OLD_VERSION="$2"
+    local NEW_VERSION="$3"
+    
+    if [[ -z "$OLD_VERSION" || -z "$NEW_VERSION" ]]; then
+        echo -e "${YELLOW}⚠️  Cannot validate version increment - missing version information${NC}"
+        return 0  # Allow if we can't validate
+    fi
+    
+    if [[ "$OLD_VERSION" == "$NEW_VERSION" ]]; then
+        echo -e "${YELLOW}⚠️  Version unchanged ($NEW_VERSION)${NC}"
+        return 0
+    fi
+    
+    if ! version_greater_than "$NEW_VERSION" "$OLD_VERSION"; then
+        echo -e "${RED}❌ Version increment violation: $NEW_VERSION is not higher than $OLD_VERSION${NC}"
+        echo -e "${RED}   Policy requires all version changes to be incremental${NC}"
+        return 1
+    fi
+    
+    echo -e "${GREEN}✅ Version increment valid: $OLD_VERSION → $NEW_VERSION${NC}"
+    return 0
+}
+
 # Function to update to a new version
 update_version() {
     local NEW_VERSION="$1"
@@ -167,10 +306,16 @@ update_version() {
         return 1
     fi
     
+    # Get current version and validate increment
+    local CURRENT_VERSION=$(get_version)
+    if ! validate_version_increment "main" "$CURRENT_VERSION" "$NEW_VERSION"; then
+        return 1
+    fi
+    
     echo -e "${BLUE}📦 Updating to version $NEW_VERSION:${NC}"
     echo ""
     
-    # Update centralized metadata first
+    # Update centralized metadata first (both main and template version)
     update_metadata_version "$NEW_VERSION"
     
     # Update template
@@ -197,6 +342,7 @@ update_version() {
     echo ""
     echo -e "${YELLOW}📝 Don't forget to update CHANGELOG.md with the changes for version $NEW_VERSION${NC}"
     echo -e "${YELLOW}📝 Consider creating a git tag: git tag v$NEW_VERSION${NC}"
+    echo -e "${YELLOW}🚀 Main version change will trigger automated deployment workflow${NC}"
 }
 
 # Main script logic
@@ -213,20 +359,34 @@ case "${1:-show}" in
     "update")
         update_version "$2"
         ;;
+    "update-component")
+        update_component_version_cmd "$2" "$3"
+        ;;
+    "list-components")
+        list_component_versions
+        ;;
+    "validate-increment")
+        validate_version_increment "$2" "$3" "$4"
+        ;;
     *)
-        echo "Usage: $0 {show|check|sync|update} [version]"
+        echo "Usage: $0 {show|check|sync|update|update-component|list-components|validate-increment} [options]"
         echo ""
         echo "Commands:"
-        echo "  show             - Show current versions across all files"
-        echo "  check            - Check version consistency"
-        echo "  sync             - Sync documentation with current template version"
-        echo "  update <version> - Update to new version (e.g., update 0.3.2)"
+        echo "  show                                    - Show current versions across all files"
+        echo "  check                                   - Check version consistency"
+        echo "  sync                                    - Sync documentation with current template version"
+        echo "  update <version>                        - Update main version (e.g., update 0.3.2)"
+        echo "  update-component <component> <version>  - Update component version"
+        echo "  list-components                         - List all components with versions"
+        echo "  validate-increment <type> <old> <new>  - Validate version increment policy"
         echo ""
         echo "Examples:"
         echo "  $0 show"
         echo "  $0 check"
         echo "  $0 sync"
         echo "  $0 update 0.3.2"
+        echo "  $0 update-component github_actions.weekly_version_check 0.3.0"
+        echo "  $0 list-components"
         exit 1
         ;;
 esac
