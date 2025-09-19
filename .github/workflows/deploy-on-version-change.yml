@@ -149,17 +149,19 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Create annotated tag with version info
-          git tag -a "v$NEW_VERSION" -m "Release version $NEW_VERSION
+          # Create annotated tag with version info using a here-document
+          cat <<EOF > /tmp/tag-message.txt
+Release version $NEW_VERSION
 
-          Package version: $NEW_VERSION
-          Template version: $NEW_VERSION
-          
-          Automated deployment triggered by version change in config/metadata.json
-          Previous version: ${{ needs.detect-version-change.outputs.old_version }}
-          
-          See CHANGELOG.md for detailed changes."
-          
+Package version: $NEW_VERSION
+Template version: $NEW_VERSION
+
+Automated deployment triggered by version change in config/metadata.json
+Previous version: ${{ needs.detect-version-change.outputs.old_version }}
+
+See CHANGELOG.md for detailed changes.
+EOF
+          git tag -a "v$NEW_VERSION" -F /tmp/tag-message.txt
           git push origin "v$NEW_VERSION"
       
       - name: Generate deployment summary
