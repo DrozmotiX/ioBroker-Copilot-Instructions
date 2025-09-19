@@ -101,7 +101,7 @@ tests.integration(path.join(__dirname, '..'), {
                         
                         // Get adapter object using promisified pattern
                         const obj = await new Promise((res, rej) => {
-                            harness.objects.getObject('system.adapter.brightsky.0', (err, o) => {
+                            harness.objects.getObject('system.adapter.your-adapter.0', (err, o) => {
                                 if (err) return rej(err);
                                 res(o);
                             });
