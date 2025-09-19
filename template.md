@@ -82,6 +82,7 @@ const { tests } = require('@iobroker/testing');
 
 // Define test coordinates or configuration
 const TEST_COORDINATES = '52.520008,13.404954'; // Berlin
+const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 // Use tests.integration() with defineAdditionalTests
 tests.integration(path.join(__dirname, '..'), {
@@ -93,40 +94,81 @@ tests.integration(path.join(__dirname, '..'), {
                 harness = getHarness();
             });
 
-            it('should configure and start adapter', () => new Promise(async (resolve) => {
-                // Get adapter object and configure
-                harness.objects.getObject('system.adapter.brightsky.0', async (err, obj) => {
-                    if (err) {
-                        console.error('Error getting adapter object:', err);
-                        resolve();
-                        return;
-                    }
-
-                    // Configure adapter properties
-                    obj.native.position = TEST_COORDINATES;
-                    obj.native.createCurrently = true;
-                    obj.native.createHourly = true;
-                    obj.native.createDaily = true;
-                    // ... other configuration
-
-                    // Set the updated configuration
-                    harness.objects.setObject(obj._id, obj);
-
-                    // Start adapter and wait
-                    await harness.startAdapterAndWait();
-
-                    // Wait for adapter to process data
-                    setTimeout(() => {
-                        // Verify states were created
-                        harness.states.getState('brightsky.0.info.connection', (err, state) => {
-                            if (state && state.val === true) {
-                                console.log('✅ Adapter started successfully');
-                            }
-                            resolve();
+            it('should configure and start adapter', function () {
+                return new Promise(async (resolve, reject) => {
+                    try {
+                        harness = getHarness();
+                        
+                        // Get adapter object using promisified pattern
+                        const obj = await new Promise((res, rej) => {
+                            harness.objects.getObject('system.adapter.brightsky.0', (err, o) => {
+                                if (err) return rej(err);
+                                res(o);
+                            });
                         });
-                    }, 15000); // Allow time for API calls
+                        
+                        if (!obj) {
+                            return reject(new Error('Adapter object not found'));
+                        }
+
+                        // Configure adapter properties
+                        Object.assign(obj.native, {
+                            position: TEST_COORDINATES,
+                            createCurrently: true,
+                            createHourly: true,
+                            createDaily: true,
+                            // Add other configuration as needed
+                        });
+
+                        // Set the updated configuration
+                        harness.objects.setObject(obj._id, obj);
+
+                        console.log('✅ Step 1: Configuration written, starting adapter...');
+                        
+                        // Start adapter and wait
+                        await harness.startAdapterAndWait();
+                        
+                        console.log('✅ Step 2: Adapter started');
+
+                        // Wait for adapter to process data
+                        const waitMs = 15000;
+                        await wait(waitMs);
+
+                        console.log('🔍 Step 3: Checking states after adapter run...');
+                        
+                        // Get all states created by adapter
+                        const stateIds = await harness.dbConnection.getStateIDs('your-adapter.0.*');
+                        
+                        console.log(`📊 Found ${stateIds.length} states`);
+
+                        if (stateIds.length > 0) {
+                            console.log('✅ Adapter successfully created states');
+                            
+                            // Show sample of created states
+                            const allStates = await new Promise((res, rej) => {
+                                harness.states.getStates(stateIds, (err, states) => {
+                                    if (err) return rej(err);
+                                    res(states || []);
+                                });
+                            });
+                            
+                            console.log('📋 Sample states created:');
+                            stateIds.slice(0, 5).forEach((stateId, index) => {
+                                const state = allStates[index];
+                                console.log(`   ${stateId}: ${state && state.val !== undefined ? state.val : 'undefined'}`);
+                            });
+                            
+                            await harness.stopAdapter();
+                            resolve(true);
+                        } else {
+                            console.log('❌ No states were created by the adapter');
+                            reject(new Error('Adapter did not create any states'));
+                        }
+                    } catch (error) {
+                        reject(error);
+                    }
                 });
-            })).timeout(30000);
+            }).timeout(40000);
         });
     }
 });
@@ -138,79 +180,149 @@ tests.integration(path.join(__dirname, '..'), {
 
 ```javascript
 // Example: Testing successful configuration
-it('should configure and start adapter with valid configuration', () => new Promise(async (resolve) => {
-    // ... successful configuration test as shown above
-})).timeout(30000);
+it('should configure and start adapter with valid configuration', function () {
+    return new Promise(async (resolve, reject) => {
+        // ... successful configuration test as shown above
+    });
+}).timeout(40000);
 
 // Example: Testing failure scenarios
-it('should fail gracefully with invalid configuration', () => new Promise(async (resolve) => {
-    harness.objects.getObject('system.adapter.brightsky.0', async (err, obj) => {
-        if (err) {
-            console.error('Error getting adapter object:', err);
-            resolve();
-            return;
-        }
-
-        // Configure with INVALID data to test failure handling
-        obj.native.position = 'invalid-coordinates'; // This should cause failure
-        obj.native.createCurrently = true;
-
-        harness.objects.setObject(obj._id, obj);
-
+it('should NOT create daily states when daily is disabled', function () {
+    return new Promise(async (resolve, reject) => {
         try {
-            await harness.startAdapterAndWait();
+            harness = getHarness();
             
-            setTimeout(() => {
-                // Verify adapter handled the error properly
-                harness.states.getState('brightsky.0.info.connection', (err, state) => {
-                    if (state && state.val === false) {
-                        console.log('✅ Adapter properly failed with invalid configuration');
-                    } else {
-                        console.log('❌ Adapter should have failed but connection shows true');
-                    }
-                    resolve();
+            console.log('🔍 Step 1: Fetching adapter object...');
+            const obj = await new Promise((res, rej) => {
+                harness.objects.getObject('system.adapter.your-adapter.0', (err, o) => {
+                    if (err) return rej(err);
+                    res(o);
                 });
-            }, 15000);
+            });
+            
+            if (!obj) return reject(new Error('Adapter object not found'));
+            console.log('✅ Step 1.5: Adapter object loaded');
+
+            console.log('🔍 Step 2: Updating adapter config...');
+            Object.assign(obj.native, {
+                position: TEST_COORDINATES,
+                createCurrently: false,
+                createHourly: true,
+                createDaily: false, // Daily disabled for this test
+            });
+
+            await new Promise((res, rej) => {
+                harness.objects.setObject(obj._id, obj, (err) => {
+                    if (err) return rej(err);
+                    console.log('✅ Step 2.5: Adapter object updated');
+                    res(undefined);
+                });
+            });
+
+            console.log('🔍 Step 3: Starting adapter...');
+            await harness.startAdapterAndWait();
+            console.log('✅ Step 4: Adapter started');
+
+            console.log('⏳ Step 5: Waiting 20 seconds for states...');
+            await new Promise((res) => setTimeout(res, 20000));
+
+            console.log('🔍 Step 6: Fetching state IDs...');
+            const stateIds = await harness.dbConnection.getStateIDs('your-adapter.0.*');
+
+            console.log(`📊 Step 7: Found ${stateIds.length} total states`);
+
+            const hourlyStates = stateIds.filter((key) => key.includes('hourly'));
+            if (hourlyStates.length > 0) {
+                console.log(`✅ Step 8: Correctly ${hourlyStates.length} hourly weather states created`);
+            } else {
+                console.log('❌ Step 8: No hourly states created (test failed)');
+                return reject(new Error('Expected hourly states but found none'));
+            }
+
+            // Check daily states should NOT be present
+            const dailyStates = stateIds.filter((key) => key.includes('daily'));
+            if (dailyStates.length === 0) {
+                console.log(`✅ Step 9: No daily states found as expected`);
+            } else {
+                console.log(`❌ Step 9: Daily states present (${dailyStates.length}) (test failed)`);
+                return reject(new Error('Expected no daily states but found some'));
+            }
+
+            await harness.stopAdapter();
+            console.log('🛑 Step 10: Adapter stopped');
+
+            resolve(true);
         } catch (error) {
-            console.log('✅ Adapter correctly threw error with invalid configuration:', error.message);
-            resolve();
+            reject(error);
         }
     });
-})).timeout(30000);
+}).timeout(40000);
 
-// Example: Testing missing required configuration
-it('should fail when required configuration is missing', () => new Promise(async (resolve) => {
-    harness.objects.getObject('system.adapter.brightsky.0', async (err, obj) => {
-        if (err) {
-            console.error('Error getting adapter object:', err);
-            resolve();
-            return;
-        }
-
-        // Remove required configuration to test failure
-        delete obj.native.position; // This should cause failure
-
-        harness.objects.setObject(obj._id, obj);
-
+// Example: Testing missing required configuration  
+it('should handle missing required configuration properly', function () {
+    return new Promise(async (resolve, reject) => {
         try {
-            await harness.startAdapterAndWait();
+            harness = getHarness();
             
-            setTimeout(() => {
-                harness.states.getState('brightsky.0.info.connection', (err, state) => {
-                    if (!state || state.val === false) {
-                        console.log('✅ Adapter properly failed with missing required configuration');
-                    } else {
-                        console.log('❌ Adapter should have failed but connection shows true');
-                    }
-                    resolve();
+            console.log('🔍 Step 1: Fetching adapter object...');
+            const obj = await new Promise((res, rej) => {
+                harness.objects.getObject('system.adapter.your-adapter.0', (err, o) => {
+                    if (err) return rej(err);
+                    res(o);
                 });
-            }, 10000);
+            });
+            
+            if (!obj) return reject(new Error('Adapter object not found'));
+
+            console.log('🔍 Step 2: Removing required configuration...');
+            // Remove required configuration to test failure handling
+            delete obj.native.position; // This should cause failure or graceful handling
+
+            await new Promise((res, rej) => {
+                harness.objects.setObject(obj._id, obj, (err) => {
+                    if (err) return rej(err);
+                    res(undefined);
+                });
+            });
+
+            console.log('🔍 Step 3: Starting adapter...');
+            await harness.startAdapterAndWait();
+
+            console.log('⏳ Step 4: Waiting for adapter to process...');
+            await new Promise((res) => setTimeout(res, 10000));
+
+            console.log('🔍 Step 5: Checking adapter behavior...');
+            const stateIds = await harness.dbConnection.getStateIDs('your-adapter.0.*');
+
+            // Check if adapter handled missing configuration gracefully
+            if (stateIds.length === 0) {
+                console.log('✅ Adapter properly handled missing configuration - no invalid states created');
+                resolve(true);
+            } else {
+                // If states were created, check if they're in error state
+                const connectionState = await new Promise((res, rej) => {
+                    harness.states.getState('your-adapter.0.info.connection', (err, state) => {
+                        if (err) return rej(err);
+                        res(state);
+                    });
+                });
+                
+                if (!connectionState || connectionState.val === false) {
+                    console.log('✅ Adapter properly failed with missing configuration');
+                    resolve(true);
+                } else {
+                    console.log('❌ Adapter should have failed or handled missing config gracefully');
+                    reject(new Error('Adapter should have handled missing configuration'));
+                }
+            }
+
+            await harness.stopAdapter();
         } catch (error) {
             console.log('✅ Adapter correctly threw error with missing configuration:', error.message);
-            resolve();
+            resolve(true);
         }
     });
-})).timeout(30000);
+}).timeout(40000);
 ```
 
 #### Advanced State Access Patterns
