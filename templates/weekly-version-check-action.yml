@@ -246,7 +246,7 @@ This automated update process:
 - **Update Guide**: https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/blob/main/docs/automated-updates.md
 
 ---
-*🤖 This issue was automatically created by GitHub Actions on $(date). Weekly monitoring will continue to check for updates while preserving your customizations.*`;
+*🤖 This issue was automatically created by GitHub Actions on ${new Date().toISOString().split('T')[0]}. Weekly monitoring will continue to check for updates while preserving your customizations.*`;
             }
             
             const issue = await github.rest.issues.create({
