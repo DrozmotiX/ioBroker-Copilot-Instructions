@@ -6,6 +6,11 @@ labels: ["copilot-setup", "automation"]
 assignees: []
 ---
 
+<!-- 
+Template Version: 0.4.0
+Source: https://github.com/DrozmotiX/ioBroker-Copilot-Instructions
+-->
+
 # 🤖 Automated ioBroker Copilot Instructions Setup
 
 **GitHub Copilot**: Please help me set up GitHub Copilot instructions for my ioBroker adapter repository with full automation and validation.
