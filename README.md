@@ -39,7 +39,9 @@ Your contributions help make adapter development better for the entire ioBroker 
    GitHub Copilot: Please help me set up GitHub Copilot instructions for my ioBroker adapter repository using the centralized automation template from:
    https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/templates/initial-setup-automation.md
    ```
-2. **Let GitHub Copilot handle everything** using our **centralized automation system**:
+2. Assign the created issue to @copilot
+
+3. **Let GitHub Copilot handle everything** using our **centralized automation system**:
    - ✅ Validates existing setup and detects repository status
    - 📥 Downloads and customizes latest template using metadata.json
    - 🎯 Adds adapter-specific content with intelligent customization
@@ -47,6 +49,8 @@ Your contributions help make adapter development better for the entire ioBroker 
    - 🛡️ Preserves any existing customizations automatically
    - 🚫 **Avoids manual scripts** (replaces approaches like validation scripts in package.json)
 
+4. Copilot will create a new PR containing the required changes. Wait until copilot finishes updating this PR and perform a review when requested by copilot.
+    
 ### For Quick Updates Only  
 1. **Create a quick update issue** with this simple content:
    ```
