@@ -93,12 +93,12 @@ tests.integration(path.join(__dirname, '..'), {
                 harness = getHarness();
             });
 
-            it('should configure and start adapter', () => new Promise(async (resolve) => {
+            it('should configure and start adapter', () => new Promise(async (resolve, reject) => {
                 // Get adapter object and configure
                 harness.objects.getObject('system.adapter.brightsky.0', async (err, obj) => {
                     if (err) {
                         console.error('Error getting adapter object:', err);
-                        resolve();
+                        reject(err);
                         return;
                     }
 
@@ -119,10 +119,16 @@ tests.integration(path.join(__dirname, '..'), {
                     setTimeout(() => {
                         // Verify states were created
                         harness.states.getState('brightsky.0.info.connection', (err, state) => {
+                            if (err) {
+                                reject(err);
+                                return;
+                            }
                             if (state && state.val === true) {
                                 console.log('✅ Adapter started successfully');
+                                resolve();
+                            } else {
+                                reject(new Error('Adapter failed to start - connection state is not true'));
                             }
-                            resolve();
                         });
                     }, 15000); // Allow time for API calls
                 });
@@ -138,16 +144,16 @@ tests.integration(path.join(__dirname, '..'), {
 
 ```javascript
 // Example: Testing successful configuration
-it('should configure and start adapter with valid configuration', () => new Promise(async (resolve) => {
+it('should configure and start adapter with valid configuration', () => new Promise(async (resolve, reject) => {
     // ... successful configuration test as shown above
 })).timeout(30000);
 
 // Example: Testing failure scenarios
-it('should fail gracefully with invalid configuration', () => new Promise(async (resolve) => {
+it('should fail gracefully with invalid configuration', () => new Promise(async (resolve, reject) => {
     harness.objects.getObject('system.adapter.brightsky.0', async (err, obj) => {
         if (err) {
             console.error('Error getting adapter object:', err);
-            resolve();
+            reject(err);
             return;
         }
 
@@ -163,12 +169,17 @@ it('should fail gracefully with invalid configuration', () => new Promise(async 
             setTimeout(() => {
                 // Verify adapter handled the error properly
                 harness.states.getState('brightsky.0.info.connection', (err, state) => {
+                    if (err) {
+                        reject(err);
+                        return;
+                    }
                     if (state && state.val === false) {
                         console.log('✅ Adapter properly failed with invalid configuration');
+                        resolve();
                     } else {
                         console.log('❌ Adapter should have failed but connection shows true');
+                        reject(new Error('Adapter should have failed with invalid configuration'));
                     }
-                    resolve();
                 });
             }, 15000);
         } catch (error) {
@@ -179,11 +190,11 @@ it('should fail gracefully with invalid configuration', () => new Promise(async 
 })).timeout(30000);
 
 // Example: Testing missing required configuration
-it('should fail when required configuration is missing', () => new Promise(async (resolve) => {
+it('should fail when required configuration is missing', () => new Promise(async (resolve, reject) => {
     harness.objects.getObject('system.adapter.brightsky.0', async (err, obj) => {
         if (err) {
             console.error('Error getting adapter object:', err);
-            resolve();
+            reject(err);
             return;
         }
 
@@ -197,12 +208,17 @@ it('should fail when required configuration is missing', () => new Promise(async
             
             setTimeout(() => {
                 harness.states.getState('brightsky.0.info.connection', (err, state) => {
+                    if (err) {
+                        reject(err);
+                        return;
+                    }
                     if (!state || state.val === false) {
                         console.log('✅ Adapter properly failed with missing required configuration');
+                        resolve();
                     } else {
                         console.log('❌ Adapter should have failed but connection shows true');
+                        reject(new Error('Adapter should have failed with missing configuration'));
                     }
-                    resolve();
                 });
             }, 10000);
         } catch (error) {
