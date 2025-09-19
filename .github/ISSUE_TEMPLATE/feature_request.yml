@@ -1,0 +1,117 @@
+name: 🚀 Feature Request
+description: Suggest new functionality for the ioBroker Copilot Instructions template
+title: "[FEATURE] "
+labels: ["enhancement", "feature-request"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🚀 Feature Request for ioBroker Copilot Instructions Template
+        
+        Thank you for suggesting new functionality! This template helps maintainers understand and explore new features that could benefit the ioBroker community.
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: Prerequisites
+      description: Please confirm you have reviewed existing functionality
+      options:
+        - label: I have searched existing issues and discussions to ensure this is not a duplicate
+          required: true
+        - label: I have reviewed the current template documentation and features
+          required: true
+        - label: This feature would benefit the broader ioBroker adapter development community
+          required: true
+
+  - type: dropdown
+    id: feature-category
+    attributes:
+      label: Feature Category
+      description: What type of functionality are you requesting?
+      options:
+        - Template Instructions Enhancement
+        - GitHub Copilot Integration Improvement
+        - Automation & Tooling
+        - Documentation & Setup
+        - Version Management
+        - Testing & Validation
+        - Other (please specify)
+      default: 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: Feature Description
+      description: Describe the new functionality you'd like to see
+      placeholder: |
+        Clearly describe:
+        - What functionality you want added
+        - Why this would be valuable
+        - How it would improve adapter development
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-cases
+    attributes:
+      label: Use Cases & Examples
+      description: Provide specific examples of how this feature would be used
+      placeholder: |
+        Examples:
+        - As an adapter developer, I want [functionality] so that [benefit]
+        - When [scenario], this feature would help by [improvement]
+        - Current workflow: [current process]
+        - Improved workflow with this feature: [new process]
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Proposed Solution
+      description: If you have ideas for how this could be implemented
+      placeholder: |
+        Suggestions for implementation:
+        - Template changes needed
+        - New sections or instructions
+        - Integration with existing tools
+        - Examples of similar functionality elsewhere
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority Level
+      description: How important is this feature for your adapter development?
+      options:
+        - Low - Nice to have improvement
+        - Medium - Would significantly improve workflow
+        - High - Essential for effective adapter development
+        - Critical - Blocking current development efforts
+      default: 1
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other information that might help understand this request
+      placeholder: |
+        Additional information:
+        - Links to relevant ioBroker documentation
+        - Examples from other projects
+        - Screenshots or mockups
+        - Technical considerations
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      description: Are you willing to help implement this feature?
+      options:
+        - label: I'm willing to help test this feature when implemented
+        - label: I'm willing to provide feedback during development
+        - label: I'm willing to help with documentation
+        - label: I'm willing to help with implementation (code/templates)

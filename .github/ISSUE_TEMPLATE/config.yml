@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 💬 Community Discussion
+    url: https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/discussions
+    about: Join discussions about best practices, share experiences, and collaborate on improvements
+  - name: 🌍 ioBroker Community Forum
+    url: https://forum.iobroker.net/topic/82238/ki-trifft-iobroker-ein-gemeinsames-abenteuer
+    about: Connect with the broader ioBroker community for adapter development collaboration
+  - name: 📖 Documentation
+    url: https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/tree/main/docs
+    about: Complete setup guides, automated updates documentation, and best practices

@@ -1,0 +1,184 @@
+name: 🐛 Bug Report
+description: Report issues with the current template or setup
+title: "[BUG] "
+labels: ["bug"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🐛 Bug Report for ioBroker Copilot Instructions
+        
+        Thank you for reporting an issue! This helps us improve the template and setup process for the ioBroker community.
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: Prerequisites
+      description: Please confirm you have done the following
+      options:
+        - label: I have searched existing issues to ensure this is not a duplicate
+          required: true
+        - label: I have followed the setup guide and troubleshooting steps
+          required: true
+        - label: This issue is related to the ioBroker Copilot Instructions template or setup process
+          required: true
+
+  - type: dropdown
+    id: issue-type
+    attributes:
+      label: Issue Type
+      description: What type of issue are you experiencing?
+      options:
+        - Template Issue - Problem with template content or structure
+        - Setup Issue - Problem during installation or configuration
+        - Bug - Unexpected behavior or error
+        - Question - Need help understanding something
+        - Documentation Issue - Unclear or missing documentation
+        - Automation Issue - Problem with automated updates or scripts
+      default: 0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      description: How severe is this issue?
+      options:
+        - Low - Minor inconvenience, has workaround
+        - Medium - Affects functionality but not critical
+        - High - Significant impact on adapter development
+        - Critical - Completely blocks adapter development
+      default: 1
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-behavior
+    attributes:
+      label: Current Behavior
+      description: Describe what is happening now
+      placeholder: |
+        Describe the current behavior:
+        - What are you trying to do?
+        - What happens instead of what you expect?
+        - Any error messages or unexpected outputs?
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: Describe what you expected to happen
+      placeholder: |
+        Describe what should happen:
+        - What did you expect to occur?
+        - How should it work based on documentation?
+        - What would be the ideal outcome?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction-steps
+    attributes:
+      label: Steps to Reproduce
+      description: Provide detailed steps to reproduce the issue
+      placeholder: |
+        1. Go to...
+        2. Click on...
+        3. Run command...
+        4. See error...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: environment-github-copilot
+    attributes:
+      label: GitHub Copilot Status
+      description: Is GitHub Copilot properly set up in your repository?
+      options:
+        - "Yes - Copilot is active and working"
+        - "No - Copilot is not set up"
+        - "Partial - Copilot works sometimes"
+        - "Unknown - Not sure if it's working"
+      default: 0
+    validations:
+      required: true
+
+  - type: input
+    id: template-version
+    attributes:
+      label: Template Version
+      description: What version of the template are you using?
+      placeholder: "e.g., 0.4.0 or 'latest' or 'unknown'"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: environment-os
+    attributes:
+      label: Operating System
+      description: What operating system are you using?
+      options:
+        - Windows
+        - macOS
+        - Linux
+        - Other (please specify in additional context)
+    validations:
+      required: true
+
+  - type: input
+    id: environment-node
+    attributes:
+      label: Node.js Version
+      description: What version of Node.js are you using? (if applicable)
+      placeholder: "e.g., 18.x, 20.x, or N/A"
+
+  - type: textarea
+    id: error-logs
+    attributes:
+      label: Error Messages/Logs
+      description: Include any relevant error messages, logs, or console output
+      placeholder: |
+        Paste error messages or logs here:
+        ```
+        error log content here
+        ```
+      render: text
+
+  - type: textarea
+    id: configuration
+    attributes:
+      label: Configuration Details
+      description: Relevant configuration or setup details
+      placeholder: |
+        Include relevant details such as:
+        - Relevant sections from .github/copilot-instructions.md
+        - Package.json dependencies
+        - IDE/editor being used
+        - Any custom configurations
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other context about the problem
+      placeholder: |
+        Additional information:
+        - Screenshots if applicable
+        - Links to your repository (if public)
+        - Timeline of when the issue started
+        - Any recent changes made
+
+  - type: checkboxes
+    id: workaround
+    attributes:
+      label: Workaround
+      description: Have you found any workarounds?
+      options:
+        - label: I have found a temporary workaround (please describe in additional context)
+        - label: I have not found any workaround
+        - label: I need help finding a workaround
