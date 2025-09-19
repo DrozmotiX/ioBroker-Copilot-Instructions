@@ -128,6 +128,42 @@ run_test_with_output \
     "Version mismatch" \
     1
 
+# Test package.json versioning functionality
+run_test_with_output \
+    "Show command displays package.json version" \
+    "$TEST_DIR/scripts/manage-versions.sh show" \
+    "📦 Package.json version"
+
+# Test package.json consistency checking
+create_package_inconsistency() {
+    # Create inconsistency by modifying package.json version
+    if [[ -f "$TEST_DIR/package.json" ]]; then
+        sed -i 's/"version": "[^"]*"/"version": "9.8.7"/' "$TEST_DIR/package.json"
+    fi
+}
+
+run_test \
+    "Create package.json inconsistency for testing" \
+    "$(declare -f create_package_inconsistency); create_package_inconsistency"
+
+run_test_with_output \
+    "Check command detects package.json inconsistency" \
+    "$TEST_DIR/scripts/manage-versions.sh check" \
+    "Template.*vs.*Package.json" \
+    1
+
+# Test package.json is updated during version update
+run_test_with_output \
+    "Update command updates package.json version" \
+    "cd '$TEST_DIR' && ./scripts/manage-versions.sh update 0.8.8" \
+    "✅ Updated package.json"
+
+# Verify package.json version was actually changed
+run_test_with_output \
+    "Package.json version was actually updated" \
+    "grep '\"version\":' '$TEST_DIR/package.json'" \
+    "0.8.8"
+
 # Test script dependencies exist
 dependencies=("extract-version.sh" "update-versions.sh")
 for dep in "${dependencies[@]}"; do
