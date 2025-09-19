@@ -55,7 +55,7 @@
     "snippets": {
       "version_check_command": {
         "file": "snippets/version-check-command.md",
-        "version": "0.1.0",
+        "version": "0.1.1",
         "description": "Reusable version check command snippet"
       },
       "version_management_commands": {
