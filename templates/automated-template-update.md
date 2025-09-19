@@ -91,6 +91,6 @@ Show me what changes will be made before applying them."
 
 - **Template Source**: https://github.com/DrozmotiX/ioBroker-Copilot-Instructions
 - **Latest Template**: https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/template.md
-- **Version Check Script**: Use our [version check command](../snippets/version-check-command.md)
+- **Version Check Script**: Use our [version check command](https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/snippets/version-check-command.md)
 
 **GitHub Copilot**: Start by running the version check and analyzing my current template, then proceed with the merge using the provided prompt.
