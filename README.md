@@ -49,7 +49,7 @@ Your contributions help make adapter development better for the entire ioBroker 
    - 🛡️ Preserves any existing customizations automatically
    - 🚫 **Avoids manual scripts** (replaces approaches like validation scripts in package.json)
 
-4. Copilot will create a new PR containing the required changes. Wait until copilot finishes updating this PR and perform a review when requested by copilot.
+4. Copilot will create a new PR containing the required changes. Wait until Copilot finishes updating this PR and perform a review when requested by Copilot.
     
 ### For Quick Updates Only  
 1. **Create a quick update issue** with this simple content:
