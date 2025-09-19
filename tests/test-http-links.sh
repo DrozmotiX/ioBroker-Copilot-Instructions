@@ -61,22 +61,22 @@ run_negative_test() {
 # Test that templates don't contain relative links to snippets
 run_negative_test \
     "Templates don't contain relative snippet links" \
-    "grep -r '\.\./snippets.*\\.md)' '$TEMPLATES_DIR' --include='*.md'"
+    "grep -r '\.\./snippets.*\\.md)' \"$TEMPLATES_DIR\" --include='*.md'"
 
 run_negative_test \
     "Templates don't contain relative yml snippet links" \
-    "grep -r '\.\./snippets.*\\.yml)' '$TEMPLATES_DIR' --include='*.md'"
+    "grep -r '\.\./snippets.*\\.yml)' \"$TEMPLATES_DIR\" --include='*.md'"
 
 # Test that templates contain the expected HTTP URLs for snippets
 run_test_with_output \
     "Version check snippet uses HTTP URL" \
     "version-check-command.md" \
-    "grep -r 'https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/snippets/version-check-command.md' '$TEMPLATES_DIR' --include='*.md'"
+    "grep -r 'https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/snippets/version-check-command.md' \"$TEMPLATES_DIR\" --include='*.md'"
 
 run_test_with_output \
     "GitHub Action snippet uses HTTP URL" \
     "github-action-version-check.yml" \
-    "grep -r 'https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/snippets/github-action-version-check.yml' '$TEMPLATES_DIR' --include='*.md'"
+    "grep -r 'https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/snippets/github-action-version-check.yml' \"$TEMPLATES_DIR\" --include='*.md'"
 
 # Test that the HTTP URLs are actually accessible (if network is available)
 test_url_accessibility() {
