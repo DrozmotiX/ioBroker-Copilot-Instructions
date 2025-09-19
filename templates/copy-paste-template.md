@@ -13,7 +13,7 @@ This guide shows you how to create a simple GitHub issue that will automatically
 ```
 GitHub Copilot: Please help me update my ioBroker Copilot instructions template to the latest version while preserving all custom sections.
 
-Please use the requirements from: templates/copy-paste-template.md
+Please use the requirements from: https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/blob/main/template.md
 ```
 
 ## Template Update Requirements
