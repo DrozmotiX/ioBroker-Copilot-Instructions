@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## **WORK IN PROGRESS**
 
+- (copilot) **FIXED**: Fixed Promise scope issues in integration testing examples - use proper `(resolve, reject)` parameters and error handling (Fixes #15)
 - (copilot) **NEW**: Added fully automated ioBroker Copilot setup with zero manual steps (Fixes #26)
 - (copilot) **NEW**: Created initial-setup-automation.md template for comprehensive automated setup and validation
 - (copilot) **NEW**: Added weekly-version-check-action.yml GitHub Action for automated template monitoring
