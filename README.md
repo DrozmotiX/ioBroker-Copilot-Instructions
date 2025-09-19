@@ -49,7 +49,7 @@ Your contributions help make adapter development better for the entire ioBroker 
 
 **Zero Manual Steps Required** - No curl commands, file editing, or manual configuration needed!
 
-![Version](https://img.shields.io/github/package-json/v/DrozmotiX/ioBroker-Copilot-Instructions?label=Current%20Version) | **Template:** [`template.md`](template.md) | ![Last Updated](https://img.shields.io/github/last-commit/DrozmotiX/ioBroker-Copilot-Instructions?label=Last%20Updated)
+![Version](https://img.shields.io/github/package-json/v/DrozmotiX/ioBroker-Copilot-Instructions?label=Current%20Version) | **Template:** [`template.md`](template.md) | **Version:** 0.4.0
 
 ## 📚 Documentation
 
@@ -116,7 +116,7 @@ The [Initial Setup Template](templates/initial-setup-automation.md) automaticall
 
 - **Current Template Version:** ![Version](https://img.shields.io/github/package-json/v/DrozmotiX/ioBroker-Copilot-Instructions?label=v)
 - **Template Location:** [`template.md`](template.md)  
-- **Last Updated:** ![Last Updated](https://img.shields.io/github/last-commit/DrozmotiX/ioBroker-Copilot-Instructions?label=)
+- **Template Version:** 0.4.0
 
 Your template version is automatically tracked in your `.github/copilot-instructions.md` file:
 
