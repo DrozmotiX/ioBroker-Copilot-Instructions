@@ -27,7 +27,8 @@ jobs:
           
           # Get current version from local copilot instructions
           if [ -f ".github/copilot-instructions.md" ]; then
-            CURRENT_VERSION=$(grep -E "\*\*Version:\*\*|\*\*Template Version:\*\*" .github/copilot-instructions.md | head -1 | sed 's/.*Version:\*\*[[:space:]]*//' | tr -d '*' | xargs || echo "unknown")
+            CURRENT_VERSION=$(awk '/Version:|Template Version:/ {match($0, /([0-9]+(\.[0-9]+)*)/, arr); if (arr[1] != "") print arr[1]}' .github/copilot-instructions.md | head -1)
+            if [ -z "$CURRENT_VERSION" ]; then CURRENT_VERSION="unknown"; fi
             echo "📋 Current local version: $CURRENT_VERSION"
           else
             CURRENT_VERSION="none"
