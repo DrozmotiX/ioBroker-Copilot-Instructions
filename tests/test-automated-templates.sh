@@ -138,7 +138,7 @@ if [[ -f "$REPO_ROOT/.github/ISSUE_TEMPLATE/feature_request.yml" ]]; then
     echo "  Testing feature request template exists... ${GREEN}✅ PASS${NC}"
     
     # Test YAML validity
-    if python3 -c "import yaml; yaml.safe_load(open('$REPO_ROOT/.github/ISSUE_TEMPLATE/feature_request.yml'))" 2>/dev/null; then
+    if python3 -c "import yaml, sys; yaml.safe_load(open(sys.argv[1]))" "$REPO_ROOT/.github/ISSUE_TEMPLATE/feature_request.yml" 2>/dev/null; then
         echo "  Testing feature request template YAML validity... ${GREEN}✅ PASS${NC}"
     else
         echo "  Testing feature request template YAML validity... ${RED}❌ FAIL${NC}"
