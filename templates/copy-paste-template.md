@@ -25,6 +25,8 @@ REQUIREMENTS:
 3. Add latest ioBroker best practices from the new template
 4. Update version to match latest template version
 5. Maintain Template Source reference
+6. REMOVE any duplicate content from [CUSTOMIZE] sections that already exists in the standard template
+7. Keep only truly unique, adapter-specific content in [CUSTOMIZE] sections
 
 Show me the changes before applying them."
 ```
@@ -35,6 +37,7 @@ After update, confirm:
 - [ ] Version updated to latest
 - [ ] Custom content intact
 - [ ] Template structure complete
+- [ ] No duplicate content between [CUSTOMIZE] sections and standard template
 
 **Reference**: https://github.com/DrozmotiX/ioBroker-Copilot-Instructions
 ```

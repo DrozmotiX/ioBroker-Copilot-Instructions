@@ -3,35 +3,91 @@
 # Tests for check-template-version.sh script
 #
 
+set -e
+
+# Color output for better readability
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Test configuration
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(dirname "$SCRIPT_DIR")"
+
+# Test helper functions
+run_test_with_output() {
+    local test_name="$1"
+    local test_command="$2"
+    local expected_pattern="$3"
+    
+    printf "  Testing %s... " "$test_name"
+    
+    if eval "$test_command" | grep -q "$expected_pattern"; then
+        echo -e "${GREEN}✅ PASS${NC}"
+        return 0
+    else
+        echo -e "${RED}❌ FAIL${NC}"
+        return 1
+    fi
+}
+
+run_test() {
+    local test_name="$1"
+    local test_command="$2"
+    
+    printf "  Testing %s... " "$test_name"
+    
+    if eval "$test_command" >/dev/null 2>&1; then
+        echo -e "${GREEN}✅ PASS${NC}"
+        return 0
+    else
+        echo -e "${RED}❌ FAIL${NC}"
+        return 1
+    fi
+}
+
+print_test_result() {
+    local test_name="$1"
+    local result="$2"
+    
+    if [[ "$result" == "PASS" ]]; then
+        echo -e "  ${GREEN}✅ PASS${NC} $test_name"
+    else
+        echo -e "  ${RED}❌ FAIL${NC} $test_name"
+    fi
+}
+
 echo -e "${BLUE}Testing check-template-version.sh${NC}"
 
 # Test successful version check with existing template
 run_test_with_output \
     "Check template version runs successfully" \
-    "$TEST_DIR/scripts/check-template-version.sh" \
+    "$REPO_ROOT/scripts/check-template-version.sh" \
     "🔍 Checking ioBroker Copilot template version"
 
 # Test version extraction from local template
 run_test_with_output \
     "Local version extraction works" \
-    "$TEST_DIR/scripts/check-template-version.sh" \
+    "$REPO_ROOT/scripts/check-template-version.sh" \
     "📄 Local template version:"
 
 # Test remote version check (may fail in CI due to network)
 run_test_with_output \
     "Remote version check attempts" \
-    "$TEST_DIR/scripts/check-template-version.sh" \
+    "$REPO_ROOT/scripts/check-template-version.sh" \
     "🌐 Checking remote template version"
 
 # Test completion message
 run_test_with_output \
     "Check completion message" \
-    "$TEST_DIR/scripts/check-template-version.sh" \
+    "$REPO_ROOT/scripts/check-template-version.sh" \
     "🏁 Template check complete"
 
 # Test missing local template handling
 test_missing_template() {
-    cd "$TEST_DIR"
+    cd "$REPO_ROOT"
     mv .github/copilot-instructions.md .github/copilot-instructions.md.bak 2>/dev/null || true
     local result=0
     
@@ -51,7 +107,7 @@ run_test \
 
 # Test template without version (malformed)
 test_malformed_template() {
-    cd "$TEST_DIR"
+    cd "$REPO_ROOT"
     
     # Backup original and create malformed version
     cp .github/copilot-instructions.md .github/copilot-instructions.md.bak
@@ -74,7 +130,7 @@ run_test \
     "$(declare -f test_malformed_template); test_malformed_template"
 
 # Test URL configuration
-local_template_path="$TEST_DIR/.github/copilot-instructions.md"
+local_template_path="$REPO_ROOT/.github/copilot-instructions.md"
 if [[ -f "$local_template_path" ]]; then
     print_test_result "Local template file exists" "PASS"
 else
@@ -82,14 +138,14 @@ else
 fi
 
 # Test script contains correct remote URL
-if grep -q "https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/template.md" "$TEST_DIR/scripts/check-template-version.sh"; then
+if grep -q "https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/template.md" "$REPO_ROOT/scripts/check-template-version.sh"; then
     print_test_result "Correct remote URL configured" "PASS"
 else
     print_test_result "Correct remote URL configured" "FAIL" "Remote URL not found or incorrect"
 fi
 
 # Test script is executable
-if [[ -x "$TEST_DIR/scripts/check-template-version.sh" ]]; then
+if [[ -x "$REPO_ROOT/scripts/check-template-version.sh" ]]; then
     print_test_result "Script is executable" "PASS"
 else
     print_test_result "Script is executable" "FAIL" "Script is not executable"
@@ -97,7 +153,7 @@ fi
 
 # Test curl command handling (simulate network failure)
 test_network_failure() {
-    cd "$TEST_DIR"
+    cd "$REPO_ROOT"
     
     # Create a modified script with invalid URL to simulate network failure
     cp scripts/check-template-version.sh scripts/check-template-version-test.sh
@@ -121,7 +177,7 @@ run_test \
 
 # Test update guidance is provided for outdated templates
 test_update_guidance() {
-    cd "$TEST_DIR"
+    cd "$REPO_ROOT"
     
     # Backup original and create outdated version
     cp .github/copilot-instructions.md .github/copilot-instructions.md.bak

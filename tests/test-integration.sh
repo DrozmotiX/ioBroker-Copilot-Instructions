@@ -3,11 +3,67 @@
 # Integration tests for script interactions and end-to-end workflows
 #
 
+set -e
+
+# Color output for better readability
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Test configuration
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(dirname "$SCRIPT_DIR")"
+
+# Test helper functions
+run_test_with_output() {
+    local test_name="$1"
+    local test_command="$2"
+    local expected_pattern="$3"
+    
+    printf "  Testing %s... " "$test_name"
+    
+    if eval "$test_command" | grep -q "$expected_pattern"; then
+        echo -e "${GREEN}✅ PASS${NC}"
+        return 0
+    else
+        echo -e "${RED}❌ FAIL${NC}"
+        return 1
+    fi
+}
+
+run_test() {
+    local test_name="$1"
+    local test_command="$2"
+    
+    printf "  Testing %s... " "$test_name"
+    
+    if eval "$test_command" >/dev/null 2>&1; then
+        echo -e "${GREEN}✅ PASS${NC}"
+        return 0
+    else
+        echo -e "${RED}❌ FAIL${NC}"
+        return 1
+    fi
+}
+
+print_test_result() {
+    local test_name="$1"
+    local result="$2"
+    
+    if [[ "$result" == "PASS" ]]; then
+        echo -e "  ${GREEN}✅ PASS${NC} $test_name"
+    else
+        echo -e "  ${RED}❌ FAIL${NC} $test_name"
+    fi
+}
+
 echo -e "${BLUE}Testing Script Integration${NC}"
 
 # Test full version update workflow
 test_version_update_workflow() {
-    cd "$TEST_DIR"
+    cd "$REPO_ROOT"
     
     # Store original versions
     local original_template_version=$(grep "^**Version:**" template.md | head -1 | sed 's/.*Version:\*\* *//' | tr -d ' ')
@@ -36,7 +92,7 @@ run_test \
 
 # Test consistency check after version update
 test_consistency_after_update() {
-    cd "$TEST_DIR"
+    cd "$REPO_ROOT"
     
     # Store original version
     local original_version=$(./scripts/extract-version.sh template)
@@ -64,7 +120,7 @@ run_test \
 
 # Test sync functionality restores consistency
 test_sync_restores_consistency() {
-    cd "$TEST_DIR"
+    cd "$REPO_ROOT"
     
     # Create inconsistency by manually editing README
     sed -i 's/Latest Version:\*\* v[0-9]\+\.[0-9]\+\.[0-9]\+/Latest Version:** v9.9.9/' README.md
@@ -87,7 +143,7 @@ run_test \
 # Test all scripts have execute permissions
 scripts=("manage-versions.sh" "extract-version.sh" "update-versions.sh" "check-template-version.sh")
 for script in "${scripts[@]}"; do
-    if [[ -x "$TEST_DIR/scripts/$script" ]]; then
+    if [[ -x "$REPO_ROOT/scripts/$script" ]]; then
         print_test_result "Script $script has execute permission" "PASS"
     else
         print_test_result "Script $script has execute permission" "FAIL" "Script lacks execute permission"
@@ -96,7 +152,7 @@ done
 
 # Test all scripts can be run from any directory
 test_script_path_independence() {
-    cd "$TEST_DIR"
+    cd "$REPO_ROOT"
     
     # Create a subdirectory and test running from there
     mkdir -p test-subdir
@@ -120,7 +176,7 @@ run_test \
 
 # Test error handling when repository files are missing
 test_missing_files_handling() {
-    cd "$TEST_DIR"
+    cd "$REPO_ROOT"
     
     # Test with missing template - show command should still work (displays warning)
     mv template.md template.md.bak
@@ -160,7 +216,7 @@ run_test \
 
 # Test date synchronization
 test_date_synchronization() {
-    cd "$TEST_DIR"
+    cd "$REPO_ROOT"
     
     # Change README date to something old
     sed -i 's/Last Updated:\*\* [A-Za-z]* [0-9]*/Last Updated:** January 2000/' README.md

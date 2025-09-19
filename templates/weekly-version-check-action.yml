@@ -1,0 +1,278 @@
+name: Check ioBroker Copilot Template Version
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly check every Sunday at midnight UTC
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  check-template:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Check template version
+        id: version-check
+        run: |
+          echo "🔍 Checking ioBroker Copilot template version..."
+          
+          # Get current version from local template
+          if [ -f ".github/copilot-instructions.md" ]; then
+            CURRENT_VERSION=$(grep "Version:" .github/copilot-instructions.md | head -1 | sed 's/.*Version:\s*//' | tr -d '*' | xargs)
+            echo "📋 Current version: $CURRENT_VERSION"
+          else
+            CURRENT_VERSION="none"
+            echo "❌ No copilot-instructions.md file found"
+          fi
+          
+          # Get latest version from remote
+          echo "🌐 Fetching latest template version..."
+          LATEST_VERSION=$(curl -s https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/template.md | grep "Version:" | head -1 | sed 's/.*Version:\s*//' | tr -d '*' | xargs)
+          echo "📋 Latest version: $LATEST_VERSION"
+          
+          # Set outputs
+          echo "current-version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          echo "latest-version=$LATEST_VERSION" >> $GITHUB_OUTPUT
+          
+          if [ "$CURRENT_VERSION" != "$LATEST_VERSION" ] || [ "$CURRENT_VERSION" = "none" ]; then
+            echo "🆙 Update needed!"
+            echo "update-needed=true" >> $GITHUB_OUTPUT
+          else
+            echo "✅ Template is up-to-date"
+            echo "update-needed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check for existing template-related issues
+        id: check-issue
+        if: steps.version-check.outputs.update-needed == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            console.log('🔍 Checking for existing template update issues...');
+            
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              per_page: 100
+            });
+            
+            // Look for any existing template-related issues
+            const templateIssues = issues.filter(issue => {
+              const title = issue.title.toLowerCase();
+              const hasLabels = issue.labels.some(label => 
+                label.name === 'template-update' || 
+                label.name === 'automation' ||
+                label.name === 'copilot-setup'
+              );
+              const hasKeywords = title.includes('copilot') && (
+                title.includes('template') || 
+                title.includes('setup') || 
+                title.includes('update')
+              );
+              return hasLabels || hasKeywords;
+            });
+            
+            if (templateIssues.length > 0) {
+              console.log(`📋 Found ${templateIssues.length} existing template-related issue(s):`);
+              templateIssues.forEach(issue => {
+                console.log(`  - #${issue.number}: ${issue.title}`);
+              });
+              return templateIssues[0].number;
+            } else {
+              console.log('✅ No existing template-related issues found');
+              return null;
+            }
+
+      - name: Create or update template issue
+        if: steps.version-check.outputs.update-needed == 'true' && !steps.check-issue.outputs.result
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const currentVersion = '${{ steps.version-check.outputs.current-version }}';
+            const latestVersion = '${{ steps.version-check.outputs.latest-version }}';
+            const repoName = context.repo.repo;
+            
+            console.log(`🎯 Creating template issue for ${context.repo.owner}/${repoName}`);
+            console.log(`📋 Current: ${currentVersion}, Latest: ${latestVersion}`);
+            
+            let title, body, labels;
+            
+            if (currentVersion === 'none') {
+              title = '🤖 Setup ioBroker GitHub Copilot Instructions';
+              labels = ['copilot-setup', 'automation', 'enhancement'];
+              body = `# 🤖 Automated ioBroker Copilot Instructions Setup
+
+**Automated Detection**: This ioBroker adapter repository doesn't have GitHub Copilot instructions configured yet.
+
+**Latest Available Version**: ${latestVersion}
+
+## 🎯 What This Sets Up
+
+GitHub Copilot instructions will enhance your development experience by providing:
+- ✨ ioBroker-specific code suggestions
+- 🛡️ Best practices for adapter development
+- 🧪 Enhanced testing patterns with @iobroker/testing
+- 📝 Improved README and documentation generation
+- 🔧 Smart error handling and state management
+
+## 🚀 Automated Setup Process
+
+**GitHub Copilot**: Please help me set up GitHub Copilot instructions for my ioBroker adapter repository.
+
+### Primary Task
+
+Create a complete \`.github/copilot-instructions.md\` file using this process:
+
+1. **Download and integrate the latest template**:
+   \`\`\`
+   Fetch the ioBroker Copilot template from:
+   https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/template.md
+   
+   Create .github/copilot-instructions.md by:
+   - Removing the template comment block (<!-- to --> section)
+   - Setting version to ${latestVersion}
+   - Adding Template Source reference
+   - Customizing [CUSTOMIZE] sections for this ${repoName} adapter
+   \`\`\`
+
+2. **Adapter-Specific Customization**:
+   \`\`\`
+   In the [CUSTOMIZE] Project-Specific Instructions section, please add:
+   - This ${repoName} adapter's specific API patterns and authentication
+   - Unique error codes and handling specific to this service  
+   - Custom device discovery or connection patterns
+   - Any special configuration requirements for this adapter
+   \`\`\`
+
+## 🔧 Validation Checklist
+
+After setup, please confirm:
+- [ ] File created at \`.github/copilot-instructions.md\`
+- [ ] Version set to \`${latestVersion}\`
+- [ ] Template source reference included
+- [ ] [CUSTOMIZE] sections populated with ${repoName}-specific patterns
+- [ ] Enhanced Copilot suggestions working (test with \`this.setState(\` in a .js file)
+
+## 🎁 Next Steps
+
+Once setup is complete:
+1. **Weekly Monitoring**: This action will automatically check for template updates
+2. **Preserved Customizations**: All your [CUSTOMIZE] sections will be preserved in future updates
+3. **Enhanced Development**: Start coding and experience improved ioBroker-specific suggestions
+
+## 📚 Reference
+
+- **Template Repository**: https://github.com/DrozmotiX/ioBroker-Copilot-Instructions
+- **Full Setup Guide**: https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/blob/main/docs/setup.md
+
+---
+*🤖 This issue was automatically created by GitHub Actions. The weekly monitoring will continue to check for template updates while preserving all your customizations.*`;
+
+            } else {
+              title = '🤖 Update ioBroker Copilot Instructions Template';
+              labels = ['template-update', 'automation', 'enhancement'];
+              body = `# 🤖 ioBroker Copilot Template Update Available
+
+**Automated Detection**: Your ioBroker Copilot instructions template has an update available.
+
+- **Current Version**: \`${currentVersion}\`
+- **Latest Version**: \`${latestVersion}\`
+- **Repository**: ${context.repo.owner}/${repoName}
+
+## 🚀 Automated Update Process
+
+**GitHub Copilot**: Please help me update my ioBroker Copilot template while preserving all customizations.
+
+### Template Update Task
+
+Use this exact merge prompt:
+
+\`\`\`
+"Update my .github/copilot-instructions.md by merging the latest ioBroker template from:
+https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/blob/main/template.md
+
+CRITICAL PRESERVATION REQUIREMENTS:
+1. Keep ALL [CUSTOMIZE] sections and their content exactly as they are
+2. Preserve any ${repoName}-specific context not covered by the standard template
+3. Maintain custom error handling, API patterns, or authentication flows
+4. Keep any unique testing scenarios or configuration instructions
+5. REMOVE any duplicate content from [CUSTOMIZE] sections that already exists in the standard template
+6. Keep only truly unique, adapter-specific content in [CUSTOMIZE] sections
+
+UPDATE REQUIREMENTS:  
+1. Integrate latest ioBroker best practices from the new template
+2. Update version number to ${latestVersion}
+3. Refresh Template Source reference
+4. Add any new standard sections that are missing
+5. Clean up [CUSTOMIZE] sections to avoid duplicating standard template content
+
+Show me a summary of what will be changed before applying the update."
+\`\`\`
+
+## 🔍 What's New in ${latestVersion}
+
+Recent template improvements typically include:
+- 🧪 Enhanced testing patterns and best practices
+- 🛡️ Improved error handling recommendations  
+- 📝 Better documentation generation patterns
+- 🔧 Updated dependency management guidance
+- ⚡ Performance optimization suggestions
+
+## 🔧 Validation Checklist
+
+After the update, please confirm:
+- [ ] All [CUSTOMIZE] sections preserved exactly as they were
+- [ ] Version updated to \`${latestVersion}\`
+- [ ] Custom ${repoName}-specific content intact
+- [ ] New best practices integrated without conflicts
+- [ ] Template source reference updated
+- [ ] Enhanced suggestions still working (test in your code editor)
+- [ ] No duplicate content between [CUSTOMIZE] sections and standard template
+
+## 🛡️ Safety Features
+
+This automated update process:
+- ✅ **Preserves Customizations**: All [CUSTOMIZE] sections are automatically maintained
+- 🔒 **No Data Loss**: Your adapter-specific patterns and configurations remain intact
+- 📋 **Audit Trail**: All changes are tracked in this issue for review
+- 🔄 **Reversible**: You can always revert changes if needed
+
+## 📚 Reference
+
+- **Template Repository**: https://github.com/DrozmotiX/ioBroker-Copilot-Instructions
+- **Template Source**: https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/template.md
+- **Update Guide**: https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/blob/main/docs/automated-updates.md
+
+---
+*🤖 This issue was automatically created by GitHub Actions on ${new Date().toISOString().split('T')[0]}. Weekly monitoring will continue to check for updates while preserving your customizations.*`;
+            }
+            
+            const issue = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: labels
+            });
+            
+            console.log(`✅ Created issue #${issue.data.number}: ${title}`);
+            
+            return issue.data.number;
+
+      - name: Log completion
+        if: steps.version-check.outputs.update-needed == 'false'
+        run: |
+          echo "✅ Template check completed - no updates needed"
+          echo "📋 Current version ${{ steps.version-check.outputs.current-version }} is up-to-date"
+          
+      - name: Log issue creation
+        if: steps.version-check.outputs.update-needed == 'true' && steps.check-issue.outputs.result
+        run: |
+          echo "ℹ️  Template update needed, but found existing issue #${{ steps.check-issue.outputs.result }}"
+          echo "📋 Current: ${{ steps.version-check.outputs.current-version }}, Latest: ${{ steps.version-check.outputs.latest-version }}"
