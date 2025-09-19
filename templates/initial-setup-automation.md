@@ -290,7 +290,7 @@ Test that enhanced Copilot suggestions work:
 
 - **Template Repository**: https://github.com/DrozmotiX/ioBroker-Copilot-Instructions
 - **Latest Template**: https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/template.md
-- **Version Check**: See [version check command](../snippets/version-check-command.md)
-- **GitHub Action Template**: [GitHub Action](../snippets/github-action-version-check.yml)
+- **Version Check**: See [version check command](https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/snippets/version-check-command.md)
+- **GitHub Action Template**: [GitHub Action](https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/snippets/github-action-version-check.yml)
 
 **GitHub Copilot**: Please start with the current state analysis and proceed step-by-step through the setup process. Provide detailed feedback on what you're doing at each step.
