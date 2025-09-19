@@ -26,7 +26,7 @@
   },
   "components": {
     "github_actions": {
-      "centralized_version_check": {
+      "centralized-version-check": {
         "file": "templates/centralized-version-check-action.yml",
         "version": "1.0.0",
         "description": "Centralized GitHub Action with dynamic version checking from metadata.json"
