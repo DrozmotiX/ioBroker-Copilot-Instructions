@@ -93,7 +93,13 @@ get_component_version() {
 # Function to list all components
 list_components() {
     if [[ -f "$METADATA_FILE" ]] && command -v jq >/dev/null 2>&1; then
-        jq -r '.components | to_entries[] | "\(.key).\(.value | to_entries[] | "\(.key): \(.value.version) - \(.value.description)")"' "$METADATA_FILE" 2>/dev/null
+        # Get all component keys
+        local component_keys
+        component_keys=$(jq -r '.components | keys[]' "$METADATA_FILE")
+        for key in $component_keys; do
+            # For each component, get its entries (version, description, etc.)
+            jq -r --arg k "$key" '.components[$k] | to_entries[] | "\($k).\(.key): \(.value.version) - \(.value.description)"' "$METADATA_FILE"
+        done
     else
         echo "❌ Error: Cannot list components without jq or metadata file" >&2
         return 1
