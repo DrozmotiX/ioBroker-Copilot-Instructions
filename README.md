@@ -36,15 +36,16 @@ Your contributions help make adapter development better for the entire ioBroker 
    ```
    Title: 🤖 Setup ioBroker GitHub Copilot Instructions
    
-   GitHub Copilot: Please help me set up GitHub Copilot instructions for my ioBroker adapter repository using the template from:
+   GitHub Copilot: Please help me set up GitHub Copilot instructions for my ioBroker adapter repository using the centralized automation template from:
    templates/initial-setup-automation.md
    ```
-2. **Let GitHub Copilot handle everything**:
-   - ✅ Validates existing setup
-   - 📥 Downloads and customizes latest template
-   - 🎯 Adds adapter-specific content
-   - ⚙️ Sets up weekly monitoring
-   - 🛡️ Preserves any existing customizations
+2. **Let GitHub Copilot handle everything** using our **centralized automation system**:
+   - ✅ Validates existing setup and detects repository status
+   - 📥 Downloads and customizes latest template using metadata.json
+   - 🎯 Adds adapter-specific content with intelligent customization
+   - ⚙️ Sets up weekly monitoring with centralized GitHub Action
+   - 🛡️ Preserves any existing customizations automatically
+   - 🚫 **Avoids manual scripts** (replaces approaches like validation scripts in package.json)
 
 ### For Quick Updates Only  
 1. **Create a quick update issue** with this simple content:
@@ -176,7 +177,7 @@ For advanced users who want more control over the template management process:
 
 ### Manual Version Check
 
-If you want to manually check your template status:
+For repository diagnostics or manual validation:
 
 ```bash
 # Download and run the version check script
@@ -184,9 +185,11 @@ curl -s https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instruction
 ```
 
 This script will:
-- Compare your local template version with the latest available
+- Compare your local template version with the latest available from metadata.json
 - Provide update guidance if your template is outdated
 - Show you what's changed in newer versions
+
+**Note**: The centralized automation system eliminates the need for manual scripts in your repository (avoiding patterns like validation scripts in package.json).
 
 ### Repository Maintenance
 
