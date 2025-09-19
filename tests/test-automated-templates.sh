@@ -90,7 +90,7 @@ fi
 if [[ -f "$REPO_ROOT/templates/copy-paste-template.md" ]]; then
     test_template_content "$REPO_ROOT/templates/copy-paste-template.md" "CUSTOMIZE" "Copy-paste template preserves CUSTOMIZE tags"
     test_template_content "$REPO_ROOT/templates/copy-paste-template.md" "GitHub Copilot" "Copy-paste template includes GitHub Copilot instructions"
-    test_template_content "$REPO_ROOT/templates/copy-paste-template.md" "Copy and paste" "Copy-paste template has usage instructions"
+    test_template_content "$REPO_ROOT/templates/copy-paste-template.md" "Create a GitHub issue" "Copy-paste template has issue creation instructions"
 fi
 
 # Test automated-updates.md content

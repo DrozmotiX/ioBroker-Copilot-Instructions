@@ -91,13 +91,25 @@ This guide walks you through setting up GitHub Copilot for ioBroker adapter deve
 **Best for**: Both initial setup and ongoing maintenance
 
 1. **For Initial Setup or Updates**
-   - Use the [Initial Setup Automation Template](../templates/initial-setup-automation.md)
+   - Create an issue with this simple content:
+     ```
+     Title: 🤖 Setup ioBroker GitHub Copilot Instructions
+     
+     GitHub Copilot: Please help me set up GitHub Copilot instructions using:
+     templates/initial-setup-automation.md
+     ```
    - Creates comprehensive setup with validation and monitoring
    - Handles both new installations and updates automatically
    - Preserves all custom content during updates
 
 2. **For Quick Updates Only**  
-   - Use the [Copy-Paste Template](../templates/copy-paste-template.md) for existing setups
+   - Create an issue with this simple content:
+     ```
+     Title: 🤖 Update ioBroker Copilot Instructions Template
+     
+     GitHub Copilot: Please help me update my template using:
+     templates/copy-paste-template.md
+     ```
    - Focuses specifically on template merging
    - Ideal when you just need to update an existing template
 

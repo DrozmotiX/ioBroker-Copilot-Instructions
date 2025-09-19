@@ -32,7 +32,13 @@ Your contributions help make adapter development better for the entire ioBroker 
 **🚀 Fully Automated Setup** (Recommended for all users):
 
 ### For New Repositories or Comprehensive Setup
-1. **Create an automated setup issue** using the [Initial Setup Automation Template](templates/initial-setup-automation.md)
+1. **Create an automated setup issue** with this simple content:
+   ```
+   Title: 🤖 Setup ioBroker GitHub Copilot Instructions
+   
+   GitHub Copilot: Please help me set up GitHub Copilot instructions for my ioBroker adapter repository using the template from:
+   templates/initial-setup-automation.md
+   ```
 2. **Let GitHub Copilot handle everything**:
    - ✅ Validates existing setup
    - 📥 Downloads and customizes latest template
@@ -41,7 +47,13 @@ Your contributions help make adapter development better for the entire ioBroker 
    - 🛡️ Preserves any existing customizations
 
 ### For Quick Updates Only  
-1. **Use the** [Copy-Paste Template](templates/copy-paste-template.md) for existing setups
+1. **Create a quick update issue** with this simple content:
+   ```
+   Title: 🤖 Update ioBroker Copilot Instructions Template
+   
+   GitHub Copilot: Please help me update my ioBroker Copilot instructions using the template from:
+   templates/copy-paste-template.md
+   ```
 2. **GitHub Copilot will merge** the latest template while preserving your customizations
 
 ## 📚 Documentation

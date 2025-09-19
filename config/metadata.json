@@ -15,6 +15,9 @@
   "automation": {
     "workflow_file": ".github/workflows/check-copilot-template.yml",
     "cron_schedule": "0 0 * * 0",
-    "labels": ["template-update", "automation"]
+    "labels": [
+      "template-update",
+      "automation"
+    ]
   }
 }
