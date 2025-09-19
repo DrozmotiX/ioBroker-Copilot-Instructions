@@ -122,6 +122,101 @@ echo -e "${GREEN}✅ PASS${NC}"
 echo "  Testing templates avoid hardcoded versions... "
 echo -e "${GREEN}✅ PASS${NC}"
 
+# Test GitHub issue templates
+echo -e "\n📝 Testing GitHub Issue Templates..."
+
+# Test that issue template directory exists
+if [[ -d "$REPO_ROOT/.github/ISSUE_TEMPLATE" ]]; then
+    echo "  Testing GitHub issue template directory exists... ${GREEN}✅ PASS${NC}"
+else
+    echo "  Testing GitHub issue template directory exists... ${RED}❌ FAIL${NC}"
+    EXIT_CODE=1
+fi
+
+# Test feature request template
+if [[ -f "$REPO_ROOT/.github/ISSUE_TEMPLATE/feature_request.yml" ]]; then
+    echo "  Testing feature request template exists... ${GREEN}✅ PASS${NC}"
+    
+    # Test YAML validity
+    if python3 -c "import yaml; yaml.safe_load(open('$REPO_ROOT/.github/ISSUE_TEMPLATE/feature_request.yml'))" 2>/dev/null; then
+        echo "  Testing feature request template YAML validity... ${GREEN}✅ PASS${NC}"
+    else
+        echo "  Testing feature request template YAML validity... ${RED}❌ FAIL${NC}"
+        EXIT_CODE=1
+    fi
+    
+    # Test content
+    test_template_content "$REPO_ROOT/.github/ISSUE_TEMPLATE/feature_request.yml" "Feature Request" "Feature request template has correct title"
+    test_template_content "$REPO_ROOT/.github/ISSUE_TEMPLATE/feature_request.yml" "enhancement" "Feature request template has enhancement label"
+    test_template_content "$REPO_ROOT/.github/ISSUE_TEMPLATE/feature_request.yml" "ioBroker" "Feature request template mentions ioBroker"
+else
+    echo "  Testing feature request template exists... ${RED}❌ FAIL${NC}"
+    EXIT_CODE=1
+fi
+
+# Test bug report template
+if [[ -f "$REPO_ROOT/.github/ISSUE_TEMPLATE/bug_report.yml" ]]; then
+    echo "  Testing bug report template exists... ${GREEN}✅ PASS${NC}"
+    
+    # Test YAML validity
+    if python3 -c "import yaml; yaml.safe_load(open('$REPO_ROOT/.github/ISSUE_TEMPLATE/bug_report.yml'))" 2>/dev/null; then
+        echo "  Testing bug report template YAML validity... ${GREEN}✅ PASS${NC}"
+    else
+        echo "  Testing bug report template YAML validity... ${RED}❌ FAIL${NC}"
+        EXIT_CODE=1
+    fi
+    
+    # Test content and selection options
+    test_template_content "$REPO_ROOT/.github/ISSUE_TEMPLATE/bug_report.yml" "Bug Report" "Bug report template has correct title"
+    test_template_content "$REPO_ROOT/.github/ISSUE_TEMPLATE/bug_report.yml" "Template Issue" "Bug report template has template issue option"
+    test_template_content "$REPO_ROOT/.github/ISSUE_TEMPLATE/bug_report.yml" "Setup Issue" "Bug report template has setup issue option"
+    test_template_content "$REPO_ROOT/.github/ISSUE_TEMPLATE/bug_report.yml" "Question" "Bug report template has question option"
+else
+    echo "  Testing bug report template exists... ${RED}❌ FAIL${NC}"
+    EXIT_CODE=1
+fi
+
+# Test documentation/automation template
+if [[ -f "$REPO_ROOT/.github/ISSUE_TEMPLATE/documentation_automation.yml" ]]; then
+    echo "  Testing documentation/automation template exists... ${GREEN}✅ PASS${NC}"
+    
+    # Test YAML validity
+    if python3 -c "import yaml; yaml.safe_load(open('$REPO_ROOT/.github/ISSUE_TEMPLATE/documentation_automation.yml'))" 2>/dev/null; then
+        echo "  Testing documentation/automation template YAML validity... ${GREEN}✅ PASS${NC}"
+    else
+        echo "  Testing documentation/automation template YAML validity... ${RED}❌ FAIL${NC}"
+        EXIT_CODE=1
+    fi
+    
+    # Test content
+    test_template_content "$REPO_ROOT/.github/ISSUE_TEMPLATE/documentation_automation.yml" "Documentation.*Automation" "Documentation template has correct title"
+    test_template_content "$REPO_ROOT/.github/ISSUE_TEMPLATE/documentation_automation.yml" "documentation" "Documentation template has documentation label"
+    test_template_content "$REPO_ROOT/.github/ISSUE_TEMPLATE/documentation_automation.yml" "automation" "Documentation template has automation label"
+else
+    echo "  Testing documentation/automation template exists... ${RED}❌ FAIL${NC}"
+    EXIT_CODE=1
+fi
+
+# Test config file
+if [[ -f "$REPO_ROOT/.github/ISSUE_TEMPLATE/config.yml" ]]; then
+    echo "  Testing issue template config exists... ${GREEN}✅ PASS${NC}"
+    
+    # Test YAML validity
+    if python3 -c "import yaml; yaml.safe_load(open('$REPO_ROOT/.github/ISSUE_TEMPLATE/config.yml'))" 2>/dev/null; then
+        echo "  Testing issue template config YAML validity... ${GREEN}✅ PASS${NC}"
+    else
+        echo "  Testing issue template config YAML validity... ${RED}❌ FAIL${NC}"
+        EXIT_CODE=1
+    fi
+    
+    # Test content
+    test_template_content "$REPO_ROOT/.github/ISSUE_TEMPLATE/config.yml" "Community Discussion" "Config file has community discussion link"
+    test_template_content "$REPO_ROOT/.github/ISSUE_TEMPLATE/config.yml" "ioBroker Community Forum" "Config file has ioBroker forum link"
+else
+    echo "  Testing issue template config exists... ${RED}❌ FAIL${NC}"
+    EXIT_CODE=1
+fi
+
 # Clean up
 rm -rf "$TEMP_DIR"
 

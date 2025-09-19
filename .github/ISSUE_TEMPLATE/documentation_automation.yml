@@ -1,0 +1,178 @@
+name: 📚 Documentation & Automation Improvement
+description: Suggest improvements to documentation, setup processes, or automation
+title: "[DOCS/AUTO] "
+labels: ["documentation", "automation", "enhancement"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 📚 Documentation & Automation Improvement
+        
+        Thank you for suggesting improvements! This template helps us enhance documentation, setup processes, and automation to better serve the ioBroker community.
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: Prerequisites
+      description: Please confirm you have reviewed existing resources
+      options:
+        - label: I have searched existing issues to ensure this is not a duplicate
+          required: true
+        - label: I have reviewed the current documentation and setup guides
+          required: true
+        - label: This improvement would benefit the broader ioBroker adapter development community
+          required: true
+
+  - type: dropdown
+    id: improvement-type
+    attributes:
+      label: Improvement Type
+      description: What type of improvement are you suggesting?
+      options:
+        - Documentation - Improve existing docs or add missing docs
+        - Setup Process - Improve installation or configuration steps
+        - Automation - Improve scripts, tools, or automated processes
+        - Testing - Improve validation or testing procedures
+        - User Experience - Improve usability of templates or tools
+        - Community Resources - Improve community support materials
+        - Other (please specify)
+      default: 0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: target-audience
+    attributes:
+      label: Target Audience
+      description: Who would benefit most from this improvement?
+      options:
+        - New ioBroker adapter developers
+        - Experienced adapter developers
+        - Template maintainers
+        - Community contributors
+        - All users
+      default: 4
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-situation
+    attributes:
+      label: Current Situation
+      description: Describe the current state and what needs improvement
+      placeholder: |
+        Describe what exists now:
+        - What documentation/automation currently exists?
+        - What are the current pain points or limitations?
+        - What makes the current approach difficult or confusing?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-improvement
+    attributes:
+      label: Proposed Improvement
+      description: Describe your suggested improvement in detail
+      placeholder: |
+        Describe your proposed improvement:
+        - What specifically should be improved or added?
+        - How would this make things better?
+        - What would the improved workflow/documentation look like?
+    validations:
+      required: true
+
+  - type: textarea
+    id: examples-references
+    attributes:
+      label: Examples & References
+      description: Provide examples or references that support your suggestion
+      placeholder: |
+        Supporting examples:
+        - Links to good documentation examples from other projects
+        - Screenshots of confusing sections (if applicable)
+        - Examples from the ioBroker community
+        - References to best practices
+
+  - type: dropdown
+    id: priority-impact
+    attributes:
+      label: Priority & Impact
+      description: How would you rate the impact and priority of this improvement?
+      options:
+        - Low Impact - Nice to have improvement
+        - Medium Impact - Would help some users significantly
+        - High Impact - Would help most users significantly
+        - Critical Impact - Essential for community success
+      default: 1
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: improvement-areas
+    attributes:
+      label: Specific Areas for Improvement
+      description: Select all areas that would benefit from this improvement
+      options:
+        - label: Setup and installation process
+        - label: Template integration steps
+        - label: GitHub Copilot configuration
+        - label: Troubleshooting and error handling
+        - label: Version management and updates
+        - label: Testing and validation procedures
+        - label: Community contribution guidelines
+        - label: Examples and use cases
+        - label: API/script documentation
+        - label: Automated tools and scripts
+
+  - type: textarea
+    id: implementation-suggestions
+    attributes:
+      label: Implementation Suggestions
+      description: If you have ideas about how to implement this improvement
+      placeholder: |
+        Implementation ideas:
+        - Changes to specific documentation files
+        - New documentation sections needed
+        - Script or automation improvements
+        - Process changes
+        - Tools or resources that could help
+
+  - type: textarea
+    id: success-criteria
+    attributes:
+      label: Success Criteria
+      description: How would we know this improvement was successful?
+      placeholder: |
+        Success would be measured by:
+        - Reduced confusion or support requests
+        - Faster setup/onboarding for new users
+        - More successful template integrations
+        - Better community engagement
+        - Specific metrics or feedback
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other information that would help with this improvement
+      placeholder: |
+        Additional information:
+        - User feedback or common questions you've seen
+        - Specific scenarios where current approach fails
+        - Timeline considerations
+        - Resources you could provide to help
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      description: How can you help with this improvement?
+      options:
+        - label: I can help write or review documentation
+        - label: I can help test the improved process
+        - label: I can provide feedback during development
+        - label: I can help with implementation (scripts/automation)
+        - label: I can help gather community feedback
+        - label: I can provide examples or use cases
