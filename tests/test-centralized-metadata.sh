@@ -22,12 +22,12 @@ NC='\033[0m' # No Color
 # Test framework helper
 run_test_with_output() {
     local TEST_NAME="$1"
-    local COMMAND="$2"
-    local EXPECTED_PATTERN="$3"
-    
+    shift
+    local EXPECTED_PATTERN="$1"
+    shift
     echo -n "  Testing $TEST_NAME... "
     
-    if eval "$COMMAND" 2>/dev/null | grep -q "$EXPECTED_PATTERN"; then
+    if "$@" 2>/dev/null | grep -q "$EXPECTED_PATTERN"; then
         echo -e "${GREEN}✅ PASS${NC}"
         return 0
     else
