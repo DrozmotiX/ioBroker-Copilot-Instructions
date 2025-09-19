@@ -45,11 +45,30 @@ Create a complete `.github/copilot-instructions.md` file by:
 
 2. **Add adapter-specific context**:
    ```
-   In the [CUSTOMIZE] Project-Specific Instructions section, add:
-   - This adapter's specific API patterns
-   - Unique authentication or connection handling
-   - Custom error codes specific to this service
-   - Adapter-specific device discovery patterns
+   In the [CUSTOMIZE] Project-Specific Instructions section, add ONLY content that is:
+   - This adapter's specific API patterns NOT covered by standard ioBroker patterns
+   - Unique authentication or connection handling specific to your service
+   - Custom error codes specific to this service (not generic ioBroker error handling)
+   - Adapter-specific device discovery patterns unique to your implementation
+   
+   IMPORTANT: Do NOT duplicate content that already exists in the standard template.
+   Only add truly unique patterns specific to your adapter's service/API.
+   
+   Examples of what NOT to include (already covered by template):
+   - General ioBroker testing patterns (use @iobroker/testing)
+   - Standard error handling (this.log.error, try/catch)
+   - Common state management (this.setState, this.getState)
+   - Standard adapter lifecycle methods
+   - Generic dependency management advice
+   ```
+
+3. **Template Duplicate Prevention**:
+   ```
+   When GitHub Copilot creates your template, it should:
+   - Review [CUSTOMIZE] sections against the standard template
+   - Remove any content that duplicates standard ioBroker patterns
+   - Keep only truly adapter-specific content that adds unique value
+   - Ensure [CUSTOMIZE] sections complement, not repeat, standard guidance
    ```
 
 ### If Copilot Instructions DO Exist:
@@ -65,6 +84,8 @@ CRITICAL REQUIREMENTS:
 4. Update the version number to match the latest template version
 5. Keep the Template Source reference up-to-date
 6. Ensure no custom content is lost during the merge
+7. REMOVE any duplicate content from [CUSTOMIZE] sections that already exists in the standard template
+8. Keep only truly unique, adapter-specific content in [CUSTOMIZE] sections
 
 Show me the changes before applying them."
 ```
@@ -205,6 +226,8 @@ CRITICAL REQUIREMENTS:
 4. Update the version number to ${latestVersion}
 5. Keep the Template Source reference up-to-date
 6. Ensure no custom content is lost during the merge
+7. REMOVE any duplicate content from [CUSTOMIZE] sections that already exists in the standard template
+8. Keep only truly unique, adapter-specific content in [CUSTOMIZE] sections
 
 Show me the changes before applying them."
 \`\`\`
@@ -240,6 +263,7 @@ After update, please confirm:
 - [ ] **Version tracking**: Latest version number is present
 - [ ] **Template source**: Reference to source repository included
 - [ ] **Custom sections**: [CUSTOMIZE] areas populated with adapter-specific content
+- [ ] **No duplicates**: [CUSTOMIZE] sections contain only unique content not found in standard template
 
 ### GitHub Action Validation  
 - [ ] **Workflow created**: `.github/workflows/check-copilot-template.yml` exists

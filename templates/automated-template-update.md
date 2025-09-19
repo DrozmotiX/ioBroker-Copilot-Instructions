@@ -44,6 +44,8 @@ CRITICAL REQUIREMENTS:
 4. Update the version number to match the latest template version
 5. Keep the Template Source reference up-to-date
 6. Ensure no custom content is lost during the merge
+7. REMOVE any duplicate content from [CUSTOMIZE] sections that already exists in the standard template
+8. Keep only truly unique, adapter-specific content in [CUSTOMIZE] sections
 
 Show me what changes will be made before applying them."
 ```
@@ -57,6 +59,7 @@ Show me what changes will be made before applying them."
 - [ ] **Project context maintained** - Adapter-specific instructions are preserved  
 - [ ] **Template completeness** - All standard sections are present and up-to-date
 - [ ] **Syntax validation** - Markdown formatting is correct
+- [ ] **No duplicates** - [CUSTOMIZE] sections contain only unique content not found in standard template
 
 ## 📋 Expected Deliverables
 

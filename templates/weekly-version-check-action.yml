@@ -202,12 +202,15 @@ CRITICAL PRESERVATION REQUIREMENTS:
 2. Preserve any ${repoName}-specific context not covered by the standard template
 3. Maintain custom error handling, API patterns, or authentication flows
 4. Keep any unique testing scenarios or configuration instructions
+5. REMOVE any duplicate content from [CUSTOMIZE] sections that already exists in the standard template
+6. Keep only truly unique, adapter-specific content in [CUSTOMIZE] sections
 
 UPDATE REQUIREMENTS:  
 1. Integrate latest ioBroker best practices from the new template
 2. Update version number to ${latestVersion}
 3. Refresh Template Source reference
 4. Add any new standard sections that are missing
+5. Clean up [CUSTOMIZE] sections to avoid duplicating standard template content
 
 Show me a summary of what will be changed before applying the update."
 \`\`\`
@@ -230,6 +233,7 @@ After the update, please confirm:
 - [ ] New best practices integrated without conflicts
 - [ ] Template source reference updated
 - [ ] Enhanced suggestions still working (test in your code editor)
+- [ ] No duplicate content between [CUSTOMIZE] sections and standard template
 
 ## 🛡️ Safety Features
 

@@ -155,4 +155,25 @@ run_test_with_output "README.md emphasizes zero manual steps" \
     "grep -i 'Zero Manual Steps' '$REPO_ROOT/README.md'" \
     "Zero Manual Steps"
 
+# Test duplicate prevention guidance (addressing comment feedback)
+run_test_with_output "Initial setup template includes duplicate prevention guidance" \
+    "grep -i 'REMOVE.*duplicate.*content' '$REPO_ROOT/templates/initial-setup-automation.md'" \
+    "REMOVE.*duplicate.*content"
+
+run_test_with_output "GitHub Action includes duplicate prevention guidance" \
+    "grep -i 'REMOVE.*duplicate.*content' '$REPO_ROOT/templates/weekly-version-check-action.yml'" \
+    "REMOVE.*duplicate.*content"
+
+run_test_with_output "Copy-paste template includes duplicate prevention" \
+    "grep -i 'REMOVE.*duplicate.*content' '$REPO_ROOT/templates/copy-paste-template.md'" \
+    "REMOVE.*duplicate.*content"
+
+run_test_with_output "Automated template update includes duplicate prevention" \
+    "grep -i 'REMOVE.*duplicate.*content' '$REPO_ROOT/templates/automated-template-update.md'" \
+    "REMOVE.*duplicate.*content"
+
+run_test_with_output "Initial setup template includes examples of what NOT to duplicate" \
+    "grep -i 'Examples of what NOT to include' '$REPO_ROOT/templates/initial-setup-automation.md'" \
+    "Examples of what NOT to include"
+
 echo -e "\n${GREEN}All automated setup template tests passed!${NC}"
