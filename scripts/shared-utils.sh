@@ -79,6 +79,70 @@ get_version_check_command() {
     echo "curl -s ${raw_url}/scripts/check-template-version.sh | bash"
 }
 
+# Function to get component version
+get_component_version() {
+    local component_path="$1"
+    if [[ -z "$component_path" ]]; then
+        echo "❌ Error: Component path required" >&2
+        return 1
+    fi
+    
+    get_metadata ".components.${component_path}.version"
+}
+
+# Function to list all components
+list_components() {
+    if [[ -f "$METADATA_FILE" ]] && command -v jq >/dev/null 2>&1; then
+        # Get all component keys
+        local component_keys
+        component_keys=$(jq -r '.components | keys[]' "$METADATA_FILE")
+        for key in $component_keys; do
+            # For each component, get its entries (version, description, etc.)
+            jq -r --arg k "$key" '.components[$k] | to_entries[] | "\($k).\(.key): \(.value.version) - \(.value.description)"' "$METADATA_FILE"
+        done
+    else
+        echo "❌ Error: Cannot list components without jq or metadata file" >&2
+        return 1
+    fi
+}
+
+# Function to get template version (separate from main version)
+get_template_version() {
+    get_metadata ".template.version"
+}
+
+# Function to get version policy
+get_version_policy() {
+    local policy_key="$1"
+    get_metadata ".version_policy.${policy_key}"
+}
+
+# Function to update component version
+update_component_version() {
+    local component_path="$1"
+    local new_version="$2"
+    
+    if [[ -z "$component_path" || -z "$new_version" ]]; then
+        echo "❌ Error: Component path and version required" >&2
+        return 1
+    fi
+    
+    if [[ -f "$METADATA_FILE" ]] && command -v jq >/dev/null 2>&1; then
+        local temp_file=$(mktemp)
+        if jq ".components.${component_path}.version = \"$new_version\"" "$METADATA_FILE" > "$temp_file" && mv "$temp_file" "$METADATA_FILE"; then
+            echo "✅ Updated component $component_path to version $new_version"
+            return 0
+        else
+            rm -f "$temp_file"
+            echo "❌ Error: Failed to update component version" >&2
+            return 1
+        fi
+    else
+        echo "❌ Error: Cannot update component version without jq" >&2
+        return 1
+    fi
+}
+
 # Function to validate metadata file
 validate_metadata() {
     if [[ ! -f "$METADATA_FILE" ]]; then
@@ -89,6 +153,14 @@ validate_metadata() {
     if command -v jq >/dev/null 2>&1; then
         if ! jq empty "$METADATA_FILE" 2>/dev/null; then
             echo "❌ Invalid JSON in metadata file: $METADATA_FILE"
+            return 1
+        fi
+        
+        # Validate main version matches template version
+        local main_version=$(get_version)
+        local template_version=$(get_template_version)
+        if [[ "$main_version" != "$template_version" ]]; then
+            echo "❌ Main version ($main_version) must match template version ($template_version)"
             return 1
         fi
     fi
