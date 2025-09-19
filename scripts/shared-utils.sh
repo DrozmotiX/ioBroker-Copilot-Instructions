@@ -13,12 +13,25 @@ SNIPPETS_DIR="$REPO_ROOT/snippets"
 get_metadata() {
     local key="$1"
     if [[ -f "$METADATA_FILE" ]] && command -v jq >/dev/null 2>&1; then
-        jq -r "$key" "$METADATA_FILE" 2>/dev/null || echo ""
+        local result=$(jq -r "$key" "$METADATA_FILE" 2>/dev/null)
+        if [[ "$result" == "null" ]] || [[ -z "$result" ]]; then
+            echo "❌ Error: Could not extract key '$key' from metadata file" >&2
+            return 1
+        fi
+        echo "$result"
     else
         # Fallback without jq
         case "$key" in
             ".version") 
-                grep '"version"' "$METADATA_FILE" 2>/dev/null | sed 's/.*"version": *"//;s/".*//' || echo "0.4.0"
+                if [[ -f "$METADATA_FILE" ]]; then
+                    grep '"version"' "$METADATA_FILE" 2>/dev/null | sed 's/.*"version": *"//;s/".*//' || {
+                        echo "❌ Error: Could not extract version from metadata file" >&2
+                        return 1
+                    }
+                else
+                    echo "❌ Error: Metadata file not found: $METADATA_FILE" >&2
+                    return 1
+                fi
                 ;;
             ".repository.url")
                 echo "https://github.com/DrozmotiX/ioBroker-Copilot-Instructions"

@@ -80,9 +80,9 @@ if [[ -f "$METADATA_FILE" ]]; then
     fi
     
     # Test required fields exist
-    run_test_with_output "Version field exists" "grep '\"version\"' '$METADATA_FILE'" "version"
-    run_test_with_output "Repository URL exists" "grep '\"repository\"' '$METADATA_FILE'" "repository"
-    run_test_with_output "Scripts section exists" "grep '\"scripts\"' '$METADATA_FILE'" "scripts"
+    run_test_with_output "Version field exists" "version" grep '"version"' "$METADATA_FILE"
+    run_test_with_output "Repository URL exists" "repository" grep '"repository"' "$METADATA_FILE"
+    run_test_with_output "Scripts section exists" "scripts" grep '"scripts"' "$METADATA_FILE"
 fi
 
 # Test shared utilities functions
@@ -141,12 +141,12 @@ test_file_exists "$REPO_ROOT/snippets/version-management-commands.md" "Version m
 
 # Test snippet content
 if [[ -f "$REPO_ROOT/snippets/version-check-command.md" ]]; then
-    run_test_with_output "Version check snippet has curl command" "grep 'curl.*check-template-version' '$REPO_ROOT/snippets/version-check-command.md'" "curl"
+    run_test_with_output "Version check snippet has curl command" "curl" grep 'curl.*check-template-version' "$REPO_ROOT/snippets/version-check-command.md"
 fi
 
 if [[ -f "$REPO_ROOT/snippets/github-action-version-check.yml" ]]; then
-    run_test_with_output "GitHub Action snippet has workflow name" "grep 'name:.*Check.*Template' '$REPO_ROOT/snippets/github-action-version-check.yml'" "name"
-    run_test_with_output "GitHub Action snippet has cron schedule" "grep 'cron:.*0 0' '$REPO_ROOT/snippets/github-action-version-check.yml'" "cron"
+    run_test_with_output "GitHub Action snippet has workflow name" "name" grep 'name:.*Check.*Template' "$REPO_ROOT/snippets/github-action-version-check.yml"
+    run_test_with_output "GitHub Action snippet has cron schedule" "cron" grep 'cron:.*0 0' "$REPO_ROOT/snippets/github-action-version-check.yml"
 fi
 
 # Test integration with existing scripts
@@ -155,7 +155,7 @@ echo -e "${YELLOW}🔗 Testing Script Integration${NC}"
 
 # Test extract-version.sh integration
 if [[ -f "$REPO_ROOT/scripts/extract-version.sh" ]]; then
-    run_test_with_output "Extract version script sources shared utils" "grep 'source.*shared-utils.sh' '$REPO_ROOT/scripts/extract-version.sh'" "source"
+    run_test_with_output "Extract version script sources shared utils" "source" grep 'source.*shared-utils.sh' "$REPO_ROOT/scripts/extract-version.sh"
     
     # Test metadata option
     if source "$SHARED_UTILS" 2>/dev/null; then
@@ -171,8 +171,8 @@ fi
 
 # Test manage-versions.sh integration
 if [[ -f "$REPO_ROOT/scripts/manage-versions.sh" ]]; then
-    run_test_with_output "Manage versions script sources shared utils" "grep 'source.*shared-utils.sh' '$REPO_ROOT/scripts/manage-versions.sh'" "source"
-    run_test_with_output "Manage versions script references metadata file" "grep 'METADATA_FILE' '$REPO_ROOT/scripts/manage-versions.sh'" "METADATA_FILE"
+    run_test_with_output "Manage versions script sources shared utils" "source" grep 'source.*shared-utils.sh' "$REPO_ROOT/scripts/manage-versions.sh"
+    run_test_with_output "Manage versions script references metadata file" "METADATA_FILE" grep 'METADATA_FILE' "$REPO_ROOT/scripts/manage-versions.sh"
 fi
 
 # Test documentation references
@@ -180,9 +180,9 @@ echo ""
 echo -e "${YELLOW}📚 Testing Documentation References${NC}"
 
 # Test that documentation now references snippets instead of duplicating content
-run_test_with_output "Maintenance doc references snippet" "grep 'snippets/github-action-version-check.yml' '$REPO_ROOT/docs/maintenance.md'" "snippets"
-run_test_with_output "Testing doc references snippet" "grep 'snippets/github-action-version-check.yml' '$REPO_ROOT/docs/testing.md'" "snippets"
-run_test_with_output "Template references snippet" "grep 'snippets/' '$REPO_ROOT/templates/automated-template-update.md'" "snippets"
+run_test_with_output "Maintenance doc references snippet" "snippets" grep 'snippets/github-action-version-check.yml' "$REPO_ROOT/docs/maintenance.md"
+run_test_with_output "Testing doc references snippet" "snippets" grep 'snippets/github-action-version-check.yml' "$REPO_ROOT/docs/testing.md"
+run_test_with_output "Template references snippet" "snippets" grep 'snippets/' "$REPO_ROOT/templates/automated-template-update.md"
 
 # Clean up
 rm -rf "$TEMP_DIR"
