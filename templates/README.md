@@ -1,18 +1,18 @@
 # Issue Templates and Automation
 
-This directory contains templates and automation files for setting up and maintaining ioBroker Copilot instructions.
+This directory contains templates and automation files for setting up and maintaining ioBroker Copilot instructions using a standardized GitHub Action template structure.
 
 ## Templates
 
 ### 🚀 [initial-setup-automation.md](initial-setup-automation.md)
-**Primary template for all new repositories and comprehensive updates**
+**Primary template for all new repositories and comprehensive setup**
 
 - ✅ Validates if GitHub Copilot is already setup
 - 🔍 Detects existing copilot-instructions.md files
-- 📥 Automatically downloads and customizes latest template
-- ⚙️ Sets up weekly monitoring via GitHub Actions
+- 📥 Uses standardized GitHub Action templates via HTTP references
+- ⚙️ Sets up both initial setup and weekly monitoring workflows
 - 🛡️ Preserves custom content during updates
-- 🎯 Adds adapter-specific customizations
+- 🎯 Establishes adapter-specific context first
 
 **Use this for**: New repositories or when you want full automation including monitoring
 
@@ -34,17 +34,61 @@ This directory contains templates and automation files for setting up and mainta
 
 **Use this for**: Complex updates or when you need detailed change tracking
 
-## Automation Files
+## Standardized GitHub Action Templates
 
-### 🤖 [weekly-version-check-action.yml](weekly-version-check-action.yml)
-**GitHub Action for automated monitoring**
+### 🎯 [ghAction-InitialSetup.yml](ghAction-InitialSetup.yml)
+**Initial setup automation for new repositories**
 
-- 📅 Weekly template version checking
-- 🎯 Automatic issue creation when updates are available
-- 🚫 Prevents duplicate issues
-- 🛡️ Safe update process with preservation of custom content
+- 🚀 **Manual Trigger**: Run on-demand for initial setup
+- 🔍 **Repository Analysis**: Automatically detects ioBroker adapter structure
+- 📝 **Context-First Setup**: Creates adapter-specific context before template integration
+- 🔄 **Follow-up Automation**: Creates enhancement issue after initial setup
 
-**Use this**: Copy to `.github/workflows/check-copilot-template.yml` in your repository for weekly monitoring
+**Usage**:
+```bash
+curl -o .github/workflows/initial-copilot-setup.yml \
+  https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/templates/ghAction-InitialSetup.yml
+```
+
+### 📅 [ghAction-AutomatedVersionCheckAndUpdate.yml](ghAction-AutomatedVersionCheckAndUpdate.yml)
+**Continuous monitoring and update automation**
+
+- 📅 **Weekly Schedule**: Runs every Sunday to check for updates
+- 🔍 **Dynamic Version Detection**: Uses `config/metadata.json` for current version
+- 🤖 **Copilot-Driven Automation**: Creates intelligent setup/update issues
+- 🛡️ **Smart Issue Management**: Prevents duplicate issues
+- 📋 **Repository Status Detection**: Identifies setup vs. update scenarios
+
+**Usage**:
+```bash
+curl -o .github/workflows/check-copilot-template.yml \
+  https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/templates/ghAction-AutomatedVersionCheckAndUpdate.yml
+```
+
+## Legacy Files (Deprecated)
+
+### ⚠️ [weekly-version-check-action.yml](weekly-version-check-action.yml)
+**Replaced by ghAction-AutomatedVersionCheckAndUpdate.yml**
+
+### ⚠️ [centralized-version-check-action.yml](centralized-version-check-action.yml)
+**Replaced by ghAction-AutomatedVersionCheckAndUpdate.yml**
+
+## Standardized Template Structure
+
+All GitHub Action templates follow the naming convention:
+- **`ghAction-{Purpose}.yml`**: Clear, descriptive naming
+- **HTTP References**: All templates are referenced via standardized GitHub URLs
+- **Version Information**: Each template includes version headers
+- **Self-Contained**: Templates include all necessary logic without external dependencies
+
+### Benefits of Standardization
+
+- ✅ **Always Current**: Templates are always the latest version
+- ✅ **Centralized Maintenance**: Updates benefit all repositories automatically  
+- ✅ **Consistent Behavior**: All repositories use identical automation logic
+- ✅ **No Template Drift**: Prevents local modifications that cause inconsistencies
+- ✅ **Clear Naming**: Easy to identify template purpose
+- ✅ **HTTP-Accessible**: Can be directly downloaded via curl
 
 ## Usage Recommendations
 

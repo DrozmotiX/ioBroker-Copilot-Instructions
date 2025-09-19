@@ -137,33 +137,54 @@ Our approach stores template version information in the Copilot instructions fil
 - ❌ **Avoid**: Manual scripts in package.json or separate validation files
 ## 🔧 Step 3: Automated GitHub Action Setup
 
-**GitHub Copilot**: Please create the weekly monitoring automation using our centralized action:
+**GitHub Copilot**: Please set up automated workflows using our standardized GitHub Action templates:
 
-### 3.1 Create GitHub Action for Weekly Monitoring
+### 3.1 Initial Setup Action (Optional - For New Repositories)
+
+If this repository needs automated initial setup, create the workflow file:
+
+1. **Create Workflow File**: `.github/workflows/initial-copilot-setup.yml`
+2. **Copy Template Content**: 
+   ```bash
+   curl -o .github/workflows/initial-copilot-setup.yml \
+     https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/templates/ghAction-InitialSetup.yml
+   ```
+
+**Features**:
+- 🚀 **Manual Trigger**: Run on-demand for initial setup
+- 🔍 **Repository Analysis**: Automatically detects ioBroker adapter structure
+- 📝 **Context-First Setup**: Creates adapter-specific context before template integration
+- 🔄 **Follow-up Automation**: Creates enhancement issue after initial setup
+
+### 3.2 Create GitHub Action for Weekly Monitoring
+
+Create the continuous monitoring workflow:
 
 1. **Create Workflow File**: `.github/workflows/check-copilot-template.yml`
-
-2. **Use Centralized Template**:
+2. **Copy Template Content**:
+   ```bash
+   curl -o .github/workflows/check-copilot-template.yml \
+     https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/templates/ghAction-AutomatedVersionCheckAndUpdate.yml
    ```
-   Copy the complete workflow from:
-   https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/templates/centralized-version-check-action.yml
-   ```
 
-3. **Workflow Features** (automatically included):
-   - 📅 **Weekly Schedule**: Runs every Sunday to check for updates
-   - 🔍 **Dynamic Version Detection**: Uses `config/metadata.json` for current version
-   - 🤖 **Copilot-Driven Automation**: Creates intelligent setup/update issues
-   - 🛡️ **Smart Issue Management**: Prevents duplicate issues
-   - 📋 **Repository Status Detection**: Identifies setup vs. update scenarios
+**Features**:
+- 📅 **Weekly Schedule**: Runs every Sunday to check for updates
+- 🔍 **Dynamic Version Detection**: Uses `config/metadata.json` for current version
+- 🤖 **Copilot-Driven Automation**: Creates intelligent setup/update issues
+- 🛡️ **Smart Issue Management**: Prevents duplicate issues
+- 📋 **Repository Status Detection**: Identifies setup vs. update scenarios
 
-### 3.2 Centralized Automation Benefits
+### 3.3 Standardized Template Structure
 
-This centralized approach provides:
-- ✅ **No Manual Scripts**: Replaces manual validation approaches (like DrozmotiX/ioBroker.discovergy#286)
-- ✅ **Metadata-Driven**: Always uses latest version from centralized config
-- ✅ **Copilot Intelligence**: Leverages GitHub Copilot for smart automation
-- ✅ **Preservation Guarantee**: Automatically maintains all custom sections during updates
-- ✅ **Dynamic Configuration**: Adapts to repository status and needs
+All GitHub Action templates follow the standardized naming convention:
+- **`ghAction-InitialSetup.yml`**: Initial setup automation
+- **`ghAction-AutomatedVersionCheckAndUpdate.yml`**: Continuous monitoring and updates
+
+**Benefits of HTTP-Referenced Templates**:
+- ✅ **Always Current**: Templates are always the latest version
+- ✅ **Centralized Maintenance**: Updates benefit all repositories automatically
+- ✅ **Consistent Behavior**: All repositories use identical automation logic
+- ✅ **No Template Drift**: Prevents local modifications that cause inconsistencies
 ## 📋 Step 4: Validation and Testing
 
 **GitHub Copilot**: After completing the setup, please validate the integration:
@@ -179,11 +200,12 @@ This centralized approach provides:
 
 ### 4.2 GitHub Action Validation  
 
-- [ ] **Workflow File**: Created from centralized template (templates/centralized-version-check-action.yml)
-- [ ] **Permissions Set**: Issues write permission configured
-- [ ] **Schedule Configured**: Weekly execution on Sundays
-- [ ] **Manual Trigger**: workflow_dispatch enabled for manual runs
-- [ ] **Metadata Integration**: Uses config/metadata.json for version detection
+- [ ] **Initial Setup Workflow**: Created from standardized template (`ghAction-InitialSetup.yml`)
+- [ ] **Version Check Workflow**: Created from standardized template (`ghAction-AutomatedVersionCheckAndUpdate.yml`)
+- [ ] **Permissions Set**: Issues write permission configured in both workflows
+- [ ] **Schedule Configured**: Weekly execution on Sundays for version check
+- [ ] **Manual Triggers**: workflow_dispatch enabled for both workflows
+- [ ] **HTTP References**: All templates referenced via standardized GitHub URLs
 
 ### 4.3 Functionality Testing
 
@@ -220,10 +242,15 @@ A successful automated setup includes:
 
 - **Template Repository**: https://github.com/DrozmotiX/ioBroker-Copilot-Instructions
 - **Latest Template**: https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/template.md
-- **Version Check Script**: Use our [version check command](https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/snippets/version-check-command.md)
-- **GitHub Action Template**: [GitHub Action](https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/snippets/github-action-version-check.yml)
 - **Centralized Config**: https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/config/metadata.json
 - **Automation Config**: https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/config/automation-setup.yml
-- **Centralized Action**: https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/templates/centralized-version-check-action.yml
 
-**GitHub Copilot**: Please start with the repository analysis and proceed step-by-step through the automated setup process. Provide detailed feedback on what you're doing at each step and confirm successful completion of all validation criteria.
+### Standardized GitHub Action Templates
+- **Initial Setup Action**: https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/templates/ghAction-InitialSetup.yml
+- **Version Check & Update Action**: https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/templates/ghAction-AutomatedVersionCheckAndUpdate.yml
+
+### Legacy References (Deprecated)
+- **Version Check Script**: https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/snippets/version-check-command.md
+- **Old GitHub Action**: https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/snippets/github-action-version-check.yml
+
+**GitHub Copilot**: Please start with the repository analysis and proceed step-by-step through the automated setup process. Use the standardized GitHub Action templates via HTTP references for consistent, maintainable automation.
