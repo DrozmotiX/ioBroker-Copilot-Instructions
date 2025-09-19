@@ -16,6 +16,7 @@ REPO_ROOT="$(dirname "$SCRIPT_DIR")"
 TEMPLATE_FILE="$REPO_ROOT/template.md"
 README_FILE="$REPO_ROOT/README.md"
 CHANGELOG_FILE="$REPO_ROOT/CHANGELOG.md"
+PACKAGE_FILE="$REPO_ROOT/package.json"
 COPILOT_INSTRUCTIONS="$REPO_ROOT/.github/copilot-instructions.md"
 EXTRACT_SCRIPT="$SCRIPT_DIR/extract-version.sh"
 UPDATE_SCRIPT="$SCRIPT_DIR/update-versions.sh"
@@ -51,6 +52,13 @@ show_versions() {
         echo "📖 README documented version: $README_VER"
     fi
     
+    if [[ -f "$PACKAGE_FILE" ]]; then
+        PACKAGE_VER=$(grep '"version":' "$PACKAGE_FILE" | head -1 | sed 's/.*"version": *"//;s/",\?.*$//' | tr -d ' ')
+        echo "📦 Package.json version: $PACKAGE_VER"
+    else
+        echo -e "${YELLOW}⚠️  Package.json not found${NC}"
+    fi
+    
     echo "📅 Current date: $($EXTRACT_SCRIPT current-date)"
 }
 
@@ -62,6 +70,10 @@ check_consistency() {
     TEMPLATE_VER=$(grep "^**Version:**" "$TEMPLATE_FILE" | head -1 | sed 's/.*Version:\*\* *//' | tr -d ' ')
     README_VER=$(grep "Latest Version:" "$README_FILE" | head -1 | sed 's/.*Latest Version:\*\* v*//' | tr -d ' ')
     
+    if [[ -f "$PACKAGE_FILE" ]]; then
+        PACKAGE_VER=$(grep '"version":' "$PACKAGE_FILE" | head -1 | sed 's/.*"version": *"//;s/",\?.*$//' | tr -d ' ')
+    fi
+    
     INCONSISTENT=false
     
     if [[ "$TEMPLATE_VER" != "$README_VER" ]]; then
@@ -69,6 +81,16 @@ check_consistency() {
         INCONSISTENT=true
     else
         echo -e "${GREEN}✅ Template and README versions match ($TEMPLATE_VER)${NC}"
+    fi
+    
+    # Check package.json version consistency
+    if [[ -f "$PACKAGE_FILE" && -n "$PACKAGE_VER" ]]; then
+        if [[ "$TEMPLATE_VER" != "$PACKAGE_VER" ]]; then
+            echo -e "${RED}❌ Version mismatch: Template ($TEMPLATE_VER) vs Package.json ($PACKAGE_VER)${NC}"
+            INCONSISTENT=true
+        else
+            echo -e "${GREEN}✅ Template and package.json versions match ($TEMPLATE_VER)${NC}"
+        fi
     fi
     
     # Check if dates are current
@@ -133,6 +155,12 @@ update_version() {
     if [[ -f "$COPILOT_INSTRUCTIONS" ]]; then
         sed -i "s/^\*\*Version:\*\* [0-9\.]*/**Version:** $NEW_VERSION/" "$COPILOT_INSTRUCTIONS"
         echo "✅ Updated .github/copilot-instructions.md"
+    fi
+    
+    # Update package.json
+    if [[ -f "$PACKAGE_FILE" ]]; then
+        sed -i "s/\"version\": \"[0-9]\+\.[0-9]\+\.[0-9]\+\"/\"version\": \"$NEW_VERSION\"/" "$PACKAGE_FILE"
+        echo "✅ Updated package.json"
     fi
     
     # Sync documentation

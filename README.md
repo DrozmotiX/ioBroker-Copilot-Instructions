@@ -29,17 +29,6 @@ Your contributions help make adapter development better for the entire ioBroker 
 
 ## 📋 Quick Start
 
-> **New to GitHub Copilot?** Start with the [detailed setup guide](docs/setup.md) to get GitHub Copilot working in your repository first.
-
-**For experienced Copilot users:**
-
-1. **🚀 Automated Updates** (Recommended): Ensure GitHub Copilot is active in your repository first, then create an issue with the [automated update template](templates/copy-paste-template.md) to let GitHub Copilot handle everything
-2. **🎯 Manual Integration**: Use GitHub Copilot to intelligently merge the template with your existing setup
-3. **🛠️ Customize**: Review and modify sections marked with `[CUSTOMIZE]` for your specific adapter
-4. **✅ Verify**: Test that Copilot provides enhanced ioBroker-specific suggestions
-
-**Quick automation**: First ensure GitHub Copilot is set up in your repository, then copy-paste from [this template](templates/copy-paste-template.md) into a new issue.
-
 ![Version](https://img.shields.io/github/package-json/v/DrozmotiX/ioBroker-Copilot-Instructions?label=Current%20Version) | **Template:** [`template.md`](template.md) | ![Last Updated](https://img.shields.io/github/last-commit/DrozmotiX/ioBroker-Copilot-Instructions?label=Last%20Updated)
 
 ## 📚 Documentation
