@@ -22,8 +22,6 @@ body:
           required: true
         - label: I have reviewed the current template documentation and features
           required: true
-        - label: This feature would benefit the broader ioBroker adapter development community
-          required: true
 
   - type: dropdown
     id: feature-category

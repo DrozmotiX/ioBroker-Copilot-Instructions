@@ -22,8 +22,6 @@ body:
           required: true
         - label: I have reviewed the current documentation and setup guides
           required: true
-        - label: This improvement would benefit the broader ioBroker adapter development community
-          required: true
 
   - type: dropdown
     id: improvement-type
