@@ -3,7 +3,7 @@ name: Automated Template Update Request
 about: Use this template to automatically validate and update ioBroker Copilot Instructions template
 title: "🤖 Validate and Update ioBroker Copilot Instructions Template"
 labels: ["template-update", "automation"]
-assignees: []
+assignees: ["copilot"]
 ---
 
 # Automated ioBroker Copilot Template Update Request

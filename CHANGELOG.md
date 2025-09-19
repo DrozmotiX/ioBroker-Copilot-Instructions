@@ -12,6 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## **WORK IN PROGRESS**
 
+- (copilot) **FIXED**: Apply lessons learned from PR #48 hanging - updated all GitHub issue templates to default assign @copilot for immediate automation (Fixes #58)
+- (copilot) **ENHANCED**: Added clear instructions in README.md to assign issues to @copilot for automated processing (Fixes #58) 
+- (copilot) **ENHANCED**: Added instruction in README.md about Copilot creating PRs and waiting for review completion (Fixes #58)
+- (copilot) **FIXED**: Corrected capitalization consistency - all references now properly use "Copilot" instead of "copilot" (Fixes #58)
+- (copilot) **ENHANCED**: Updated all issue templates (feature_request.yml, bug_report.yml, documentation_automation.yml) to include default @copilot assignee (Fixes #58)
+- (copilot) **ENHANCED**: Updated template markdown files (initial-setup-automation.md, automated-template-update.md) to include default @copilot assignee (Fixes #58)
 - (copilot) **ENHANCED**: Updated integration testing examples to match proven working patterns from ticaki's brightsky adapter (Fixes #15)
 - (copilot) **FIXED**: Fixed Promise scope issues in integration testing examples - use proper `(resolve, reject)` parameters and error handling (Fixes #15)
 - (copilot) **NEW**: Added fully automated ioBroker Copilot setup with zero manual steps (Fixes #26)
