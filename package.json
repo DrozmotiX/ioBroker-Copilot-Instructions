@@ -1,0 +1,28 @@
+{
+  "name": "iobroker-copilot-instructions",
+  "version": "0.4.0",
+  "description": "GitHub Copilot instructions template for ioBroker adapter development",
+  "keywords": [
+    "iobroker",
+    "github-copilot",
+    "adapter-development",
+    "template",
+    "instructions"
+  ],
+  "homepage": "https://github.com/DrozmotiX/ioBroker-Copilot-Instructions#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DrozmotiX/ioBroker-Copilot-Instructions.git"
+  },
+  "bugs": {
+    "url": "https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/issues"
+  },
+  "license": "MIT",
+  "author": "DutchmanNL <rdrozda86@gmail.com>",
+  "private": true,
+  "scripts": {
+    "test": "./tests/test-runner.sh",
+    "check-version": "./scripts/check-template-version.sh",
+    "manage-version": "./scripts/manage-versions.sh"
+  }
+}
