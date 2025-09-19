@@ -115,11 +115,11 @@ When writing documentation, reference snippets instead of duplicating content:
 ```markdown
 ### Version Check
 
-Use our [version check command](../snippets/version-check-command.md).
+Use our [version check command](https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/snippets/version-check-command.md).
 
 ### GitHub Action Setup  
 
-For automated monitoring, see our [GitHub Action template](../snippets/github-action-version-check.yml).
+For automated monitoring, see our [GitHub Action template](https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/snippets/github-action-version-check.yml).
 ```
 
 ## Updating the System

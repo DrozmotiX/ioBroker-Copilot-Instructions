@@ -53,7 +53,7 @@ Your contributions help make adapter development better for the entire ioBroker 
    Title: 🤖 Update ioBroker Copilot Instructions Template
    
    GitHub Copilot: Please help me update my ioBroker Copilot instructions using the template from:
-   templates/copy-paste-template.md
+   https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/templates/copy-paste-template.md
    ```
 2. **GitHub Copilot will merge** the latest template while preserving your customizations
 
@@ -74,14 +74,14 @@ Your contributions help make adapter development better for the entire ioBroker 
 
 All template operations are now fully automated:
 
-- **✅ Setup**: Automated via [Initial Setup Template](templates/initial-setup-automation.md)
+- **✅ Setup**: Automated via [Initial Setup Template](https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/templates/initial-setup-automation.md)
 - **🔄 Updates**: Automated via GitHub Actions with issue creation  
 - **🛡️ Customizations**: Always preserved during updates
 - **📅 Monitoring**: Weekly checks with automatic notifications
 
 ### Automated Continuous Monitoring
 
-The [Initial Setup Template](templates/initial-setup-automation.md) automatically configures:
+The [Initial Setup Template](https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/templates/initial-setup-automation.md) automatically configures:
 - 📅 Weekly version checking via GitHub Actions
 - 🎯 Automatic issue creation when updates are available  
 - 🛡️ Safe updates that preserve all custom content

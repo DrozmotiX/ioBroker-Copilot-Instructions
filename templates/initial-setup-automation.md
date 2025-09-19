@@ -160,6 +160,8 @@ A successful automated setup includes:
 
 - **Template Repository**: https://github.com/DrozmotiX/ioBroker-Copilot-Instructions
 - **Latest Template**: https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/template.md
+- **Version Check Script**: Use our [version check command](https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/snippets/version-check-command.md)
+- **GitHub Action Template**: [GitHub Action](https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/snippets/github-action-version-check.yml)
 - **Centralized Config**: https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/config/metadata.json
 - **Automation Config**: https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/config/automation-setup.yml
 - **Centralized Action**: https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/templates/centralized-version-check-action.yml

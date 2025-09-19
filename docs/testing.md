@@ -128,7 +128,7 @@ This script will:
 
 ### Setting Up Automated Checking
 
-For automated monitoring, see the [GitHub Action template](../snippets/github-action-version-check.yml) which provides:
+For automated monitoring, see the [GitHub Action template](https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/snippets/github-action-version-check.yml) which provides:
 - Weekly automated checks
 - Automatic issue creation when updates are available
 - Preservation of custom content during updates
