@@ -102,14 +102,14 @@ fi
 
 # Test README.md updates
 if [[ -f "$REPO_ROOT/README.md" ]]; then
-    test_template_content "$REPO_ROOT/README.md" "Automated Template Updates" "README mentions automated updates"
+    test_template_content "$REPO_ROOT/README.md" "Automated Template Management" "README mentions automated updates"
     test_template_content "$REPO_ROOT/README.md" "copy-paste-template.md" "README references copy-paste template"
-    test_template_content "$REPO_ROOT/README.md" "templates/automated-template-update.md" "README references automated template"
+    test_template_content "$REPO_ROOT/README.md" "templates/initial-setup-automation.md" "README references automated template"
 fi
 
 # Test setup.md updates
 if [[ -f "$REPO_ROOT/docs/setup.md" ]]; then
-    test_template_content "$REPO_ROOT/docs/setup.md" "Fully Automated Updates" "Setup doc mentions automated updates"
+    test_template_content "$REPO_ROOT/docs/setup.md" "Fully Automated Process" "Setup doc mentions automated updates"
     test_template_content "$REPO_ROOT/docs/setup.md" "copy-paste-template.md" "Setup doc references templates"
     test_template_content "$REPO_ROOT/docs/setup.md" "CUSTOMIZE" "Setup doc preserves CUSTOMIZE sections"
 fi
