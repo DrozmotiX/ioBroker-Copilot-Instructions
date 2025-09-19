@@ -84,7 +84,7 @@ This script will:
 
 For automated template monitoring, copy the GitHub Action from our centralized template:
 
-**Reference**: [GitHub Action Template](../snippets/github-action-version-check.yml)
+**Reference**: [GitHub Action Template](https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/snippets/github-action-version-check.yml)
 
 This action will:
 - Check for template updates weekly
