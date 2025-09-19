@@ -16,7 +16,14 @@
   },
   "automation": {
     "workflow_file": ".github/workflows/check-copilot-template.yml",
-    "cron_schedule": "0 0 * * 0",
+    "cron_schedule": "23 3 * * 0",
+    "cron_schedule_note": "Optimized timing to avoid GitHub peak hours (was '0 0 * * 0')",
+    "cron_optimization": {
+      "enabled": true,
+      "reason": "GitHub recommends avoiding exact hours and midnight due to heavy load peaks",
+      "time_range": "1-5 AM UTC on Sundays to distribute load across off-peak hours",
+      "previous_schedule": "0 0 * * 0"
+    },
     "labels": [
       "template-update",
       "automation"

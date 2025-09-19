@@ -169,6 +169,27 @@ validate_metadata() {
     return 0
 }
 
+# Function to generate optimized cron schedule (avoiding GitHub peak hours)
+# GitHub recommends avoiding exact hours, especially midnight
+generate_optimized_cron() {
+    # Generate random minute (0-59) and hour between 1-5 AM UTC
+    # This distributes load across GitHub's off-peak hours
+    local minute=$((RANDOM % 60))
+    local hour=$((1 + RANDOM % 5))  # Random hour between 1-5 AM UTC
+    echo "$minute $hour * * 0"  # Still Sunday, but optimized timing
+}
+
+# Function to get current cron schedule (with fallback to optimized)
+get_cron_schedule() {
+    local schedule=$(get_metadata ".automation.cron_schedule" 2>/dev/null)
+    if [[ -z "$schedule" || "$schedule" == "null" ]]; then
+        # Fallback to optimized schedule if not found
+        generate_optimized_cron
+    else
+        echo "$schedule"
+    fi
+}
+
 # Function to show all metadata
 show_metadata() {
     echo "📋 Repository Metadata:"
@@ -177,4 +198,5 @@ show_metadata() {
     echo "  Raw Base URL: $(get_raw_base_url)"
     echo "  Metadata file: $METADATA_FILE"
     echo "  Snippets directory: $SNIPPETS_DIR"
+    echo "  Cron Schedule: $(get_cron_schedule)"
 }

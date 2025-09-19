@@ -43,7 +43,7 @@ The `metadata.json` file serves as the single source of truth for:
   },
   "automation": {
     "workflow_file": ".github/workflows/...", // GitHub Action filename
-    "cron_schedule": "0 0 * * 0",            // Weekly schedule
+    "cron_schedule": "23 3 * * 0",            // Optimized weekly schedule (off-peak hours)
     "labels": ["template-update", ...]       // Issue labels
   }
 }

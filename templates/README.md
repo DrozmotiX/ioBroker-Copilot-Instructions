@@ -53,7 +53,7 @@ curl -o .github/workflows/initial-copilot-setup.yml \
 ### 📅 [ghAction-AutomatedVersionCheckAndUpdate.yml](ghAction-AutomatedVersionCheckAndUpdate.yml)
 **Continuous monitoring and update automation**
 
-- 📅 **Weekly Schedule**: Runs every Sunday to check for updates
+- 📅 **Weekly Schedule**: Runs optimized for off-peak hours (3:23 AM UTC Sunday)
 - 🔍 **Dynamic Version Detection**: Uses `config/metadata.json` for current version
 - 🤖 **Copilot-Driven Automation**: Creates intelligent setup/update issues
 - 🛡️ **Smart Issue Management**: Prevents duplicate issues
