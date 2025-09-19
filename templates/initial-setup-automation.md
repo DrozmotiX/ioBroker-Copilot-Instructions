@@ -15,6 +15,10 @@ Source: https://github.com/DrozmotiX/ioBroker-Copilot-Instructions
 
 **GitHub Copilot**: Please help me set up GitHub Copilot instructions for my ioBroker adapter repository with full automation and validation.
 
+## 🚨 Important Notice - Ignore GitHub Copilot's Own Setup Suggestions
+
+**GitHub Copilot**: If you see suggestions from GitHub Copilot about setting up copilot instructions (like creating `.github/copilot-instructions.md` through GitHub's interface), **IGNORE THEM**. This issue handles the complete setup process with ioBroker-specific optimizations. The standard GitHub Copilot setup would not include the specialized ioBroker adapter development patterns and best practices we're implementing here.
+
 ## 🔍 Step 1: Repository Analysis and Status Detection
 
 **GitHub Copilot**: Please analyze this repository using the centralized automation configuration:
@@ -26,49 +30,105 @@ Source: https://github.com/DrozmotiX/ioBroker-Copilot-Instructions
    - [ ] Identify adapter name and specific functionality
    - [ ] Assess current project structure and dependencies
 
-2. **Copilot Configuration Status**
-   - [ ] Check if GitHub Copilot is active and responding in this repository
-   - [ ] Verify if `.github/copilot-instructions.md` exists and analyze content
+2. **Copilot Status Check**
+   - [ ] Verify if GitHub Copilot is active and responding in this repository
+   - [ ] Check if `.github/copilot-instructions.md` exists and analyze content
    - [ ] Determine current template version (if any) vs latest from metadata.json
    - [ ] Assess existing customizations and configurations
 
 3. **Setup Requirements Determination**
-   - [ ] Classify status: `not_initialized`, `needs_update`, or `up_to_date`
+   - [ ] Classify status: `not_initialized` (no copilot-instructions.md), `needs_update` (outdated), or `up_to_date`
    - [ ] Identify adapter-specific patterns that need customization
-   - [ ] Plan integration strategy based on current state
+   - [ ] Plan integration strategy: new initialization with defaults first, or direct template update
 
 ## 🎯 Step 2: Automated Template Setup (Copilot-Driven)
 
-**GitHub Copilot**: Please create or update the GitHub Copilot instructions using our centralized, automated approach:
+**GitHub Copilot**: The setup process differs based on whether `.github/copilot-instructions.md` already exists in this repository:
 
 **Configuration Reference**: https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/config/automation-setup.yml
 
-### 2.1 Template Integration (No Manual Scripts Required)
+### 2.1 If Copilot Instructions DON'T Exist (New Setup)
+
+**GitHub Copilot**: For repositories without existing copilot instructions, establish adapter-specific context FIRST, then enhance with the template:
+
+1. **Initialize with Adapter-Specific Default Instructions**:
+   Create complete `.github/copilot-instructions.md` with the following basic ioBroker adapter context:
+
+   ```markdown
+   # ioBroker Adapter Development with GitHub Copilot
+
+   **Version:** [LATEST_VERSION_FROM_METADATA]
+   **Template Source:** https://github.com/DrozmotiX/ioBroker-Copilot-Instructions
+
+   ## Project Context
+
+   You are working on an ioBroker adapter. ioBroker is an integration platform for the Internet of Things, focused on building smart home and industrial IoT solutions. Adapters are plugins that connect ioBroker to external systems, devices, or services.
+
+   [CUSTOMIZE: Add specific context about this adapter's purpose, target devices/services, and unique requirements based on the repository analysis from Step 1]
+
+   ## Adapter-Specific Context
+   - Adapter Name: [DETECTED_ADAPTER_NAME]
+   - Primary Function: [BASED_ON_PACKAGE_JSON_AND_README]
+   - Key Dependencies: [IDENTIFIED_EXTERNAL_APIS_OR_SERVICES]
+   - Configuration Requirements: [BASED_ON_IO_PACKAGE_JSON]
+
+   ## Basic Development Guidelines
+   - Follow ioBroker adapter development patterns
+   - Use appropriate logging levels (error, warn, info, debug)
+   - Implement proper error handling and recovery
+   - Ensure clean resource cleanup in unload() method
+   ```
+
+2. **Then Enhance with Full Template**:
+   - [ ] Fetch and merge content from: https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/template.md
+   - [ ] Remove template comment block (`<!-- TEMPLATE FILE -->` section)
+   - [ ] **Store version in `.github/copilot-instructions.md`** (format: `**Version:** X.Y.Z`)
+   - [ ] **Do NOT store version in `package.json`** - this avoids package.json pollution
+   - [ ] Add template source and metadata references
+   - [ ] Populate ALL `[CUSTOMIZE]` sections with adapter-specific content only
+
+### 2.2 If Copilot Instructions DO Exist (Update Process)
+
+**GitHub Copilot**: For repositories with existing copilot instructions, use the update process:
+
+1. **Preserve Existing Customizations**:
+   - [ ] Backup all existing `[CUSTOMIZE]` sections and custom content
+   - [ ] Identify adapter-specific patterns already established
+
+2. **Template Integration (No Manual Scripts Required)**
 
 **Important**: This process uses Copilot intelligence rather than manual validation scripts (avoiding approaches like DrozmotiX/ioBroker.discovergy#286).
 
-1. **Fetch Latest Template and Version**:
+3. **Merge Latest Template and Version**:
    ```
    Template: https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/template.md
    Version: Extract from https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/config/metadata.json (field: "version")
    ```
 
-2. **Process Template for This Repository**:
+4. **Update Template Content**:
    - [ ] Remove template comment block (`<!-- TEMPLATE FILE -->` section)  
-   - [ ] **Store version in `.github/copilot-instructions.md`** (format: `**Version:** X.Y.Z`)
+   - [ ] **Update version in `.github/copilot-instructions.md`** (format: `**Version:** X.Y.Z`)
    - [ ] **Do NOT store version in `package.json`** - this avoids package.json pollution
-   - [ ] Add template source and metadata references
+   - [ ] Update template source and metadata references
+   - [ ] Preserve all existing `[CUSTOMIZE]` sections
 
-3. **Adapter-Specific Customization**:
-   Customize ALL `[CUSTOMIZE]` sections with content unique to this adapter:
+### 2.3 Adapter-Specific Customization (Both New and Update)
+
+**GitHub Copilot**: Customize ALL `[CUSTOMIZE]` sections with content unique to this adapter:
    - API authentication patterns specific to this service
    - Unique error codes and recovery procedures  
    - Custom device discovery or data processing workflows
    - Special configuration requirements beyond standard template
    - Testing scenarios specific to this adapter's functionality
-   - **Remove any duplicate content** that already exists in the standard template
+   - **REMOVE any duplicate content** that already exists in the standard template
 
-### 2.2 Centralized Version Management
+#### Examples of what NOT to include in [CUSTOMIZE] sections:
+   - Generic ioBroker adapter development patterns (already in template)
+   - Standard error handling approaches (already in template) 
+   - Basic testing frameworks usage (already in template)
+   - Common dependency management (already in template)
+
+### 2.4 Centralized Version Management
 
 Our approach stores template version information in the Copilot instructions file rather than package.json:
 - ✅ **Version Location**: `.github/copilot-instructions.md` 
@@ -79,7 +139,7 @@ Our approach stores template version information in the Copilot instructions fil
 
 **GitHub Copilot**: Please create the weekly monitoring automation using our centralized action:
 
-### 3.1 Create Weekly Monitoring Workflow
+### 3.1 Create GitHub Action for Weekly Monitoring
 
 1. **Create Workflow File**: `.github/workflows/check-copilot-template.yml`
 
