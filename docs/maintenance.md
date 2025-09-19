@@ -55,7 +55,7 @@ This repository includes comprehensive version management scripts that automatic
 ./scripts/manage-versions.sh sync
 
 # Update to a new version across all files
-./scripts/manage-versions.sh update 0.3.2
+./scripts/manage-versions.sh update 0.4.1
 ```
 
 ### What the Scripts Do
@@ -68,39 +68,29 @@ These scripts ensure that:
 
 ### Version Check for Users
 
-Users can validate their local template version with our provided script:
+Use the provided script to check if your template is up-to-date:
 
 ```bash
 # Download and run the version check script
 curl -s https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/scripts/check-template-version.sh | bash
 ```
 
+This script will:
+- Compare your local template version with the latest available
+- Provide update guidance if your template is outdated
+- Show you what's changed in newer versions
+
 ### GitHub Action for Continuous Monitoring
 
-You can set up a GitHub Action to periodically check if templates are up-to-date:
+For automated template monitoring, copy the GitHub Action from our centralized template:
 
-```yaml
-# .github/workflows/check-copilot-template.yml
-name: Check Copilot Template Version
-on:
-  schedule:
-    - cron: '0 0 * * 0'  # Weekly check
-  workflow_dispatch:
+**Reference**: [GitHub Action Template](../snippets/github-action-version-check.yml)
 
-jobs:
-  check-template:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Check template version
-        run: |
-          CURRENT_VERSION=$(grep "Version:" .github/copilot-instructions.md | head -1 | sed 's/.*Version:\s*//')
-          LATEST_VERSION=$(curl -s https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/template.md | grep "Version:" | head -1 | sed 's/.*Version:\s*//')
-          if [ "$CURRENT_VERSION" != "$LATEST_VERSION" ]; then
-            echo "Template is outdated. Current: $CURRENT_VERSION, Latest: $LATEST_VERSION"
-            exit 1
-          fi
-```
+This action will:
+- Check for template updates weekly
+- Automatically create GitHub issues when updates are available
+- Handle both initial setup and update scenarios
+- Preserve custom content during updates
 
 ## Automated Testing Infrastructure
 

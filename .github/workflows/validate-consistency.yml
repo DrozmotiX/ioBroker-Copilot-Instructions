@@ -1,0 +1,119 @@
+name: Validate Repository Consistency
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  validate-consistency:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Validate metadata and version consistency
+        run: |
+          echo "🔍 Validating repository consistency..."
+          
+          # Check if metadata file exists and is valid JSON
+          if [[ ! -f "config/metadata.json" ]]; then
+            echo "❌ Metadata file not found: config/metadata.json"
+            exit 1
+          fi
+          
+          if ! jq empty config/metadata.json 2>/dev/null; then
+            echo "❌ Invalid JSON in metadata file"
+            exit 1
+          fi
+          
+          echo "✅ Metadata file is valid JSON"
+          
+          # Extract versions from different sources
+          METADATA_VERSION=$(jq -r '.version' config/metadata.json)
+          TEMPLATE_VERSION=$(grep "^**Version:**" template.md | head -1 | sed 's/.*Version:\*\* *//' | tr -d ' ' || echo "unknown")
+          PACKAGE_VERSION=$(grep '"version":' package.json | head -1 | sed 's/.*"version": *"//;s/".*//' || echo "unknown")
+          
+          echo "📋 Version Comparison:"
+          echo "  Metadata: $METADATA_VERSION"
+          echo "  Template: $TEMPLATE_VERSION" 
+          echo "  Package:  $PACKAGE_VERSION"
+          
+          # Check version consistency
+          INCONSISTENT=false
+          
+          if [[ "$METADATA_VERSION" != "$TEMPLATE_VERSION" && "$TEMPLATE_VERSION" != "unknown" ]]; then
+            echo "❌ Metadata version ($METADATA_VERSION) doesn't match template version ($TEMPLATE_VERSION)"
+            INCONSISTENT=true
+          fi
+          
+          if [[ "$METADATA_VERSION" != "$PACKAGE_VERSION" && "$PACKAGE_VERSION" != "unknown" ]]; then
+            echo "❌ Metadata version ($METADATA_VERSION) doesn't match package.json version ($PACKAGE_VERSION)"
+            INCONSISTENT=true
+          fi
+          
+          if [[ "$INCONSISTENT" == "true" ]]; then
+            echo ""
+            echo "💡 Run './scripts/manage-versions.sh sync' or './scripts/manage-versions.sh update <version>' to fix inconsistencies"
+            exit 1
+          fi
+          
+          echo "✅ All versions are consistent!"
+      
+      - name: Validate snippet files exist
+        run: |
+          echo "📄 Validating snippet files..."
+          
+          required_snippets=(
+            "snippets/version-check-command.md"
+            "snippets/github-action-version-check.yml" 
+            "snippets/version-management-commands.md"
+          )
+          
+          for snippet in "${required_snippets[@]}"; do
+            if [[ -f "$snippet" ]]; then
+              echo "✅ $snippet exists"
+            else
+              echo "❌ Missing required snippet: $snippet"
+              exit 1
+            fi
+          done
+      
+      - name: Validate documentation references snippets
+        run: |
+          echo "🔗 Validating documentation uses centralized snippets..."
+          
+          # Check that docs reference snippets instead of duplicating content
+          duplicated_content_count=0
+          
+          # Count GitHub Action YAML duplications (should be minimal now)
+          yaml_duplications=$(grep -r -l "name:.*Check.*Template.*Version" docs/ templates/ 2>/dev/null | wc -l)
+          echo "GitHub Action YAML references in docs/templates: $yaml_duplications"
+          
+          if [[ $yaml_duplications -gt 1 ]]; then
+            echo "⚠️  Consider further consolidation of GitHub Action YAML content"
+          fi
+          
+          # Check that curl commands are referenced via snippets
+          snippet_references=$(grep -r "snippets/" docs/ templates/ 2>/dev/null | wc -l)
+          echo "Snippet references found: $snippet_references"
+          
+          if [[ $snippet_references -lt 3 ]]; then
+            echo "❌ Documentation should reference more centralized snippets"
+            exit 1
+          fi
+          
+          echo "✅ Documentation properly references centralized snippets"
+      
+      - name: Run centralized metadata tests
+        run: |
+          echo "🧪 Running centralized metadata tests..."
+          if [[ -f "tests/test-centralized-metadata.sh" ]]; then
+            chmod +x tests/test-centralized-metadata.sh
+            ./tests/test-centralized-metadata.sh
+          else
+            echo "⚠️ Centralized metadata tests not found"
+          fi

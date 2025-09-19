@@ -69,6 +69,11 @@ Check if your template needs updating:
 curl -s https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/scripts/check-template-version.sh | bash
 ```
 
+This script will:
+- Compare your local template version with the latest available
+- Provide update guidance if your template is outdated
+- Show you what's changed in newer versions
+
 ## 🛠️ Advanced Automated Method
 
 For repositories with existing automation workflows, use the full template:

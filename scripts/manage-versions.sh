@@ -18,8 +18,12 @@ README_FILE="$REPO_ROOT/README.md"
 CHANGELOG_FILE="$REPO_ROOT/CHANGELOG.md"
 PACKAGE_FILE="$REPO_ROOT/package.json"
 COPILOT_INSTRUCTIONS="$REPO_ROOT/.github/copilot-instructions.md"
+METADATA_FILE="$REPO_ROOT/config/metadata.json"
 EXTRACT_SCRIPT="$SCRIPT_DIR/extract-version.sh"
 UPDATE_SCRIPT="$SCRIPT_DIR/update-versions.sh"
+
+# Source shared utilities
+source "$SCRIPT_DIR/shared-utils.sh"
 
 # Color codes for output
 RED='\033[0;31m'
@@ -48,8 +52,8 @@ show_versions() {
     fi
     
     if [[ -f "$README_FILE" ]]; then
-        README_VER=$(grep "Latest Version:" "$README_FILE" | head -1 | sed 's/.*Latest Version:\*\* v*//' | tr -d ' ')
-        echo "📖 README documented version: $README_VER"
+        # README uses GitHub badge for version display, which is automatically updated
+        echo "📖 README uses GitHub badge for version display (auto-updated)"
     fi
     
     if [[ -f "$PACKAGE_FILE" ]]; then
@@ -58,6 +62,10 @@ show_versions() {
     else
         echo -e "${YELLOW}⚠️  Package.json not found${NC}"
     fi
+    
+    # Show metadata version
+    METADATA_VER=$(get_version)
+    echo "⚙️  Centralized metadata version: $METADATA_VER"
     
     echo "📅 Current date: $($EXTRACT_SCRIPT current-date)"
 }
@@ -68,7 +76,7 @@ check_consistency() {
     echo ""
     
     TEMPLATE_VER=$(grep "^**Version:**" "$TEMPLATE_FILE" | head -1 | sed 's/.*Version:\*\* *//' | tr -d ' ')
-    README_VER=$(grep "Latest Version:" "$README_FILE" | head -1 | sed 's/.*Latest Version:\*\* v*//' | tr -d ' ')
+    METADATA_VER=$(get_version)
     
     if [[ -f "$PACKAGE_FILE" ]]; then
         PACKAGE_VER=$(grep '"version":' "$PACKAGE_FILE" | head -1 | sed 's/.*"version": *"//;s/",\?.*$//' | tr -d ' ')
@@ -76,11 +84,12 @@ check_consistency() {
     
     INCONSISTENT=false
     
-    if [[ "$TEMPLATE_VER" != "$README_VER" ]]; then
-        echo -e "${RED}❌ Version mismatch: Template ($TEMPLATE_VER) vs README ($README_VER)${NC}"
+    # Check template vs metadata consistency
+    if [[ "$TEMPLATE_VER" != "$METADATA_VER" ]]; then
+        echo -e "${RED}❌ Version mismatch: Template ($TEMPLATE_VER) vs Metadata ($METADATA_VER)${NC}"
         INCONSISTENT=true
     else
-        echo -e "${GREEN}✅ Template and README versions match ($TEMPLATE_VER)${NC}"
+        echo -e "${GREEN}✅ Template and metadata versions match ($TEMPLATE_VER)${NC}"
     fi
     
     # Check package.json version consistency
@@ -93,16 +102,8 @@ check_consistency() {
         fi
     fi
     
-    # Check if dates are current
-    CURRENT_DATE=$($EXTRACT_SCRIPT current-date)
-    README_DATE=$(grep "Last Updated:" "$README_FILE" | head -1 | sed 's/.*Last Updated:\*\* *//')
-    
-    if [[ "$README_DATE" != "$CURRENT_DATE" ]]; then
-        echo -e "${YELLOW}⚠️  Date may be outdated: README shows '$README_DATE', current is '$CURRENT_DATE'${NC}"
-        INCONSISTENT=true
-    else
-        echo -e "${GREEN}✅ Documentation date is current${NC}"
-    fi
+    # NOTE: README uses GitHub badge for version display, no manual date maintenance required
+    echo -e "${GREEN}📖 README uses auto-updating GitHub badge${NC}"
     
     if [[ "$INCONSISTENT" == "true" ]]; then
         echo ""
@@ -127,6 +128,25 @@ sync_documentation() {
     fi
 }
 
+# Function to update metadata file version
+update_metadata_version() {
+    local NEW_VERSION="$1"
+    
+    if [[ -f "$METADATA_FILE" ]]; then
+        if command -v jq >/dev/null 2>&1; then
+            # Use jq for precise JSON updates
+            local TEMP_FILE=$(mktemp)
+            jq ".version = \"$NEW_VERSION\"" "$METADATA_FILE" > "$TEMP_FILE" && mv "$TEMP_FILE" "$METADATA_FILE"
+            echo "✅ Updated metadata.json"
+        else
+            # Fallback sed replacement
+            sed -i "s/\"version\": \"[0-9]\+\.[0-9]\+\.[0-9]\+\"/\"version\": \"$NEW_VERSION\"/" "$METADATA_FILE"
+            echo "✅ Updated metadata.json (using sed)"
+        fi
+    else
+        echo "⚠️  Metadata file not found: $METADATA_FILE"
+    fi
+}
 # Function to update to a new version
 update_version() {
     local NEW_VERSION="$1"
@@ -144,6 +164,9 @@ update_version() {
     
     echo -e "${BLUE}📦 Updating to version $NEW_VERSION:${NC}"
     echo ""
+    
+    # Update centralized metadata first
+    update_metadata_version "$NEW_VERSION"
     
     # Update template
     if [[ -f "$TEMPLATE_FILE" ]]; then

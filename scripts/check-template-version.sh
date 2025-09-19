@@ -10,7 +10,15 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(dirname "$SCRIPT_DIR")"
 LOCAL_TEMPLATE="$REPO_ROOT/.github/copilot-instructions.md"
-REMOTE_TEMPLATE_URL="https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/template.md"
+
+# Try to source shared utilities if available (for repository maintainers)
+if [[ -f "$SCRIPT_DIR/shared-utils.sh" ]]; then
+    source "$SCRIPT_DIR/shared-utils.sh"
+    REMOTE_TEMPLATE_URL="$(get_raw_base_url)/template.md"
+else
+    # Fallback for external users
+    REMOTE_TEMPLATE_URL="https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/template.md"
+fi
 
 echo "🔍 Checking ioBroker Copilot template version..."
 
