@@ -1,0 +1,161 @@
+# Centralized Initial Setup Configuration for ioBroker Copilot Instructions
+# Version: 0.5.0
+# This file contains the configuration and prompts for automated setup
+
+automation:
+  repository_detection:
+    indicators:
+      - "package.json contains iobroker"
+      - "io-package.json exists"
+      - "main.js or lib/ directory exists"
+      - "admin/ directory exists"
+    validation:
+      required_files:
+        - "package.json"
+        - "io-package.json"
+        - "README.md"
+      optional_files:
+        - "main.js"
+        - "lib/"
+        - "admin/"
+
+  copilot_status_check:
+    detection_methods:
+      - "Check .github/copilot-instructions.md existence"
+      - "Validate version information in copilot instructions"
+      - "Test Copilot responsiveness in repository"
+    status_levels:
+      - "not_initialized" # No copilot-instructions.md
+      - "needs_update"    # Version mismatch
+      - "up_to_date"      # Current version matches
+
+  template_integration:
+    source_references:
+      template_url: "https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/template.md"
+      metadata_url: "https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/config/metadata.json"
+      repository_url: "https://github.com/DrozmotiX/ioBroker-Copilot-Instructions"
+    
+    version_storage:
+      location: ".github/copilot-instructions.md"
+      format: "**Version:** X.Y.Z"
+      note: "Store in copilot instructions file, NOT package.json"
+    
+    customization_sections:
+      preserve_tags: ["[CUSTOMIZE]"]
+      custom_content_types:
+        - "Adapter-specific API patterns"
+        - "Unique error codes and handling"
+        - "Custom device discovery patterns"
+        - "Authentication flows specific to service"
+        - "Testing scenarios beyond standard patterns"
+
+  github_action_setup:
+    workflow_file: ".github/workflows/check-copilot-template.yml"
+    template_source: "templates/centralized-version-check-action.yml"
+    features:
+      - "Weekly automated version checking"
+      - "Dynamic version detection from metadata.json"
+      - "Copilot-driven issue creation"
+      - "Custom section preservation"
+      - "Duplicate issue prevention"
+
+prompts:
+  initial_setup:
+    analysis_prompt: |
+      Please analyze this repository and check:
+      
+      1. **Repository Type Confirmation**:
+         - Confirm this is an ioBroker adapter repository
+         - Identify the adapter name and type
+         - Check existing structure and dependencies
+      
+      2. **Copilot Status Assessment**:
+         - Verify if GitHub Copilot is active in this repository
+         - Check if .github/copilot-instructions.md exists
+         - Analyze any existing Copilot configuration
+      
+      3. **Setup Requirements**:
+         - Determine what needs to be configured
+         - Identify adapter-specific patterns to customize
+         - Plan the integration strategy
+
+    template_setup_prompt: |
+      Create a complete .github/copilot-instructions.md file:
+      
+      1. **Download and process template**:
+         - Fetch: https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/template.md
+         - Remove template comment block (<!-- TEMPLATE FILE --> section)
+         - Get version from: https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/config/metadata.json
+      
+      2. **Version and source setup**:
+         - Set version from metadata.json (store in copilot instructions, NOT package.json)
+         - Add template source reference
+         - Include metadata reference for future updates
+      
+      3. **Adapter-specific customization**:
+         - Customize all [CUSTOMIZE] sections for this specific adapter
+         - Add unique API patterns, error codes, authentication flows
+         - Include adapter-specific testing scenarios
+         - Remove any duplicate content that exists in standard template
+
+    workflow_setup_prompt: |
+      Create .github/workflows/check-copilot-template.yml:
+      
+      1. **Use centralized template**:
+         - Copy from: https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/templates/centralized-version-check-action.yml
+         - This provides dynamic version checking using metadata.json
+         - Includes Copilot-driven automation (no manual scripts)
+      
+      2. **Weekly monitoring features**:
+         - Automatic version checking every Sunday
+         - Smart issue creation with duplicate prevention
+         - Custom section preservation during updates
+         - Manual trigger capability
+
+  update_process:
+    merge_prompt: |
+      Update .github/copilot-instructions.md by merging latest template:
+      
+      TEMPLATE SOURCES:
+      - Template: https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/template.md
+      - Version from: https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/config/metadata.json
+      
+      PRESERVATION REQUIREMENTS:
+      1. Keep ALL [CUSTOMIZE] sections exactly as they are
+      2. Preserve adapter-specific context not in standard template
+      3. Maintain custom error handling, API patterns, authentication
+      4. Keep unique testing scenarios and configuration instructions
+      5. REMOVE duplicate content from [CUSTOMIZE] that exists in standard template
+      6. Store version in copilot instructions, NOT package.json
+      
+      UPDATE REQUIREMENTS:
+      1. Integrate latest best practices from new template
+      2. Update version number from metadata.json
+      3. Refresh template source references
+      4. Add missing standard sections
+      5. Clean up [CUSTOMIZE] sections to avoid duplication
+
+validation:
+  success_criteria:
+    setup:
+      - ".github/copilot-instructions.md created"
+      - "Version stored in copilot instructions (not package.json)"
+      - "Template source reference included"
+      - "[CUSTOMIZE] sections populated with adapter-specific content"
+      - "Weekly monitoring workflow created"
+      - "Enhanced Copilot suggestions working"
+    
+    update:
+      - "All [CUSTOMIZE] sections preserved"
+      - "Version updated from metadata.json"
+      - "Custom content intact"
+      - "New best practices integrated"
+      - "No duplicate content between [CUSTOMIZE] and standard sections"
+      - "Template source references updated"
+
+  testing_steps:
+    - "Test enhanced Copilot suggestions (try typing 'this.setState(' in .js file)"
+    - "Verify template version matches metadata.json"
+    - "Confirm custom sections contain only unique content"
+    - "Check GitHub Action workflow syntax"
+    - "Validate issue template functionality"

@@ -1,5 +1,17 @@
 name: Check ioBroker Copilot Template Version
 
+# DEPRECATION NOTICE: This template has been replaced by the centralized version
+# Please use: https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/templates/centralized-version-check-action.yml
+# 
+# The centralized version provides:
+# - Dynamic version checking using metadata.json
+# - Better repository status detection  
+# - Copilot-driven automation instead of manual scripts
+# - Enhanced issue creation and duplicate prevention
+#
+# Migration: Replace the contents of your .github/workflows/check-copilot-template.yml
+# with the centralized template for improved functionality.
+
 on:
   schedule:
     - cron: '0 0 * * 0'  # Weekly check every Sunday at midnight UTC
@@ -15,6 +27,25 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        
+      - name: Migration Notice
+        run: |
+          echo "⚠️  DEPRECATION NOTICE: This workflow template is deprecated"
+          echo "🆙 Please migrate to the centralized version for enhanced features:"
+          echo "   https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/templates/centralized-version-check-action.yml"
+          echo ""
+          echo "🎯 Enhanced features in centralized version:"
+          echo "   - Dynamic version detection using metadata.json"
+          echo "   - Better repository status detection"
+          echo "   - Copilot-driven automation (no manual scripts)"
+          echo "   - Enhanced issue creation with duplicate prevention"
+          echo ""
+          echo "📋 Migration steps:"
+          echo "   1. Replace your .github/workflows/check-copilot-template.yml content"
+          echo "   2. Copy from the centralized template URL above"
+          echo "   3. Commit the updated workflow"
+          echo ""
+          echo "⚡ Continuing with legacy version for compatibility..."
         
       - name: Check template version
         id: version-check
