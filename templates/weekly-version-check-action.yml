@@ -14,7 +14,7 @@ name: Check ioBroker Copilot Template Version
 
 on:
   schedule:
-    - cron: '0 0 * * 0'  # Weekly check every Sunday at midnight UTC
+    - cron: '23 3 * * 0'  # Weekly check optimized for off-peak hours (3:23 AM UTC Sunday)
   workflow_dispatch:  # Allow manual triggering
 
 jobs:

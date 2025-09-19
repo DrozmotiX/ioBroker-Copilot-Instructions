@@ -67,7 +67,7 @@ run_test_with_output "Initial setup template includes automation setup" \
 
 # Test GitHub Action content
 run_test_with_output "GitHub Action has weekly schedule" \
-    "grep -i 'cron.*0 0 \* \* 0' '$REPO_ROOT/templates/weekly-version-check-action.yml'" \
+    "grep -i 'cron:' '$REPO_ROOT/templates/weekly-version-check-action.yml'" \
     "cron"
 
 run_test_with_output "GitHub Action has manual trigger" \

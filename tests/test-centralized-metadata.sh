@@ -146,7 +146,7 @@ fi
 
 if [[ -f "$REPO_ROOT/snippets/github-action-version-check.yml" ]]; then
     run_test_with_output "GitHub Action snippet has workflow name" "name" grep 'name:.*Check.*Template' "$REPO_ROOT/snippets/github-action-version-check.yml"
-    run_test_with_output "GitHub Action snippet has cron schedule" "cron" grep 'cron:.*0 0' "$REPO_ROOT/snippets/github-action-version-check.yml"
+    run_test_with_output "GitHub Action snippet has cron schedule" "cron" grep 'cron:' "$REPO_ROOT/snippets/github-action-version-check.yml"
 fi
 
 # Test integration with existing scripts
@@ -186,6 +186,77 @@ run_test_with_output "Template references snippet" "snippets" grep 'snippets/' "
 
 # Clean up
 rm -rf "$TEMP_DIR"
+
+# Test cron schedule optimization
+echo ""
+echo -e "${YELLOW}⏰ Testing Cron Schedule Optimization${NC}"
+
+# Test metadata contains optimized cron schedule
+if command -v jq >/dev/null 2>&1; then
+    echo -n "  Testing metadata has optimized cron schedule... "
+    CRON_SCHEDULE=$(jq -r '.automation.cron_schedule' "$METADATA_FILE" 2>/dev/null)
+    if [[ "$CRON_SCHEDULE" != "0 0 * * 0" ]] && [[ "$CRON_SCHEDULE" != "null" ]]; then
+        echo -e "${GREEN}✅ PASS${NC}"
+        echo "    Schedule: $CRON_SCHEDULE (optimized from '0 0 * * 0')"
+    else
+        echo -e "${RED}❌ FAIL${NC}"
+        echo "    Still using peak hours schedule: $CRON_SCHEDULE"
+        EXIT_CODE=1
+    fi
+    
+    # Test optimization documentation exists
+    echo -n "  Testing cron optimization documentation... "
+    if jq -e '.automation.cron_optimization' "$METADATA_FILE" >/dev/null 2>&1; then
+        echo -e "${GREEN}✅ PASS${NC}"
+        OPTIMIZATION_REASON=$(jq -r '.automation.cron_optimization.reason' "$METADATA_FILE" 2>/dev/null)
+        echo "    Reason: $OPTIMIZATION_REASON"
+    else
+        echo -e "${RED}❌ FAIL${NC}"
+        echo "    Missing optimization documentation in metadata"
+        EXIT_CODE=1
+    fi
+fi
+
+# Test template files use optimized schedule
+TEMPLATE_FILES=(
+    "templates/ghAction-AutomatedVersionCheckAndUpdate.yml"
+    "templates/weekly-version-check-action.yml"  
+    "templates/centralized-version-check-action.yml"
+    "snippets/github-action-version-check.yml"
+)
+
+for template in "${TEMPLATE_FILES[@]}"; do
+    echo -n "  Testing $template uses optimized schedule... "
+    if [[ -f "$REPO_ROOT/$template" ]]; then
+        if grep -q "cron:.*'0 0 \* \* 0'" "$REPO_ROOT/$template"; then
+            echo -e "${RED}❌ FAIL${NC}"
+            echo "    Still using peak hours (midnight) schedule"
+            EXIT_CODE=1
+        elif grep -q "cron:" "$REPO_ROOT/$template"; then
+            echo -e "${GREEN}✅ PASS${NC}"
+            SCHEDULE=$(grep "cron:" "$REPO_ROOT/$template" | head -1 | sed "s/.*cron: *'//" | sed "s/'.*//" || echo "not found")
+            echo "    Schedule: $SCHEDULE"
+        else
+            echo -e "${YELLOW}⚠️  SKIP${NC}"
+            echo "    No cron schedule found in template"
+        fi
+    else
+        echo -e "${YELLOW}⚠️  SKIP${NC}"
+        echo "    Template file not found"
+    fi
+done
+
+# Test shared-utils.sh has cron functions
+if [[ -f "$SHARED_UTILS" ]]; then
+    echo -n "  Testing shared utils has cron generation functions... "
+    if grep -q "generate_optimized_cron\|get_cron_schedule" "$SHARED_UTILS"; then
+        echo -e "${GREEN}✅ PASS${NC}"
+    else
+        echo -e "${RED}❌ FAIL${NC}"
+        echo "    Missing cron optimization functions"
+        EXIT_CODE=1
+    fi
+fi
 
 # Summary
 echo ""
