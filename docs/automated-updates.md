@@ -2,7 +2,7 @@
 
 This guide provides fully automated methods to validate and update your ioBroker Copilot instructions template using GitHub Copilot, ensuring all custom sections are preserved.
 
-## 🚀 Quick Start (Copy-Paste Method)
+## 🚀 Quick Start (Simple Reference Method)
 
 **Prerequisites**: Ensure GitHub Copilot is active in your repository first. If you haven't set up GitHub Copilot yet, create an issue in your repository with the title "🤖 Setup GitHub Copilot" and content "GitHub Copilot: Please help me set up GitHub Copilot for this repository and create initial .github/copilot-instructions.md file."
 
@@ -13,35 +13,14 @@ The fastest way to update your template:
 1. Go to your ioBroker adapter repository on GitHub
 2. Click "Issues" → "New Issue"  
 3. Use title: **🤖 Update ioBroker Copilot Instructions Template**
-4. Copy and paste this content:
-
-```markdown
-**GitHub Copilot**: Please help me update my ioBroker Copilot instructions template to the latest version while preserving all custom sections.
-
-## Task
-Update `.github/copilot-instructions.md` using this prompt:
+4. Use this simple content:
 
 ```
-"Merge the ioBroker template from https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/blob/main/template.md with my existing .github/copilot-instructions.md. 
+GitHub Copilot: Please help me update my ioBroker Copilot instructions template using the guide from:
+docs/automated-updates.md
 
-REQUIREMENTS:
-1. Preserve ALL [CUSTOMIZE] sections exactly as they are
-2. Keep all project-specific context and custom instructions  
-3. Add latest ioBroker best practices from the new template
-4. Update version to match latest template version
-5. Maintain Template Source reference
-
-Show me the changes before applying them."
-```
-
-## Validation
-After update, confirm:
-- [ ] All [CUSTOMIZE] sections preserved
-- [ ] Version updated to latest  
-- [ ] Custom content intact
-- [ ] Template structure complete
-
-**Reference**: https://github.com/DrozmotiX/ioBroker-Copilot-Instructions
+Reference the copy-paste template for specific requirements:
+templates/copy-paste-template.md
 ```
 
 ### Step 2: Let GitHub Copilot Handle the Update
@@ -79,7 +58,15 @@ This script will:
 For repositories with existing automation workflows, use the full template:
 
 ### Template File Location
-Copy from: [`templates/automated-template-update.md`](../templates/automated-template-update.md)
+Reference: [`templates/automated-template-update.md`](../templates/automated-template-update.md)
+
+Create an issue with this simple content:
+```
+Title: 🤖 Update ioBroker Copilot Instructions Template
+
+GitHub Copilot: Please help me update my template using the detailed guide from:
+templates/automated-template-update.md
+```
 
 This provides:
 - Detailed step-by-step automation  

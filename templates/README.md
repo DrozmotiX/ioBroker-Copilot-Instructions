@@ -49,14 +49,33 @@ This directory contains templates and automation files for setting up and mainta
 ## Usage Recommendations
 
 ### For New Repositories
-1. Use [initial-setup-automation.md](initial-setup-automation.md)
-2. Create an issue with the template content
-3. Let GitHub Copilot handle everything automatically
+1. Create an issue with this simple content:
+   ```
+   Title: 🤖 Setup ioBroker GitHub Copilot Instructions
+   
+   GitHub Copilot: Please help me set up using: templates/initial-setup-automation.md
+   ```
+2. Let GitHub Copilot handle everything automatically
 
 ### For Existing Repositories  
-1. **With monitoring needed**: Use [initial-setup-automation.md](initial-setup-automation.md)
-2. **Quick updates only**: Use [copy-paste-template.md](copy-paste-template.md)
-3. **Complex updates**: Use [automated-template-update.md](automated-template-update.md)
+1. **With monitoring needed**: Create an issue:
+   ```
+   Title: 🤖 Setup ioBroker GitHub Copilot Instructions
+   
+   GitHub Copilot: Please help using: templates/initial-setup-automation.md
+   ```
+2. **Quick updates only**: Create an issue:
+   ```
+   Title: 🤖 Update ioBroker Copilot Instructions Template
+   
+   GitHub Copilot: Please help using: templates/copy-paste-template.md
+   ```
+3. **Complex updates**: Create an issue:
+   ```
+   Title: 🤖 Update ioBroker Copilot Instructions Template
+   
+   GitHub Copilot: Please help using: templates/automated-template-update.md
+   ```
 
 ### For Manual GitHub Action Setup
 Copy [weekly-version-check-action.yml](weekly-version-check-action.yml) to `.github/workflows/check-copilot-template.yml`
