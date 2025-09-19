@@ -159,7 +159,7 @@ update_version() {
     
     # Update package.json
     if [[ -f "$PACKAGE_FILE" ]]; then
-        sed -i "s/\"version\": \"[0-9\.]*\"/\"version\": \"$NEW_VERSION\"/" "$PACKAGE_FILE"
+        sed -i "s/\"version\": \"[0-9]\+\.[0-9]\+\.[0-9]\+\"/\"version\": \"$NEW_VERSION\"/" "$PACKAGE_FILE"
         echo "✅ Updated package.json"
     fi
     
