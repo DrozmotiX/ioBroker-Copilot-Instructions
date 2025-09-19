@@ -6,14 +6,6 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(dirname "$SCRIPT_DIR")"
 
-#!/bin/bash
-#
-# Test suite for centralized automation setup functionality
-# Tests the new centralized GitHub Action and configuration setup
-
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(dirname "$SCRIPT_DIR")"
-
 # Simple test utilities (avoiding full test-runner.sh)
 run_test_with_output() {
     local test_name="$1"
