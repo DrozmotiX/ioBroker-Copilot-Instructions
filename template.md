@@ -561,7 +561,9 @@ Use this consistent format for changelog entries:
 - When working on new features in a repository with an existing package-lock.json file, use `npm ci` to install dependencies. Use `npm install` only when adding or updating dependencies.
 - Keep dependencies minimal and focused
 - Only update dependencies to latest stable versions when necessary or in separate Pull Requests. Avoid updating dependencies when adding features that don't require these updates.
-- If the package.json file was changed (and only then): Before committing, ensure package.json and package-lock.json are in sync by running `npm install` and only then also ensure to commit package-lock.json if changed.
+- When you modify `package.json`:
+  1. Run `npm install` to update and sync `package-lock.json`.
+  2. If `package-lock.json` was updated, commit both `package.json` and `package-lock.json`.
 
 ### Dependency Best Practices
 - Prefer built-in Node.js modules when possible
