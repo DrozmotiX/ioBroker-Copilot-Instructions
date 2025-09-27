@@ -560,7 +560,7 @@ Use this consistent format for changelog entries:
 - Always use `npm` for dependency management in ioBroker adapters
 - When working on new features in a repository with an existing package-lock.json file, use `npm ci` to install dependencies. Use `npm install` only when adding or updating dependencies.
 - Keep dependencies minimal and focused
-- Update of dependencies to latest stable versions shall only be done when really needed or required or in separate Pull requests! (Do not update dependencies when just adding a feature that does not need this).
+- Only update dependencies to latest stable versions when necessary or in separate Pull Requests. Avoid updating dependencies when adding features that don't require these updates.
 - If the package.json file was changed (and only then): Before committing, ensure package.json and package-lock.json are in sync by running `npm install` and only then also ensure to commit package-lock.json if changed.
 
 ### Dependency Best Practices
