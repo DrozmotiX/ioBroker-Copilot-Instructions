@@ -66,15 +66,15 @@ test_version_update_workflow() {
     cd "$REPO_ROOT"
     
     # Store original versions
-    local original_template_version=$(grep "^**Version:**" template.md | head -1 | sed 's/.*Version:\*\* *//' | tr -d ' ')
+    local original_template_version=$(grep "^\*\*Version:\*\*" template.md | head -1 | sed 's/.*Version:\*\* *//' | tr -d ' ')
     
     # Update to a test version
     ./scripts/manage-versions.sh update 1.2.3 >/dev/null 2>&1
     
     # Check if all files were updated
-    local template_version=$(grep "^**Version:**" template.md | head -1 | sed 's/.*Version:\*\* *//' | tr -d ' ')
+    local template_version=$(grep "^\*\*Version:\*\*" template.md | head -1 | sed 's/.*Version:\*\* *//' | tr -d ' ')
     local readme_version=$(grep "Latest Version:" README.md | head -1 | sed 's/.*Latest Version:\*\* v*//' | tr -d ' ')
-    local copilot_version=$(grep "^**Version:**" .github/copilot-instructions.md | head -1 | sed 's/.*Version:\*\* *//' | tr -d ' ')
+    local copilot_version=$(grep "^\*\*Version:\*\*" .github/copilot-instructions.md | head -1 | sed 's/.*Version:\*\* *//' | tr -d ' ')
     
     # Restore original version
     ./scripts/manage-versions.sh update "$original_template_version" >/dev/null 2>&1
