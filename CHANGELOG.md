@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -->
 
 ## **WORK IN PROGRESS**
-
+- (Apollon77) **ENHANCED**: Added news instructions how to handle proper Package updates and related lock file
 - (copilot) **FIXED**: Apply lessons learned from PR #48 hanging - updated all GitHub issue templates to default assign @copilot for immediate automation (Fixes #58)
 - (copilot) **ENHANCED**: Added clear instructions in README.md to assign issues to @copilot for automated processing (Fixes #58) 
 - (copilot) **ENHANCED**: Added instruction in README.md about Copilot creating PRs and waiting for review completion (Fixes #58)
@@ -41,10 +41,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - (copilot) **NEW**: Added automated template update system using GitHub Copilot-powered issue templates (Fixes #24)
 - (copilot) **NEW**: Created copy-paste template for quick automated template validation and updates
 - (copilot) **NEW**: Added comprehensive automated updates documentation with step-by-step workflows
-- (copilot) **ENHANCED**: Reorganized README into focused documentation files by instruction type for better user experience (Fixes #22)
+- (copilot) **ENHANCED**: Reorganized README into focused documentation files by an instruction type for better user experience (Fixes #22)
 - (copilot) **NEW**: Created separate docs/ directory with setup.md, maintenance.md, and testing.md for clear audience targeting
 - (copilot) **ENHANCED**: Promoted intelligent Copilot-assisted template merging instead of 1:1 copying for better version control
-- (copilot) **NEW**: Added comprehensive community support section with forum and GitHub contribution guidelines
+- (copilot) **NEW**: Added a comprehensive community support section with forum and GitHub contribution guidelines
 - (copilot) **ENHANCED**: Made organization-specific setup instructions collapsible to reduce clutter for individual users
 - (copilot) **ENHANCED**: Standardized changelog format inconsistencies to align with AlCalzone release-script standard - fixed mixed WORK IN PROGRESS formatting and added comprehensive changelog management documentation (Fixes #20)
 
