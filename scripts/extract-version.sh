@@ -17,7 +17,7 @@ source "$SCRIPT_DIR/shared-utils.sh"
 # Function to extract template version (with fallback to centralized metadata)
 get_template_version() {
     if [[ -f "$TEMPLATE_FILE" ]]; then
-        grep "^**Version:**" "$TEMPLATE_FILE" | head -1 | sed 's/.*Version:\*\* *//' | tr -d ' '
+        grep "^\*\*Version:\*\*" "$TEMPLATE_FILE" | head -1 | sed 's/.*Version:\*\* *//' | tr -d ' '
     else
         # Fallback to centralized metadata
         get_version

@@ -73,7 +73,7 @@ show_versions() {
     echo "   Main version: $MAIN_VER"
     
     if [[ -f "$TEMPLATE_FILE" ]]; then
-        TEMPLATE_VER=$(grep "^**Version:**" "$TEMPLATE_FILE" | head -1 | sed 's/.*Version:\*\* *//' | tr -d ' ')
+        TEMPLATE_VER=$(grep "^\*\*Version:\*\*" "$TEMPLATE_FILE" | head -1 | sed 's/.*Version:\*\* *//' | tr -d ' ')
         echo "   Template version: $TEMPLATE_VER"
         
         if [[ "$MAIN_VER" != "$TEMPLATE_VER" ]]; then
@@ -113,7 +113,7 @@ show_versions() {
     # Additional status information
     echo ""
     if [[ -f "$COPILOT_INSTRUCTIONS" ]]; then
-        COPILOT_VER=$(grep "^**Version:**" "$COPILOT_INSTRUCTIONS" | head -1 | sed 's/.*Version:\*\* *//' | tr -d ' ')
+        COPILOT_VER=$(grep "^\*\*Version:\*\*" "$COPILOT_INSTRUCTIONS" | head -1 | sed 's/.*Version:\*\* *//' | tr -d ' ')
         echo "🤖 Repository instructions version: $COPILOT_VER"
     else
         echo -e "${YELLOW}⚠️  Repository instructions not found${NC}"
@@ -141,7 +141,7 @@ check_consistency() {
     echo -e "${BLUE}🔍 Checking Version Consistency:${NC}"
     echo ""
     
-    TEMPLATE_VER=$(grep "^**Version:**" "$TEMPLATE_FILE" | head -1 | sed 's/.*Version:\*\* *//' | tr -d ' ')
+    TEMPLATE_VER=$(grep "^\*\*Version:\*\*" "$TEMPLATE_FILE" | head -1 | sed 's/.*Version:\*\* *//' | tr -d ' ')
     METADATA_VER=$(get_version)
     
     if [[ -f "$PACKAGE_FILE" ]]; then
