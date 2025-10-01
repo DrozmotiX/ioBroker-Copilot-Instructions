@@ -1,28 +1,26 @@
 #!/bin/bash
 #
 # Template Version Check Script for ioBroker Copilot Instructions
-# 
+#
 # This script helps verify if your local copilot-instructions.md template
 # is up-to-date with the latest version from the main repository.
 #
 # Usage: ./scripts/check-template-version.sh
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(dirname "$SCRIPT_DIR")"
+REPO_ROOT="$(pwd)"
 LOCAL_TEMPLATE="$REPO_ROOT/.github/copilot-instructions.md"
 
 # Try to source shared utilities if available (for repository maintainers)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if [[ -f "$SCRIPT_DIR/shared-utils.sh" ]]; then
     source "$SCRIPT_DIR/shared-utils.sh"
     REMOTE_TEMPLATE_URL="$(get_raw_base_url)/template.md"
 else
-    # Fallback for external users
     REMOTE_TEMPLATE_URL="https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/template.md"
 fi
 
 echo "🔍 Checking ioBroker Copilot template version..."
 
-# Check if local template exists
 if [[ ! -f "$LOCAL_TEMPLATE" ]]; then
     echo "❌ Local template not found at $LOCAL_TEMPLATE"
     echo "💡 Run the following commands to download the template:"
@@ -31,7 +29,6 @@ if [[ ! -f "$LOCAL_TEMPLATE" ]]; then
     exit 1
 fi
 
-# Extract local version
 LOCAL_VERSION=$(grep "Version:" "$LOCAL_TEMPLATE" | head -1 | sed 's/.*Version:\s*//' | tr -d '*')
 if [[ -z "$LOCAL_VERSION" ]]; then
     echo "⚠️  Could not detect version in local template"
@@ -40,7 +37,6 @@ fi
 
 echo "📄 Local template version: $LOCAL_VERSION"
 
-# Check remote version
 echo "🌐 Checking remote template version..."
 REMOTE_VERSION=$(curl -s "$REMOTE_TEMPLATE_URL" | grep "Version:" | head -1 | sed 's/.*Version:\s*//' | tr -d '*' 2>/dev/null)
 
@@ -52,7 +48,6 @@ fi
 
 echo "🌐 Remote template version: $REMOTE_VERSION"
 
-# Compare versions
 if [[ "$LOCAL_VERSION" == "$REMOTE_VERSION" ]]; then
     echo "✅ Your template is up-to-date!"
 elif [[ "$LOCAL_VERSION" == "unknown" ]]; then
