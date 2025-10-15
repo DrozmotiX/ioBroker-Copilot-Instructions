@@ -3,7 +3,6 @@ name: Initial ioBroker Copilot Setup
 about: Automated setup and validation of GitHub Copilot instructions for ioBroker adapters
 title: "🤖 Setup ioBroker GitHub Copilot Instructions"
 labels: ["copilot-setup", "automation"]
-assignees: ["copilot"]
 ---
 
 <!-- 
