@@ -23,6 +23,10 @@ All test files are located in the `tests/` directory:
 - `test-update-versions.sh` - Tests for update-versions.sh operations
 - `test-check-template-version.sh` - Tests for check-template-version.sh features
 - `test-integration.sh` - Integration tests for script interactions
+- `test-issue-duplicate-prevention.sh` - Tests for GitHub Actions duplicate issue prevention
+- `test-automated-templates.sh` - Tests for automated template update functionality
+- `test-centralized-automation.sh` - Tests for centralized automation workflows
+- `test-initial-setup-automation.sh` - Tests for initial setup automation
 
 ### Test Categories
 
@@ -182,6 +186,53 @@ chmod +x scripts/*.sh tests/*.sh
 2. Check the error message in the test summary
 3. Verify script dependencies and file permissions
 4. Test the actual script manually with the failing scenario
+
+## Issue Duplicate Prevention Testing
+
+The `test-issue-duplicate-prevention.sh` suite validates the GitHub Actions workflows that prevent duplicate issue creation. This addresses the bug where workflows were creating multiple identical issues for template updates.
+
+### What It Tests
+
+**Creator Filtering**: Ensures workflows only check issues created by `github-actions[bot]`
+- Prevents false positives from manually created issues
+- Focuses on automation-generated issues only
+
+**Label Independence**: Verifies workflows don't rely on labels for duplicate detection
+- Uses title pattern matching instead
+- More reliable as labels can be modified or missing
+
+**Comprehensive Closing**: Validates that ALL existing issues are closed
+- Iterates through all matching issues (not just the first)
+- Prevents accumulation of stale update issues
+
+**Title Pattern Matching**: Tests case-insensitive keyword detection
+- Checks for "copilot" + ("template" OR "setup" OR "update" OR "instructions")
+- Catches various issue title formats
+
+**Comment Before Close**: Ensures users are notified when issues are auto-closed
+- Adds explanatory comment before closing
+- Provides context for the closure
+
+**Unconditional Issue Creation**: Verifies new issues are always created after cleanup
+- Doesn't skip creation if old issues existed
+- Ensures users always have a current update issue
+
+### Test Coverage
+
+- 40 comprehensive tests across 4 workflow files
+- Tests both centralized and legacy workflow templates
+- Validates snippet examples match workflow behavior
+- Ensures consistent behavior across all automation files
+
+### Running Issue Prevention Tests
+
+```bash
+# Run only the duplicate prevention tests
+./tests/test-issue-duplicate-prevention.sh
+
+# Or run as part of full suite
+./tests/test-runner.sh
+```
 
 ## Future Enhancements
 
