@@ -2,7 +2,6 @@ name: 📚 Documentation & Automation Improvement
 description: Suggest improvements to documentation, setup processes, or automation
 title: "[DOCS/AUTO] "
 labels: ["documentation", "automation", "enhancement"]
-assignees: ["copilot"]
 
 body:
   - type: markdown
