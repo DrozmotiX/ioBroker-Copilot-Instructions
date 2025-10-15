@@ -78,7 +78,7 @@ jobs:
             echo "update-needed=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Check for existing template-related issues
+      - name: Check for and close existing template-related issues
         id: check-issue
         if: steps.version-check.outputs.update-needed == 'true'
         uses: actions/github-script@v7
@@ -90,38 +90,51 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               state: 'open',
-              per_page: 100
+              per_page: 100,
+              creator: 'github-actions[bot]'
             });
             
-            // Look for any existing template-related issues
+            // Look for existing template-related issues created by github-actions
+            // Check only creator and title pattern (not labels)
             const templateIssues = issues.filter(issue => {
               const title = issue.title.toLowerCase();
-              const hasLabels = issue.labels.some(label => 
-                label.name === 'template-update' || 
-                label.name === 'automation' ||
-                label.name === 'copilot-setup'
-              );
               const hasKeywords = title.includes('copilot') && (
                 title.includes('template') || 
                 title.includes('setup') || 
                 title.includes('update')
               );
-              return hasLabels || hasKeywords;
+              return hasKeywords;
             });
             
             if (templateIssues.length > 0) {
               console.log(`📋 Found ${templateIssues.length} existing template-related issue(s):`);
-              templateIssues.forEach(issue => {
-                console.log(`  - #${issue.number}: ${issue.title}`);
-              });
-              return templateIssues[0].number;
+              
+              // Close ALL existing issues with a comment
+              for (const issue of templateIssues) {
+                console.log(`  - Closing #${issue.number}: ${issue.title}`);
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  body: '🤖 Closing this issue as a new version check has been triggered. A new issue will be created with the latest information.'
+                });
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  state: 'closed'
+                });
+              }
+              
+              console.log(`✅ Closed ${templateIssues.length} existing issue(s)`);
+              return null;
             } else {
               console.log('✅ No existing template-related issues found');
               return null;
             }
 
       - name: Create or update template issue
-        if: steps.version-check.outputs.update-needed == 'true' && !steps.check-issue.outputs.result
+        if: steps.version-check.outputs.update-needed == 'true'
         uses: actions/github-script@v7
         with:
           script: |
@@ -303,7 +316,7 @@ This automated update process:
           echo "📋 Current version ${{ steps.version-check.outputs.current-version }} is up-to-date"
           
       - name: Log issue creation
-        if: steps.version-check.outputs.update-needed == 'true' && steps.check-issue.outputs.result
+        if: steps.version-check.outputs.update-needed == 'true'
         run: |
-          echo "ℹ️  Template update needed, but found existing issue #${{ steps.check-issue.outputs.result }}"
+          echo "✅ Template update issue created"
           echo "📋 Current: ${{ steps.version-check.outputs.current-version }}, Latest: ${{ steps.version-check.outputs.latest-version }}"
