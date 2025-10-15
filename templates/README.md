@@ -65,6 +65,13 @@ curl -o .github/workflows/check-copilot-template.yml \
   https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/templates/ghAction-AutomatedVersionCheckAndUpdate.yml
 ```
 
+**Duplicate Issue Prevention**: This workflow automatically closes all existing Copilot-related issues before creating a new one, ensuring clean issue management. Issues are identified by:
+- Creator: `github-actions[bot]` only
+- Title pattern: Contains "copilot" and ("template" OR "setup" OR "update" OR "instructions")
+- No dependency on labels
+
+This prevents the problem where multiple identical issues are created when workflows run multiple times.
+
 ## Legacy Files (Deprecated)
 
 ### ⚠️ [weekly-version-check-action.yml](weekly-version-check-action.yml)
