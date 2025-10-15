@@ -79,7 +79,7 @@ jobs:
           echo "  - Setup Needed: $SETUP_NEEDED" 
           echo "  - Update Needed: $UPDATE_NEEDED"
 
-      - name: Check for existing Copilot-related issues
+      - name: Check for and close existing Copilot-related issues
         id: check-issue
         if: steps.version-check.outputs.update-needed == 'true'
         uses: actions/github-script@v7
@@ -91,37 +91,52 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               state: 'open',
-              per_page: 100
+              per_page: 100,
+              creator: 'github-actions[bot]'
             });
             
-            // Look for any existing Copilot template-related issues
+            // Look for existing Copilot template-related issues created by github-actions
+            // Check only creator and title pattern (not labels)
             const copilotIssues = issues.filter(issue => {
               const title = issue.title.toLowerCase();
-              const hasLabels = issue.labels.some(label => 
-                ['copilot-setup', 'template-update', 'automation'].includes(label.name)
-              );
               const hasKeywords = title.includes('copilot') && (
                 title.includes('template') || 
                 title.includes('setup') || 
                 title.includes('update') ||
                 title.includes('instructions')
               );
-              return hasLabels || hasKeywords;
+              return hasKeywords;
             });
             
             if (copilotIssues.length > 0) {
               console.log(`📋 Found ${copilotIssues.length} existing Copilot-related issue(s):`);
-              copilotIssues.forEach(issue => {
-                console.log(`  - #${issue.number}: ${issue.title}`);
-              });
-              return copilotIssues[0].number;
+              
+              // Close ALL existing issues with a comment
+              for (const issue of copilotIssues) {
+                console.log(`  - Closing #${issue.number}: ${issue.title}`);
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  body: '🤖 Closing this issue as a new version check has been triggered. A new issue will be created with the latest information.'
+                });
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  state: 'closed'
+                });
+              }
+              
+              console.log(`✅ Closed ${copilotIssues.length} existing issue(s)`);
+              return null;
             } else {
               console.log('✅ No existing Copilot-related issues found');
               return null;
             }
 
       - name: Create automated setup or update issue
-        if: steps.version-check.outputs.update-needed == 'true' && !steps.check-issue.outputs.result
+        if: steps.version-check.outputs.update-needed == 'true'
         uses: actions/github-script@v7
         with:
           script: |
@@ -341,8 +356,6 @@ This automated process:
           
           if [ "${{ steps.version-check.outputs.update-needed }}" = "false" ]; then
             echo "✅ No action required - template is current"
-          elif [ "${{ steps.check-issue.outputs.result }}" != "" ] && [ "${{ steps.check-issue.outputs.result }}" != "null" ]; then
-            echo "ℹ️  Issue already exists: #${{ steps.check-issue.outputs.result }}"
           else
             echo "🎯 New automation issue created for repository setup/update"
           fi
