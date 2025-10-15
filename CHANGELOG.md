@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -->
 
 ## **WORK IN PROGRESS**
+- (copilot) **FIXED**: Removed automatic @copilot assignment from all GitHub issue templates to prevent unintended token usage - assignments must now be done manually by users responsible for billing (Fixes #61)
 - (Apollon77) **ENHANCED**: Added new instructions how to handle proper Package updates and related lock file
 - (copilot) **FIXED**: Apply lessons learned from PR #48 hanging - updated all GitHub issue templates to default assign @copilot for immediate automation (Fixes #58)
 - (copilot) **ENHANCED**: Added clear instructions in README.md to assign issues to @copilot for automated processing (Fixes #58) 
