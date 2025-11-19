@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -->
 
 ## **WORK IN PROGRESS**
+- (copilot) **FIXED**: Fixed excessive duplicate issue creation in version check workflows - workflows now filter by creator (github-actions[bot]), close ALL existing issues before creating new ones, and rely solely on title pattern matching instead of labels (Fixes #64)
+- (copilot) **TESTING**: Added comprehensive test suite (40 tests) for issue duplicate prevention across all version check workflows
+- (copilot) **ENHANCED**: Updated templates/README.md and TESTING.md with duplicate prevention documentation
 
 ## [0.5.0] - 2026-02-16
 - (copilot) **ENHANCED**: Merged CI/CD Pipeline documentation into CI/CD Best Practices section with details on ioBroker testing actions, Node.js versions, and deployment configuration
