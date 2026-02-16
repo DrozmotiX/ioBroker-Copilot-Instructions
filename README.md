@@ -122,7 +122,7 @@ The [Initial Setup Template](https://raw.githubusercontent.com/DrozmotiX/ioBroke
 Your template version is automatically tracked in your `.github/copilot-instructions.md` file:
 
 ```markdown
-**Version:** 0.5.0
+**Version:** 0.5.1
 **Template Source:** https://github.com/DrozmotiX/ioBroker-Copilot-Instructions
 ```
 
@@ -138,6 +138,13 @@ The Copilot instruction template covers comprehensive guidance for:
 - **API testing with credentials** - Password encryption and demo credential patterns
 - **Enhanced test failure handling** - Clear, actionable error messages for debugging
 - **CI/CD integration** - Separate jobs for credential-based API testing
+
+### 🎨 Code Quality & Linting
+- **ESLint configuration** - Using official `@iobroker/eslint-config` package
+- **Lint-first CI/CD workflow** - ESLint checks run before any other tests
+- **Best practices** - Common issues, fixes, and coding standards
+- **Auto-fix capabilities** - Guidance on using ESLint's automatic fixes
+- **Workflow dependencies** - Ensuring all tests depend on passing lint checks
 
 ### 📖 README Standards
 - Required documentation sections for ioBroker adapters
