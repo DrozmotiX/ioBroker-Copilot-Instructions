@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -->
 
 ## **WORK IN PROGRESS**
+- (copilot) **NEW**: Added comprehensive Translation Management section to template.md with detailed instructions for keeping translation files synchronized with admin/jsonConfig.json (Fixes #65)
+- (copilot) **ENHANCED**: Added validation script example for checking translation file consistency across all 11 languages
+- (copilot) **ENHANCED**: Documented critical rules for translation synchronization including orphaned key prevention and native language requirements
+- (copilot) **ENHANCED**: Provided detailed workflow for translation updates with common pitfalls and best practices
 - (copilot) **FIXED**: Fixed excessive duplicate issue creation in version check workflows - workflows now filter by creator (github-actions[bot]), close ALL existing issues before creating new ones, and rely solely on title pattern matching instead of labels (Fixes #64)
 - (copilot) **TESTING**: Added comprehensive test suite (40 tests) for issue duplicate prevention across all version check workflows
 - (copilot) **ENHANCED**: Updated templates/README.md and TESTING.md with duplicate prevention documentation
