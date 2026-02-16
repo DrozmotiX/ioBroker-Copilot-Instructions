@@ -325,6 +325,16 @@ it('should handle missing required configuration properly', function () {
 }).timeout(40000);
 ```
 
+##### CI/CD Pipeline (.github/workflows/test-and-release.yml)
+- Must use ioBroker official testing actions for consistency and best practices
+- Runs on Node.js 20.x, 22.x, 24.x
+- Tests on Ubuntu (ubuntu-latest)
+- Uses `ioBroker/testing-action-check@v1` for lint and package validation
+- Uses `ioBroker/testing-action-adapter@v1` for adapter tests
+- Uses `ioBroker/testing-action-deploy@v1` for automated releases with Trusted Publishing (OIDC)
+- Automated release to npm on version tags (requires NPM Trusted Publishing setup)
+- Includes Sentry release tracking
+
 #### Advanced State Access Patterns
 
 For testing adapters that create multiple states, use bulk state access methods to efficiently verify large numbers of states:
