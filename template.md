@@ -325,8 +325,6 @@ it('should handle missing required configuration properly', function () {
 }).timeout(40000);
 ```
 
-> **Note:** For complete CI/CD pipeline configuration including GitHub Actions workflows with ioBroker testing actions, see the [CI/CD and Testing Integration](#cicd-and-testing-integration) section.
-
 #### Advanced State Access Patterns
 
 For testing adapters that create multiple states, use bulk state access methods to efficiently verify large numbers of states:
@@ -714,8 +712,19 @@ demo-api-tests:
 ```
 
 ### CI/CD Best Practices
+
+#### GitHub Actions Workflow Configuration (.github/workflows/test-and-release.yml)
+- **Must use ioBroker official testing actions** for consistency and best practices:
+  - `ioBroker/testing-action-check@v1` for lint and package validation
+  - `ioBroker/testing-action-adapter@v1` for adapter tests
+  - `ioBroker/testing-action-deploy@v1` for automated releases with Trusted Publishing (OIDC)
+- **Node.js versions**: Test on Node.js 20.x, 22.x, 24.x
+- **Platform**: Use ubuntu-22.04 for consistency
+- **Automated releases**: Deploy to npm on version tags (requires NPM Trusted Publishing setup)
+- **Monitoring**: Include Sentry release tracking for error monitoring
+
+#### Testing Best Practices
 - Run credential tests separately from main test suite
-- Use ubuntu-22.04 for consistency
 - Don't make credential tests required for deployment
 - Provide clear failure messages for API connectivity issues
 - Use appropriate timeouts for external API calls (120+ seconds)
