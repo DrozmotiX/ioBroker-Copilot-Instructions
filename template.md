@@ -609,7 +609,7 @@ When creating admin configuration interfaces:
 #### Overview
 - **Location**: `admin/i18n/{lang}/translations.json` for 11 languages (de, en, es, fr, it, nl, pl, pt, ru, uk, zh-cn)
 - **Source of truth**: `admin/jsonConfig.json` - all `label` and `help` properties must have translations
-- **Command**: `npm run translate` - auto-generates translations but does NOT remove orphaned keys
+- **Command**: `npm run translate` - automatically generates translations but does NOT remove orphaned keys
 - **Formatting**: English uses tabs, other languages use 4 spaces (per ioBroker standards)
 
 #### Critical Rules
@@ -681,7 +681,7 @@ When creating admin configuration interfaces:
 #### Common Pitfalls
 
 ❌ **Don't do this:**
-- Leave orphaned keys like "Access Token (see printer network settings)" when they're no longer in jsonConfig.json
+- Leave orphaned keys (e.g., "oldFeatureName" or "deprecatedSetting") when they're no longer in jsonConfig.json
 - Use English text as "translations" (e.g., `"Message buffer": "Message buffer"` in German file)
 - Skip validation script - this leads to 10+ review comments asking to remove orphaned keys
 - Rely only on `npm run translate` - it doesn't remove old keys
