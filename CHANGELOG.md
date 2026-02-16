@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -->
 
 ## **WORK IN PROGRESS**
+
+## [0.6.0] - 2026-02-16
 - (copilot) **NEW**: Added comprehensive Translation Management section to template.md with detailed instructions for keeping translation files synchronized with admin/jsonConfig.json (Fixes #65)
 - (copilot) **ENHANCED**: Added validation script example for checking translation file consistency across all 11 languages
 - (copilot) **ENHANCED**: Documented critical rules for translation synchronization including orphaned key prevention and native language requirements
