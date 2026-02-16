@@ -402,7 +402,7 @@ Integration tests should run ONLY after lint and adapter tests pass:
 ```yaml
 integration-tests:
   needs: [check-and-lint, adapter-tests]
-  runs-on: ubuntu-latest
+  runs-on: ubuntu-22.04
   steps:
     - name: Run integration tests
       run: npx mocha test/integration-*.js --exit
