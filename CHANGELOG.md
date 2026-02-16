@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -->
 
 ## **WORK IN PROGRESS**
+- (copilot) **NEW**: Added comprehensive ESLint configuration and best practices section with official `@iobroker/eslint-config` guidance (Fixes #issue_number)
+- (copilot) **ENHANCED**: Established lint-first validation workflow in CI/CD section - ESLint checks now explicitly run before all other tests
+- (copilot) **ENHANCED**: Added detailed ESLint setup instructions including package.json scripts, common issues, and auto-fix capabilities
+- (copilot) **ENHANCED**: Updated README.md with new Code Quality & Linting section highlighting ESLint guidance
 - (copilot) **FIXED**: Fixed excessive duplicate issue creation in version check workflows - workflows now filter by creator (github-actions[bot]), close ALL existing issues before creating new ones, and rely solely on title pattern matching instead of labels (Fixes #64)
 - (copilot) **TESTING**: Added comprehensive test suite (40 tests) for issue duplicate prevention across all version check workflows
 - (copilot) **ENHANCED**: Updated templates/README.md and TESTING.md with duplicate prevention documentation

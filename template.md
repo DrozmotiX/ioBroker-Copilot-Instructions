@@ -33,7 +33,7 @@ sed -i '/^<!--$/,/^-->$/d' .github/copilot-instructions.md
 
 # ioBroker Adapter Development with GitHub Copilot
 
-**Version:** 0.5.0
+**Version:** 0.5.1
 **Template Source:** https://github.com/DrozmotiX/ioBroker-Copilot-Instructions
 
 This file contains instructions and best practices for GitHub Copilot when working on ioBroker adapter development.
@@ -682,6 +682,58 @@ onUnload(callback) {
 - Use semantic versioning for adapter releases
 - Include proper JSDoc comments for public methods
 
+### ESLint Configuration and Best Practices
+
+**IMPORTANT**: ESLint validation must run FIRST in your CI/CD pipeline, before any other tests. This "lint-first" approach catches code quality issues early and prevents them from blocking more expensive test runs.
+
+#### ESLint Setup
+ioBroker adapters should use the official `@iobroker/eslint-config` package for consistency across the ecosystem:
+
+```bash
+npm install --save-dev eslint @iobroker/eslint-config
+```
+
+#### Configuration (.eslintrc.json or .eslintrc.js)
+Create or update your ESLint configuration to extend the ioBroker base configuration:
+
+```json
+{
+    "extends": "@iobroker/eslint-config",
+    "rules": {
+        // Add project-specific rule overrides here if needed
+    }
+}
+```
+
+#### Package.json Scripts
+Add ESLint scripts to your `package.json`:
+
+```json
+{
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  }
+}
+```
+
+#### ESLint Best Practices
+1. **Run ESLint before committing** - Fix linting errors immediately, don't let them accumulate
+2. **Use lint:fix for auto-fixable issues** - Many ESLint errors can be automatically fixed with `npm run lint:fix`
+3. **Don't disable rules without good reason** - If you must disable a rule, document why with a comment
+4. **Lint all relevant files** - Include main code, tests, and build scripts in linting
+5. **Keep ESLint configuration up to date** - Update `@iobroker/eslint-config` regularly for latest best practices
+
+#### Common ESLint Issues and Fixes
+- **Unused variables**: Remove them or prefix with underscore (`_variable`) if intentionally unused
+- **Missing semicolons**: Run `npm run lint:fix` to auto-add them
+- **Indentation errors**: Configure your editor to match ESLint settings (usually 4 spaces for ioBroker)
+- **Trailing spaces**: Enable "trim trailing whitespace" in your editor
+- **console.log in production code**: Replace with proper `adapter.log.debug()` or remove
+
+#### ESLint in CI/CD
+ESLint checks are automatically run by `ioBroker/testing-action-check@v1` in the `check-and-lint` job. This job MUST complete successfully before any other tests run. See the CI/CD Best Practices section below for workflow configuration.
+
 ## CI/CD and Testing Integration
 
 ### GitHub Actions for API Testing
@@ -722,6 +774,38 @@ demo-api-tests:
 - **Platform**: Use ubuntu-22.04 for consistency
 - **Automated releases**: Deploy to npm on version tags (requires NPM Trusted Publishing setup)
 - **Monitoring**: Include Sentry release tracking for error monitoring
+
+#### Critical: Lint-First Validation Workflow
+**ALWAYS run ESLint checks BEFORE other tests.** This "lint-first" approach:
+- Catches code quality issues immediately
+- Prevents wasting CI resources on tests that would fail anyway due to linting errors
+- Provides faster feedback to developers
+- Enforces consistent code quality across the project
+
+**Workflow Dependency Configuration:**
+All test jobs MUST depend on the `check-and-lint` job completing successfully:
+
+```yaml
+# Example workflow structure
+jobs:
+  check-and-lint:
+    # Runs ESLint and package validation
+    # Uses: ioBroker/testing-action-check@v1
+    
+  adapter-tests:
+    needs: [check-and-lint]  # Wait for linting to pass
+    # Run adapter unit tests
+    
+  integration-tests:
+    needs: [check-and-lint, adapter-tests]  # Wait for both linting and unit tests
+    # Run integration tests
+```
+
+**Key Points:**
+- The `check-and-lint` job has NO dependencies - it runs first
+- ALL other test jobs MUST list `check-and-lint` in their `needs` array
+- If linting fails, no other tests will run, saving time and resources
+- Fix all ESLint errors before proceeding with other development work
 
 #### Testing Best Practices
 - Run credential tests separately from main test suite
