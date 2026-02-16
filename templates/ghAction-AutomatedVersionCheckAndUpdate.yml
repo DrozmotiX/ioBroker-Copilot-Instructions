@@ -76,8 +76,8 @@ jobs:
           
       - name: Check for and close existing issues
         id: issue-check
+        if: steps.version-check.outputs.setup_needed == 'true' || steps.version-check.outputs.update_needed == 'true'
         uses: actions/github-script@v7
-        with:
           script: |
             console.log('🔍 Checking for existing copilot setup/update issues...');
             
