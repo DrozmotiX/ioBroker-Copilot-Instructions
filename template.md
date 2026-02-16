@@ -325,7 +325,7 @@ it('should handle missing required configuration properly', function () {
 }).timeout(40000);
 ```
 
-##### CI/CD Pipeline (.github/workflows/test-and-release.yml)
+#### CI/CD Pipeline (.github/workflows/test-and-release.yml)
 - Must use ioBroker official testing actions for consistency and best practices
 - Runs on Node.js 20.x, 22.x, 24.x
 - Tests on Ubuntu (ubuntu-latest)
