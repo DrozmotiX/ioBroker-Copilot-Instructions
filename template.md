@@ -33,7 +33,7 @@ sed -i '/^<!--$/,/^-->$/d' .github/copilot-instructions.md
 
 # ioBroker Adapter Development with GitHub Copilot
 
-**Version:** 0.4.2
+**Version:** 0.5.0
 **Template Source:** https://github.com/DrozmotiX/ioBroker-Copilot-Instructions
 
 This file contains instructions and best practices for GitHub Copilot when working on ioBroker adapter development.
@@ -325,16 +325,6 @@ it('should handle missing required configuration properly', function () {
 }).timeout(40000);
 ```
 
-#### CI/CD Pipeline (.github/workflows/test-and-release.yml)
-- Must use ioBroker official testing actions for consistency and best practices
-- Runs on Node.js 20.x, 22.x, 24.x
-- Tests on Ubuntu (ubuntu-latest)
-- Uses `ioBroker/testing-action-check@v1` for lint and package validation
-- Uses `ioBroker/testing-action-adapter@v1` for adapter tests
-- Uses `ioBroker/testing-action-deploy@v1` for automated releases with Trusted Publishing (OIDC)
-- Automated release to npm on version tags (requires NPM Trusted Publishing setup)
-- Includes Sentry release tracking
-
 #### Advanced State Access Patterns
 
 For testing adapters that create multiple states, use bulk state access methods to efficiently verify large numbers of states:
@@ -412,7 +402,7 @@ Integration tests should run ONLY after lint and adapter tests pass:
 ```yaml
 integration-tests:
   needs: [check-and-lint, adapter-tests]
-  runs-on: ubuntu-latest
+  runs-on: ubuntu-22.04
   steps:
     - name: Run integration tests
       run: npx mocha test/integration-*.js --exit
@@ -722,8 +712,19 @@ demo-api-tests:
 ```
 
 ### CI/CD Best Practices
+
+#### GitHub Actions Workflow Configuration (.github/workflows/test-and-release.yml)
+- **Must use ioBroker official testing actions** for consistency and best practices:
+  - `ioBroker/testing-action-check@v1` for lint and package validation
+  - `ioBroker/testing-action-adapter@v1` for adapter tests
+  - `ioBroker/testing-action-deploy@v1` for automated releases with Trusted Publishing (OIDC)
+- **Node.js versions**: Test on Node.js 20.x, 22.x, 24.x
+- **Platform**: Use ubuntu-22.04 for consistency
+- **Automated releases**: Deploy to npm on version tags (requires NPM Trusted Publishing setup)
+- **Monitoring**: Include Sentry release tracking for error monitoring
+
+#### Testing Best Practices
 - Run credential tests separately from main test suite
-- Use ubuntu-22.04 for consistency
 - Don't make credential tests required for deployment
 - Provide clear failure messages for API connectivity issues
 - Use appropriate timeouts for external API calls (120+ seconds)

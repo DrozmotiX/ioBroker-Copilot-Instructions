@@ -2,7 +2,7 @@
 
 **Repository Purpose:** This repository maintains the template and best practices for GitHub Copilot instructions used in ioBroker adapter development.
 
-**Version:** 0.4.0
+**Version:** 0.5.0
 
 This file contains instructions specific to maintaining and improving this template repository, not for ioBroker adapter development (that's in `template.md`).
 
