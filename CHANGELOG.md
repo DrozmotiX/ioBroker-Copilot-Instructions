@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## **WORK IN PROGRESS**
 
-## 0.5.0 (2026-02-16)
+## [0.5.0] - 2026-02-16
 - (copilot) **ENHANCED**: Merged CI/CD Pipeline documentation into CI/CD Best Practices section with details on ioBroker testing actions, Node.js versions, and deployment configuration
 - (copilot) **FIXED**: Removed automatic @copilot assignment from all GitHub issue templates to prevent unintended token usage - assignments must now be done manually by users responsible for billing (Fixes #61)
 - (Apollon77) **ENHANCED**: Added new instructions how to handle proper Package updates and related lock file
