@@ -753,7 +753,19 @@ Add the validation script to your package.json for easy access:
 }
 ```
 
-This ensures translation validation runs automatically before tests.
+**Important**: If you already have a `pretest` script (e.g., for linting), chain the commands instead of replacing:
+
+```json
+{
+  "scripts": {
+    "translate": "translate-adapter",
+    "validate:translations": "node scripts/validate-translations.js",
+    "pretest": "npm run lint && npm run validate:translations"
+  }
+}
+```
+
+This ensures translation validation runs automatically before tests without breaking existing validation workflows.
 
 ## Best Practices for Dependencies
 

@@ -208,7 +208,7 @@ This script will:
 - Provide update guidance if your template is outdated
 - Show you what's changed in newer versions
 
-**Note**: The centralized automation system eliminates the need for manual scripts in your repository (avoiding patterns like validation scripts in package.json).
+**Note**: The centralized automation system eliminates the need for manual template update/version-check scripts in your repository. Adapter-level quality checks (like translation validation, linting, or testing) should still be added to package.json as needed.
 
 ### Repository Maintenance
 
