@@ -1,147 +1,202 @@
-name: Create GitHub Release
+name: Release Proposal
 
 on:
   push:
     tags:
       - 'v*.*.*'
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: 'Tag to create release for (e.g., v0.5.3)'
-        required: true
-        type: string
 
 permissions:
   contents: write
+  issues: write
   
 jobs:
-  create-release:
+  check-version-type:
+    runs-on: ubuntu-22.04
+    outputs:
+      should_create_issue: ${{ steps.check-type.outputs.should_create }}
+      version: ${{ steps.extract.outputs.version }}
+      version_type: ${{ steps.check-type.outputs.version_type }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Extract version from tag
+        id: extract
+        run: |
+          TAG="${{ github.ref_name }}"
+          VERSION="${TAG#v}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "🏷️  Processing version: $VERSION"
+      
+      - name: Determine version type
+        id: check-type
+        run: |
+          VERSION="${{ steps.extract.outputs.version }}"
+          
+          # Parse version components
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
+          
+          # Determine if this is a minor or major release
+          if [[ "$PATCH" == "0" ]]; then
+            if [[ "$MINOR" == "0" ]]; then
+              echo "version_type=major" >> $GITHUB_OUTPUT
+              echo "should_create=true" >> $GITHUB_OUTPUT
+              echo "🚀 Major release detected: $VERSION"
+            else
+              echo "version_type=minor" >> $GITHUB_OUTPUT
+              echo "should_create=true" >> $GITHUB_OUTPUT
+              echo "✨ Minor release detected: $VERSION"
+            fi
+          else
+            echo "version_type=patch" >> $GITHUB_OUTPUT
+            echo "should_create=false" >> $GITHUB_OUTPUT
+            echo "⏭️  Patch release detected: $VERSION - skipping release proposal"
+          fi
+
+  create-release-issue:
+    needs: check-version-type
+    if: needs.check-version-type.outputs.should_create_issue == 'true'
     runs-on: ubuntu-22.04
     
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Fetch all history for complete changelog analysis
+          fetch-depth: 0
       
-      - name: Extract version from tag
-        id: extract-version
+      - name: Extract changelog data
+        id: extract-data
         run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            TAG="${{ github.event.inputs.tag }}"
-          else
-            TAG="${{ github.ref_name }}"
-          fi
+          VERSION="${{ needs.check-version-type.outputs.version }}"
           
-          VERSION="${TAG#v}"
-          echo "tag=$TAG" >> $GITHUB_OUTPUT
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "🏷️  Processing tag: $TAG (version: $VERSION)"
-      
-      - name: Validate tag exists
-        run: |
-          TAG="${{ steps.extract-version.outputs.tag }}"
-          
-          if ! git rev-parse "$TAG" >/dev/null 2>&1; then
-            echo "❌ Error: Tag $TAG does not exist"
-            exit 1
-          fi
-          
-          echo "✅ Tag $TAG exists"
-      
-      - name: Check if release already exists
-        id: check-release
-        run: |
-          TAG="${{ steps.extract-version.outputs.tag }}"
-          
-          # Check if release already exists using GitHub API
-          if gh release view "$TAG" >/dev/null 2>&1; then
-            echo "exists=true" >> $GITHUB_OUTPUT
-            echo "⚠️  Release for $TAG already exists"
-          else
-            echo "exists=false" >> $GITHUB_OUTPUT
-            echo "✅ No existing release found for $TAG"
-          fi
-        env:
-          GH_TOKEN: ${{ github.token }}
-      
-      - name: Generate release notes
-        if: steps.check-release.outputs.exists == 'false'
-        id: generate-notes
-        run: |
-          VERSION="${{ steps.extract-version.outputs.version }}"
-          
-          echo "📝 Generating release notes for version $VERSION..."
+          echo "📝 Extracting changelog data for v$VERSION..."
           
           # Make script executable
           chmod +x scripts/generate-release-notes.sh
           
-          # Generate release notes and save to file
-          ./scripts/generate-release-notes.sh "$VERSION" > /tmp/release-notes.md
+          # Extract changelog data
+          ./scripts/generate-release-notes.sh "$VERSION" > /tmp/changelog-data.md
           
-          if [[ ! -s /tmp/release-notes.md ]]; then
-            echo "❌ Error: Failed to generate release notes"
+          if [[ ! -s /tmp/changelog-data.md ]]; then
+            echo "❌ Error: Failed to extract changelog data"
             exit 1
           fi
           
-          echo "✅ Release notes generated successfully"
-          
-          # Show preview of release notes
-          echo "📋 Release notes preview:"
-          echo "---"
-          head -n 20 /tmp/release-notes.md
-          echo "---"
+          echo "✅ Changelog data extracted successfully"
       
-      - name: Create GitHub Release
-        if: steps.check-release.outputs.exists == 'false'
+      - name: Close existing release proposal issues
         run: |
-          TAG="${{ steps.extract-version.outputs.tag }}"
-          VERSION="${{ steps.extract-version.outputs.version }}"
+          VERSION="${{ needs.check-version-type.outputs.version }}"
           
-          echo "🚀 Creating GitHub release for $TAG..."
+          # Find and close any existing release proposal issues for this version
+          EXISTING_ISSUES=$(gh issue list \
+            --search "Release v$VERSION in:title" \
+            --state open \
+            --json number \
+            --jq '.[].number')
           
-          # Determine if this is a prerelease based on version format
-          PRERELEASE_FLAG=""
-          if [[ "$VERSION" =~ -[a-z] ]]; then
-            PRERELEASE_FLAG="--prerelease"
-            echo "📦 This is a prerelease"
+          if [[ -n "$EXISTING_ISSUES" ]]; then
+            echo "🔄 Closing existing release proposal issues..."
+            for issue in $EXISTING_ISSUES; do
+              gh issue close "$issue" --comment "Superseded by new release proposal."
+              echo "  Closed issue #$issue"
+            done
           fi
-          
-          # Create release using GitHub CLI
-          gh release create "$TAG" \
-            --title "Release $VERSION" \
-            --notes-file /tmp/release-notes.md \
-            $PRERELEASE_FLAG
-          
-          echo "✅ GitHub release created successfully"
         env:
           GH_TOKEN: ${{ github.token }}
       
-      - name: Release summary
-        if: steps.check-release.outputs.exists == 'false'
+      - name: Create release proposal issue
         run: |
-          TAG="${{ steps.extract-version.outputs.tag }}"
-          VERSION="${{ steps.extract-version.outputs.version }}"
+          VERSION="${{ needs.check-version-type.outputs.version }}"
+          VERSION_TYPE="${{ needs.check-version-type.outputs.version_type }}"
           
-          echo "# 🎉 Release Created Successfully" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Item | Value |" >> $GITHUB_STEP_SUMMARY
-          echo "|------|-------|" >> $GITHUB_STEP_SUMMARY
-          echo "| Tag | \`$TAG\` |" >> $GITHUB_STEP_SUMMARY
-          echo "| Version | $VERSION |" >> $GITHUB_STEP_SUMMARY
-          echo "| Release URL | [View Release](https://github.com/${{ github.repository }}/releases/tag/$TAG) |" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## 📝 Release Notes Preview" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          head -n 15 /tmp/release-notes.md >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-      
-      - name: Skip release (already exists)
-        if: steps.check-release.outputs.exists == 'true'
-        run: |
-          TAG="${{ steps.extract-version.outputs.tag }}"
+          # Create issue body using the same structure as the template
+          cat > /tmp/issue-body.md <<'ISSUE_BODY'
+## 🎯 Task: Create GitHub Release for v$VERSION
+
+A **$VERSION_TYPE** release has been tagged and requires a GitHub release with human-readable notes.
+
+**Note**: This issue was automatically created. Patch releases are skipped.
+
+---
+
+## 📋 Raw Changelog Data
+
+<details>
+<summary>Click to view extracted changelog data</summary>
+
+```markdown
+CHANGELOG_DATA_PLACEHOLDER
+```
+
+</details>
+
+---
+
+## ✍️ Instructions for @copilot
+
+Please create a GitHub release for **v$VERSION** with the following requirements:
+
+### Requirements:
+1. **Summarize the changes** in human-readable language (do NOT copy/paste the raw entries)
+2. **For $VERSION_TYPE releases**: 
+   - Create a brief overview of the main improvements
+   - Summarize all included patches/minors (shown above) into key themes or categories
+3. **Use clear, simple language** that non-technical users can understand
+4. **Keep it concise** - aim for 3-5 key points maximum
+5. **Include impact**: Explain what these changes mean for users
+
+### Expected Release Note Format:
+```markdown
+## What's New in v$VERSION
+
+[2-3 paragraph human-readable summary of the release]
+
+### Key Improvements
+- [Summarized key point 1]
+- [Summarized key point 2]
+- [Summarized key point 3]
+
+### Changes Included
+[Brief summary of patches/minors if applicable]
+
+---
+Full changelog: [CHANGELOG.md](https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/blob/main/CHANGELOG.md)
+```
+
+### Actions:
+1. Review the raw changelog data above
+2. Create a human-readable summary following the format
+3. Create the GitHub release using: 
+   ```bash
+   gh release create v$VERSION --title "Release $VERSION" --notes "<your summary>"
+   ```
+4. Reply to this issue with the release URL once created
+
+---
+
+**Note**: This is a **$VERSION_TYPE** release. Focus on overall impact rather than listing every detail.
+ISSUE_BODY
           
-          echo "⏭️  Skipping release creation - release for $TAG already exists" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "View existing release: https://github.com/${{ github.repository }}/releases/tag/$TAG" >> $GITHUB_STEP_SUMMARY
+          # Insert the changelog data
+          sed -i '/CHANGELOG_DATA_PLACEHOLDER/r /tmp/changelog-data.md' /tmp/issue-body.md
+          sed -i '/CHANGELOG_DATA_PLACEHOLDER/d' /tmp/issue-body.md
+          
+          # Replace placeholders
+          sed -i "s/\$VERSION/$VERSION/g" /tmp/issue-body.md
+          sed -i "s/\$VERSION_TYPE/$VERSION_TYPE/g" /tmp/issue-body.md
+          
+          # Create the issue and assign to copilot
+          gh issue create \
+            --title "Release v$VERSION ($VERSION_TYPE)" \
+            --body-file /tmp/issue-body.md \
+            --label "release-proposal" \
+            --label "$VERSION_TYPE-release" \
+            --assignee "copilot"
+          
+          echo "✅ Release proposal issue created and assigned to @copilot for v$VERSION"
+        env:
+          GH_TOKEN: ${{ github.token }}

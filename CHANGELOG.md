@@ -13,15 +13,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## **WORK IN PROGRESS**
 
 ## [0.5.4] - 2026-02-17
-- (copilot) **NEW**: Created automated GitHub release system with intelligent changelog aggregation (Fixes #86)
-- (copilot) **NEW**: Added generate-release-notes.sh script for parsing CHANGELOG.md and generating human-readable release notes
-- (copilot) **NEW**: Implemented version type detection (patch/minor/major) for appropriate changelog aggregation
-- (copilot) **NEW**: Added automatic aggregation of patch releases for minor versions and minor releases for major versions
-- (copilot) **NEW**: Created create-release.yml GitHub Actions workflow for automated release creation on version tags
-- (copilot) **ENHANCED**: Integrated automated release creation with existing deploy-on-version-change.yml workflow
-- (copilot) **ENHANCED**: Release notes include emoji indicators, statistics, and categorized change summaries
-- (copilot) **TESTING**: Added comprehensive test suite (25 tests) for release notes generation covering all scenarios
-- (copilot) **ENHANCED**: Updated documentation in docs/maintenance.md and TESTING.md with automated release information
+- (copilot) **NEW**: Created automated release proposal system via GitHub issues for minor/major versions (Fixes #86)
+- (copilot) **NEW**: Added generate-release-notes.sh script for extracting changelog data from CHANGELOG.md
+- (copilot) **NEW**: Implemented version type detection to skip patch releases (only minor/major get release proposals)
+- (copilot) **ENHANCED**: Release proposals assign @copilot to create human-readable summaries from raw changelog data
+- (copilot) **ENHANCED**: Minor releases include all patch changelog data; major releases include all minor changelog data
+- (copilot) **NEW**: Created create-release.yml workflow that generates issues with proper Copilot instructions
+- (copilot) **ENHANCED**: Copilot transforms raw changelog entries into concise, user-friendly release notes
+- (copilot) **TESTING**: Simplified script to focus on data extraction rather than summarization
+- (copilot) **ENHANCED**: Updated documentation in docs/maintenance.md with new workflow explanation
 
 ## [0.5.3] - 2026-02-19
 - (copilot) **ENHANCED**: Major refactoring of template.md for improved organization and readability
