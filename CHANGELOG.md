@@ -12,6 +12,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## **WORK IN PROGRESS**
 
+## [0.5.4] - 2026-02-17
+- (copilot) **NEW**: Created automated release proposal system via GitHub issues for minor/major versions (Fixes #86)
+- (copilot) **NEW**: Added generate-release-notes.sh script for extracting changelog data from CHANGELOG.md
+- (copilot) **NEW**: Implemented version type detection to skip patch releases (only minor/major get release proposals)
+- (copilot) **ENHANCED**: Release proposals assign @copilot to create human-readable summaries from raw changelog data
+- (copilot) **ENHANCED**: Minor releases include all patch changelog data; major releases include all minor changelog data
+- (copilot) **NEW**: Created create-release.yml workflow that generates issues with proper Copilot instructions
+- (copilot) **ENHANCED**: Copilot transforms raw changelog entries into concise, user-friendly release notes
+- (copilot) **TESTING**: Simplified script to focus on data extraction rather than summarization
+- (copilot) **ENHANCED**: Updated documentation in docs/maintenance.md with new workflow explanation
+
 ## [0.5.3] - 2026-02-19
 - (copilot) **ENHANCED**: Major refactoring of template.md for improved organization and readability
 - (copilot) **NEW**: Added comprehensive Table of Contents with clickable anchor links to all major sections

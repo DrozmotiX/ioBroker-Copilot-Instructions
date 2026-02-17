@@ -10,6 +10,7 @@ The testing framework provides comprehensive automated testing for all shell scr
 - `extract-version.sh` - Version and date extraction utility  
 - `update-versions.sh` - Documentation version synchronization
 - `check-template-version.sh` - Template version comparison tool
+- `generate-release-notes.sh` - Automated release notes generation with changelog aggregation
 
 ## Test Structure
 
@@ -22,6 +23,7 @@ All test files are located in the `tests/` directory:
 - `test-manage-versions.sh` - Tests for manage-versions.sh commands
 - `test-update-versions.sh` - Tests for update-versions.sh operations
 - `test-check-template-version.sh` - Tests for check-template-version.sh features
+- `test-generate-release-notes.sh` - Tests for generate-release-notes.sh with changelog aggregation
 - `test-integration.sh` - Integration tests for script interactions
 - `test-issue-duplicate-prevention.sh` - Tests for GitHub Actions duplicate issue prevention
 - `test-automated-templates.sh` - Tests for automated template update functionality

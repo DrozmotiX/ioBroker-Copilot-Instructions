@@ -167,6 +167,38 @@ When adding new scripts or modifying existing ones, you **MUST**:
 
 ## Release Process
 
+### Automated Release Proposal System
+
+The repository includes an automated system that creates release proposal issues for minor and major versions.
+
+**How it Works:**
+1. When a PR with a version bump is merged to `main`, the deployment workflow creates a git tag (e.g., `v0.6.0`)
+2. The tag automatically triggers the `create-release.yml` workflow
+3. **For patch releases (x.y.Z)**: No action taken - patches don't require GitHub releases
+4. **For minor/major releases (x.Y.0 or X.0.0)**: 
+   - Workflow extracts changelog data from CHANGELOG.md
+   - Creates a GitHub issue with the raw data
+   - Assigns issue to @copilot with instructions to create human-readable release notes
+   - Copilot processes the data and creates the actual GitHub release
+
+**Release Types:**
+- **Patch Release (e.g., 0.5.4)**: Skipped - no GitHub release needed
+- **Minor Release (e.g., 0.6.0)**: Issue created with changelog data from 0.6.0 + all 0.5.x patches
+- **Major Release (e.g., 1.0.0)**: Issue created with changelog data from 1.0.0 + all 0.x.0 minors
+
+**Copilot's Role:**
+- Receives an issue with raw changelog data
+- Creates a concise, human-readable summary (not copy/paste)
+- Groups changes into themes and key points
+- Creates the GitHub release with the refined notes
+- Replies to the issue with the release URL
+
+**Manual Intervention:**
+If you want to skip a release or need to modify the approach:
+1. Find the release proposal issue
+2. Close it with a comment explaining why, or
+3. Provide additional context/requirements for Copilot
+
 ### Preparing a Release
 
 1. **Update Version**: Use the version management script
@@ -190,6 +222,7 @@ When adding new scripts or modifying existing ones, you **MUST**:
 
 ### Post-Release Tasks
 
+- **GitHub Release**: Automatically created with aggregated release notes (no manual action needed)
 - Announce significant changes to the ioBroker community
 - Monitor for user feedback and issues
 - Update documentation if needed based on user questions

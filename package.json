@@ -1,6 +1,6 @@
 {
   "name": "iobroker-copilot-instructions",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "GitHub Copilot instructions template for ioBroker adapter development",
   "keywords": [
     "iobroker",

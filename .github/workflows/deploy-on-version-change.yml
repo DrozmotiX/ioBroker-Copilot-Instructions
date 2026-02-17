@@ -185,6 +185,10 @@ EOF
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Individual component versions remain independent and can be updated separately using:" >> $GITHUB_STEP_SUMMARY
           echo '`./scripts/manage-versions.sh update-component <component> <version>`' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 🎉 Next Steps" >> $GITHUB_STEP_SUMMARY
+          echo "The tag **v${{ needs.detect-version-change.outputs.new_version }}** has been created." >> $GITHUB_STEP_SUMMARY
+          echo "This will automatically trigger the release creation workflow with human-readable release notes." >> $GITHUB_STEP_SUMMARY
 
   notify-completion:
     needs: [detect-version-change, deploy-package]
