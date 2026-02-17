@@ -1,0 +1,147 @@
+name: Create GitHub Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to create release for (e.g., v0.5.3)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  
+jobs:
+  create-release:
+    runs-on: ubuntu-22.04
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for complete changelog analysis
+      
+      - name: Extract version from tag
+        id: extract-version
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            TAG="${{ github.event.inputs.tag }}"
+          else
+            TAG="${{ github.ref_name }}"
+          fi
+          
+          VERSION="${TAG#v}"
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "🏷️  Processing tag: $TAG (version: $VERSION)"
+      
+      - name: Validate tag exists
+        run: |
+          TAG="${{ steps.extract-version.outputs.tag }}"
+          
+          if ! git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "❌ Error: Tag $TAG does not exist"
+            exit 1
+          fi
+          
+          echo "✅ Tag $TAG exists"
+      
+      - name: Check if release already exists
+        id: check-release
+        run: |
+          TAG="${{ steps.extract-version.outputs.tag }}"
+          
+          # Check if release already exists using GitHub API
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "⚠️  Release for $TAG already exists"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "✅ No existing release found for $TAG"
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
+      
+      - name: Generate release notes
+        if: steps.check-release.outputs.exists == 'false'
+        id: generate-notes
+        run: |
+          VERSION="${{ steps.extract-version.outputs.version }}"
+          
+          echo "📝 Generating release notes for version $VERSION..."
+          
+          # Make script executable
+          chmod +x scripts/generate-release-notes.sh
+          
+          # Generate release notes and save to file
+          ./scripts/generate-release-notes.sh "$VERSION" > /tmp/release-notes.md
+          
+          if [[ ! -s /tmp/release-notes.md ]]; then
+            echo "❌ Error: Failed to generate release notes"
+            exit 1
+          fi
+          
+          echo "✅ Release notes generated successfully"
+          
+          # Show preview of release notes
+          echo "📋 Release notes preview:"
+          echo "---"
+          head -n 20 /tmp/release-notes.md
+          echo "---"
+      
+      - name: Create GitHub Release
+        if: steps.check-release.outputs.exists == 'false'
+        run: |
+          TAG="${{ steps.extract-version.outputs.tag }}"
+          VERSION="${{ steps.extract-version.outputs.version }}"
+          
+          echo "🚀 Creating GitHub release for $TAG..."
+          
+          # Determine if this is a prerelease based on version format
+          PRERELEASE_FLAG=""
+          if [[ "$VERSION" =~ -[a-z] ]]; then
+            PRERELEASE_FLAG="--prerelease"
+            echo "📦 This is a prerelease"
+          fi
+          
+          # Create release using GitHub CLI
+          gh release create "$TAG" \
+            --title "Release $VERSION" \
+            --notes-file /tmp/release-notes.md \
+            $PRERELEASE_FLAG
+          
+          echo "✅ GitHub release created successfully"
+        env:
+          GH_TOKEN: ${{ github.token }}
+      
+      - name: Release summary
+        if: steps.check-release.outputs.exists == 'false'
+        run: |
+          TAG="${{ steps.extract-version.outputs.tag }}"
+          VERSION="${{ steps.extract-version.outputs.version }}"
+          
+          echo "# 🎉 Release Created Successfully" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Item | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Tag | \`$TAG\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| Version | $VERSION |" >> $GITHUB_STEP_SUMMARY
+          echo "| Release URL | [View Release](https://github.com/${{ github.repository }}/releases/tag/$TAG) |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 📝 Release Notes Preview" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          head -n 15 /tmp/release-notes.md >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+      
+      - name: Skip release (already exists)
+        if: steps.check-release.outputs.exists == 'true'
+        run: |
+          TAG="${{ steps.extract-version.outputs.tag }}"
+          
+          echo "⏭️  Skipping release creation - release for $TAG already exists" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "View existing release: https://github.com/${{ github.repository }}/releases/tag/$TAG" >> $GITHUB_STEP_SUMMARY
