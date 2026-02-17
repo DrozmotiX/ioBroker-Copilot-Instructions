@@ -8,18 +8,20 @@ body:
       value: |
         ## 🎯 Task: Create GitHub Release
         
-        Use this template to request a GitHub release. When you assign this issue to **@copilot**, it will:
+        Use this template to manually request a GitHub release. When you assign this issue to **@copilot**, 
+        it will follow the [Release Process guidelines](https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/blob/main/.github/copilot-instructions.md#release-process) to:
         
-        1. **Automatically detect the latest version** from recent merges to main branch
-        2. **Determine the version type** (minor or major) - patch releases are skipped
-        3. **Extract changelog data** from CHANGELOG.md automatically
-        4. **Create a human-readable summary** of the changes
+        1. **Automatically detect the latest version** from git tags
+        2. **Determine the version type** (patch, minor, or major)
+        3. **Extract all relevant changelog data** from CHANGELOG.md
+        4. **Create a human-readable summary** following repository guidelines
         5. **Create the GitHub release** with the summary
         
-        **Note**: 
-        - You do NOT need to provide version number, type, or changelog data manually
-        - Patch releases (x.y.Z) do not get GitHub releases and will be skipped
-        - Only minor (x.Y.0) and major (X.0.0) releases will be created
+        **Process Notes:**
+        - Minor/major releases are typically created automatically via workflow
+        - Patch releases can be initiated manually using this template
+        - @copilot will detect version and type automatically from git tags
+        - Summaries MUST follow guidelines: review and consolidate, NOT copy/paste
         
         ---
         
@@ -51,36 +53,47 @@ body:
         
         ## ✍️ Instructions for @copilot
         
-        When this issue is assigned to you, please follow these steps:
+        When this issue is assigned to you, follow the **Release Process** guidelines from 
+        [.github/copilot-instructions.md](https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/blob/main/.github/copilot-instructions.md#release-process):
         
-        ### Step 1: Detect Version
-        1. Check the latest merged tags to main branch using:
+        ### Step 1: Detect Version and Type
+        1. Check the latest merged tags to main branch:
            ```bash
            git tag --sort=-v:refname | head -5
            ```
-        2. Identify the most recent version tag
-        3. Determine if it's a minor (x.Y.0) or major (X.0.0) release
-        4. If it's a patch release (x.y.Z), reply that patch releases don't get GitHub releases and close this issue
+        2. Identify the most recent version tag and determine type:
+           - **Minor release** (x.Y.0): Must summarize ALL patch version release notes since last minor
+           - **Major release** (X.0.0): Must summarize ALL minor release notes since last major
+           - **Patch release** (x.y.Z): Can be initiated manually, summarize changes since last release notes
         
         ### Step 2: Extract Changelog Data
-        1. Run the changelog extraction script:
-           ```bash
-           ./scripts/generate-release-notes.sh [DETECTED_VERSION]
-           ```
-        2. This will automatically extract all relevant changelog entries
+        Run the changelog extraction script to get all relevant entries:
+        ```bash
+        ./scripts/generate-release-notes.sh [DETECTED_VERSION]
+        ```
         
-        ### Step 3: Create Human-Readable Summary
-        Review the extracted changelog data and create a summary following these requirements:
-        - Write in clear, simple language that non-technical users can understand
-        - Do NOT copy/paste raw changelog entries
-        - For minor releases: Summarize all included patches into key themes
-        - For major releases: Summarize all included minors into major improvements
-        - Keep it concise (3-5 key points maximum)
-        - Explain the impact and what these changes mean for users
-        - Consider any additional context provided above (if any)
+        ### Step 3: Create Human-Readable Summary (CRITICAL REQUIREMENTS)
+        
+        **Follow these mandatory guidelines from copilot-instructions.md:**
+        
+        #### For Minor Releases:
+        - ✅ MUST contain a summary of ALL patch version release notes since last minor
+        - ❌ Do NOT copy/paste the changelog entries
+        - ✅ Review and create human-friendly summarized content
+        - ⚠️ Avoid conflicts: e.g., if v0.5.4 solves an issue introduced in v0.5.2, don't mention the original issue
+        
+        #### For Major Releases:
+        - ✅ MUST contain a summary of ALL minor release notes since last major
+        - ❌ Do NOT copy/paste the changelog entries
+        - ✅ Review and create human-friendly summarized content
+        - ⚠️ Consolidate related changes across minors into coherent themes
+        
+        #### For Patch Releases:
+        - ✅ Summarize changelog items between last release notes and all version bumps starting from last major/minor release
+        - ❌ Do NOT copy/paste the changelog entries
+        - ⚠️ Handle conflicts properly: if later patches fix issues from earlier patches, consolidate appropriately
         
         ### Step 4: Create GitHub Release
-        Use the following command to create the release:
         ```bash
         gh release create v[VERSION] --title "Release [VERSION]" --notes "[your human-readable summary]"
         ```
@@ -89,17 +102,16 @@ body:
         ```markdown
         ## What's New in v[VERSION]
         
-        [2-3 paragraph human-readable summary of the release that explains
-        the overall theme and purpose of this version]
+        [2-3 paragraph human-readable summary that explains the overall theme,
+        purpose, and impact of this release. Write for non-technical users.]
         
         ### Key Improvements
-        - [Summarized key theme 1 with impact]
-        - [Summarized key theme 2 with impact]
-        - [Summarized key theme 3 with impact]
+        - [Major theme 1: consolidate related features/fixes]
+        - [Major theme 2: group similar enhancements]
+        - [Major theme 3: highlight important changes]
         
-        ### Changes Included
-        [Brief summary of version range, e.g., "This release includes all changes
-        from v0.5.0 through v0.5.4, focusing on template improvements and automation."]
+        ### Version Range
+        This release includes changes from v[START] through v[END].
         
         ---
         Full changelog: [CHANGELOG.md](https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/blob/main/CHANGELOG.md)
@@ -107,10 +119,12 @@ body:
         
         ### Step 5: Report Completion
         Reply to this issue with:
-        - The version number that was released
+        - Version number and type
         - Link to the created GitHub release
-        - Brief confirmation of successful creation
+        - Brief summary of included version range
+        - Confirmation of guideline compliance
         
         ---
         
-        **For Maintainers**: After creating this issue, assign it to `@copilot` to automatically process and create the release.
+        **For Maintainers**: After creating this issue, assign it to `@copilot` to process according to 
+        [Release Process guidelines](https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/blob/main/.github/copilot-instructions.md#release-process).
