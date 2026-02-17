@@ -167,6 +167,34 @@ When adding new scripts or modifying existing ones, you **MUST**:
 
 ## Release Process
 
+### Automated Release Creation
+
+The repository now includes an automated release system that creates GitHub releases whenever a version is bumped and merged to main.
+
+**How it Works:**
+1. When a PR with a version bump is merged to `main`, the deployment workflow creates a git tag (e.g., `v0.5.4`)
+2. The tag automatically triggers the `create-release.yml` workflow
+3. The workflow generates human-readable release notes from `CHANGELOG.md`
+4. A GitHub release is automatically created with the generated notes
+
+**Release Note Features:**
+- **Smart Aggregation**: Minor releases include summaries of all patch releases, major releases include summaries of all minor releases
+- **Human-Readable**: Automatically categorizes and counts changes (new features, enhancements, bug fixes, etc.)
+- **Emoji Indicators**: Uses emojis (🎉 ✨ 🐛 🧪 🔧) for visual clarity
+- **Statistics**: Shows total number of changes by category
+
+**Example Release Types:**
+- **Patch Release (e.g., 0.5.4)**: Lists all changes for that version
+- **Minor Release (e.g., 0.6.0)**: Includes summary of all 0.5.x patches plus the 0.6.0 changes
+- **Major Release (e.g., 1.0.0)**: Includes summary of all 0.x.0 minor releases plus the 1.0.0 changes
+
+**Manual Release Creation:**
+If you need to create a release manually, you can trigger it via GitHub Actions:
+1. Go to Actions → "Create GitHub Release"
+2. Click "Run workflow"
+3. Enter the tag (e.g., `v0.5.4`)
+4. Click "Run workflow"
+
 ### Preparing a Release
 
 1. **Update Version**: Use the version management script
@@ -190,6 +218,7 @@ When adding new scripts or modifying existing ones, you **MUST**:
 
 ### Post-Release Tasks
 
+- **GitHub Release**: Automatically created with aggregated release notes (no manual action needed)
 - Announce significant changes to the ioBroker community
 - Monitor for user feedback and issues
 - Update documentation if needed based on user questions

@@ -12,6 +12,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## **WORK IN PROGRESS**
 
+## [0.5.4] - 2026-02-17
+- (copilot) **NEW**: Created automated GitHub release system with intelligent changelog aggregation (Fixes #86)
+- (copilot) **NEW**: Added generate-release-notes.sh script for parsing CHANGELOG.md and generating human-readable release notes
+- (copilot) **NEW**: Implemented version type detection (patch/minor/major) for appropriate changelog aggregation
+- (copilot) **NEW**: Added automatic aggregation of patch releases for minor versions and minor releases for major versions
+- (copilot) **NEW**: Created create-release.yml GitHub Actions workflow for automated release creation on version tags
+- (copilot) **ENHANCED**: Integrated automated release creation with existing deploy-on-version-change.yml workflow
+- (copilot) **ENHANCED**: Release notes include emoji indicators, statistics, and categorized change summaries
+- (copilot) **TESTING**: Added comprehensive test suite (25 tests) for release notes generation covering all scenarios
+- (copilot) **ENHANCED**: Updated documentation in docs/maintenance.md and TESTING.md with automated release information
+
 ## [0.5.3] - 2026-02-19
 - (copilot) **ENHANCED**: Major refactoring of template.md for improved organization and readability
 - (copilot) **NEW**: Added comprehensive Table of Contents with clickable anchor links to all major sections
