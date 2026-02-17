@@ -61,7 +61,11 @@ body:
            ```bash
            git tag --sort=-v:refname | head -5
            ```
-        2. Identify the most recent version tag and determine type:
+        2. Check existing GitHub releases to see which tags already have releases:
+           ```bash
+           gh release list --limit 10
+           ```
+        3. Identify the most recent version tag **that does not yet have a GitHub release** and determine type:
            - **Minor release** (x.Y.0): Must summarize ALL patch version release notes since last minor
            - **Major release** (X.0.0): Must summarize ALL minor release notes since last major
            - **Patch release** (x.y.Z): Can be initiated manually, summarize changes since last release notes
