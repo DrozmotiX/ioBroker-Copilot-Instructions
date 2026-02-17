@@ -12,6 +12,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## **WORK IN PROGRESS**
 
+## [0.5.5] - 2026-02-17
+- (copilot) **ENHANCED**: Updated release_creation.yml template to automatically detect version from latest merges to main (Fixes #89)
+- (copilot) **ENHANCED**: Release template now instructs @copilot to auto-extract changelog data using generate-release-notes.sh script
+- (copilot) **ENHANCED**: Removed manual version, type, and changelog data input fields from release template
+- (copilot) **ENHANCED**: Simplified release creation workflow - users only need to assign issue to @copilot
+- (copilot) **ENHANCED**: Added optional additional context field for special release notes requirements
+
 ## [0.5.4] - 2026-02-17
 - (copilot) **NEW**: Created automated release proposal system via GitHub issues for minor/major versions (Fixes #86)
 - (copilot) **NEW**: Added generate-release-notes.sh script for extracting changelog data from CHANGELOG.md

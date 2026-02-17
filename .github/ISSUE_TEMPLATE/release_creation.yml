@@ -1,6 +1,6 @@
 name: 🚀 Create Release
-description: Create a GitHub release with human-readable notes for a minor or major version
-title: "Release v[VERSION] ([TYPE])"
+description: Request a GitHub release with human-readable notes (version auto-detected by @copilot)
+title: "Create Release"
 labels: ["release-proposal"]
 body:
   - type: markdown
@@ -8,60 +8,41 @@ body:
       value: |
         ## 🎯 Task: Create GitHub Release
         
-        Use this template to request a GitHub release for a **minor** or **major** version.
+        Use this template to request a GitHub release. When you assign this issue to **@copilot**, it will:
         
-        **Note**: Patch releases (x.y.Z) do not require GitHub releases and should be skipped.
-
-  - type: input
-    id: version
-    attributes:
-      label: Version Number
-      description: Enter the version number (e.g., 0.6.0 or 1.0.0)
-      placeholder: "0.6.0"
-    validations:
-      required: true
-
-  - type: dropdown
-    id: version_type
-    attributes:
-      label: Version Type
-      description: Select the type of release
-      options:
-        - minor (x.Y.0 - new features, backwards compatible)
-        - major (X.0.0 - breaking changes or major milestone)
-    validations:
-      required: true
+        1. **Automatically detect the latest version** from recent merges to main branch
+        2. **Determine the version type** (minor or major) - patch releases are skipped
+        3. **Extract changelog data** from CHANGELOG.md automatically
+        4. **Create a human-readable summary** of the changes
+        5. **Create the GitHub release** with the summary
+        
+        **Note**: 
+        - You do NOT need to provide version number, type, or changelog data manually
+        - Patch releases (x.y.Z) do not get GitHub releases and will be skipped
+        - Only minor (x.Y.0) and major (X.0.0) releases will be created
+        
+        ---
+        
+        ## 📝 Optional: Additional Release Context
+        
+        If you want to provide additional context for the release notes (optional):
 
   - type: textarea
-    id: changelog_data
+    id: additional_context
     attributes:
-      label: Changelog Data
+      label: Additional Context (Optional)
       description: |
-        Paste the raw changelog entries for this version and all included patches/minors.
-        
-        You can extract this data by running:
-        ```bash
-        ./scripts/generate-release-notes.sh [VERSION]
-        ```
-        
-        Or manually copy the relevant sections from CHANGELOG.md
+        Provide any additional information that should be included in the release notes.
+        This is completely optional - @copilot will create comprehensive release notes without this.
       placeholder: |
-        ## Version 0.6.0 - Minor Release
-        
-        ### Changes in 0.6.0
-        - (author) **NEW**: Added feature X
-        - (author) **ENHANCED**: Improved feature Y
-        
-        ### All Patch Releases Since v0.5.0
-        #### Version 0.5.4
-        - (author) **NEW**: Added feature A
-        - (author) **FIXED**: Fixed bug B
-        
-        #### Version 0.5.3
-        - (author) **ENHANCED**: Improved feature C
+        Examples:
+        - Special migration notes
+        - Breaking change details
+        - Important warnings or deprecations
+        - Links to related documentation
       render: markdown
     validations:
-      required: true
+      required: false
 
   - type: markdown
     attributes:
@@ -70,38 +51,65 @@ body:
         
         ## ✍️ Instructions for @copilot
         
-        Once this issue is created and assigned to @copilot, the AI assistant will:
+        When this issue is assigned to you, please follow these steps:
         
-        1. **Review the raw changelog data** provided above
-        2. **Create a human-readable summary** following these requirements:
-           - Summarize changes in clear, simple language (do NOT copy/paste raw entries)
-           - For minor releases: Briefly summarize all included patches into key themes
-           - For major releases: Briefly summarize all included minors into key improvements
-           - Keep it concise (3-5 key points maximum)
-           - Explain the impact and what it means for users
-        3. **Create the GitHub release** using:
+        ### Step 1: Detect Version
+        1. Check the latest merged tags to main branch using:
            ```bash
-           gh release create v[VERSION] --title "Release [VERSION]" --notes "[summary]"
+           git tag --sort=-v:refname | head -5
            ```
-        4. **Reply to this issue** with the release URL once created
+        2. Identify the most recent version tag
+        3. Determine if it's a minor (x.Y.0) or major (X.0.0) release
+        4. If it's a patch release (x.y.Z), reply that patch releases don't get GitHub releases and close this issue
+        
+        ### Step 2: Extract Changelog Data
+        1. Run the changelog extraction script:
+           ```bash
+           ./scripts/generate-release-notes.sh [DETECTED_VERSION]
+           ```
+        2. This will automatically extract all relevant changelog entries
+        
+        ### Step 3: Create Human-Readable Summary
+        Review the extracted changelog data and create a summary following these requirements:
+        - Write in clear, simple language that non-technical users can understand
+        - Do NOT copy/paste raw changelog entries
+        - For minor releases: Summarize all included patches into key themes
+        - For major releases: Summarize all included minors into major improvements
+        - Keep it concise (3-5 key points maximum)
+        - Explain the impact and what these changes mean for users
+        - Consider any additional context provided above (if any)
+        
+        ### Step 4: Create GitHub Release
+        Use the following command to create the release:
+        ```bash
+        gh release create v[VERSION] --title "Release [VERSION]" --notes "[your human-readable summary]"
+        ```
         
         ### Expected Release Note Format:
         ```markdown
         ## What's New in v[VERSION]
         
-        [2-3 paragraph human-readable summary of the release]
+        [2-3 paragraph human-readable summary of the release that explains
+        the overall theme and purpose of this version]
         
         ### Key Improvements
-        - [Summarized key point 1]
-        - [Summarized key point 2]
-        - [Summarized key point 3]
+        - [Summarized key theme 1 with impact]
+        - [Summarized key theme 2 with impact]
+        - [Summarized key theme 3 with impact]
         
         ### Changes Included
-        [Brief summary of patches/minors if applicable]
+        [Brief summary of version range, e.g., "This release includes all changes
+        from v0.5.0 through v0.5.4, focusing on template improvements and automation."]
         
         ---
         Full changelog: [CHANGELOG.md](https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/blob/main/CHANGELOG.md)
         ```
+        
+        ### Step 5: Report Completion
+        Reply to this issue with:
+        - The version number that was released
+        - Link to the created GitHub release
+        - Brief confirmation of successful creation
         
         ---
         
