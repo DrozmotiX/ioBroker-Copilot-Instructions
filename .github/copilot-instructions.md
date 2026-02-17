@@ -160,14 +160,16 @@ GitHub Copilot will automatically validate if new test cases should be created o
   - Types: **NEW** (features), **FIXED** (bugs), **ENHANCED** (improvements), **TESTING** (test additions), **CI/CD** (automation)
   - Focus on user impact, not technical implementation details
 - **ALWAYS update README.md** - When adding new functionality, infrastructure, or changing how users interact with the repository, update the relevant sections of README.md
-- **ALWAYS bump version** - Every PR must increment the version using semantic versioning:
-  - **Default: PATCH bump** (0.5.1 → 0.5.2) - For bug fixes, documentation updates, minor improvements, and translations
-  - **MINOR bump** (0.5.1 → 0.6.0) - For new features or functionality that is backwards-compatible
-  - **MAJOR bump** (0.5.1 → 1.0.0) - For breaking changes or major architecture changes
-  - Use command: `./scripts/manage-versions.sh update X.Y.Z` to update all version files consistently
-  - **User must validate** - Review the suggested patch bump and adjust if needed (minor/major) based on the scope of changes
-  - Verify consistency after bumping: `./scripts/manage-versions.sh check`
-  - Version bumps trigger automated deployment workflow when merged to main
+- **ALWAYS bump version (MANDATORY)** - Every PR MUST increment the version using semantic versioning. This is a strict requirement:
+  - **Step 1: Default action** - Automatically bump PATCH version by +1 (e.g., 0.5.1 → 0.5.2)
+    - Run: `./scripts/manage-versions.sh update 0.5.2` (replace with actual next patch version)
+    - Use PATCH for: bug fixes, documentation updates, minor improvements, translations, and most PRs
+  - **Step 2: User validation** - Review if PATCH is appropriate or if MINOR/MAJOR is needed:
+    - **MINOR bump** (0.5.1 → 0.6.0) - Only if adding new backwards-compatible features or significant functionality
+    - **MAJOR bump** (0.5.1 → 1.0.0) - Only for breaking changes or major architecture changes
+  - **Step 3: Verification** - Always verify consistency: `./scripts/manage-versions.sh check`
+  - **Important**: Version bumps trigger automated deployment workflow when merged to main
+  - **No exceptions**: Every PR must include a version bump, even for small changes
 - Include detailed CHANGELOG.md entries for user-facing changes with specific details about what was added/changed/fixed
 - Test changes against multiple ioBroker adapter projects when possible
 - Update README.md if usage instructions, new features, or repository structure changes
