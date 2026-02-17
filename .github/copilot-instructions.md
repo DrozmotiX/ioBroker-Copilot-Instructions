@@ -114,6 +114,7 @@ This script automatically:
 
 ##### For Minor Releases:
 - ✅ MUST contain a summary of ALL patch version release notes since last minor
+- ✅ MUST contain a summary of ALL changelog items of patch version bumps, also for merges without a release
 - ❌ Do NOT copy/paste the changelog entries verbatim
 - ✅ Review and create human-friendly summarized content
 - ⚠️ Avoid conflicts: If v0.5.4 solves an issue introduced in v0.5.2, consolidate appropriately (don't mention both)
@@ -121,7 +122,8 @@ This script automatically:
 - 🎯 Focus on user impact, not technical implementation details
 
 ##### For Major Releases:
-- ✅ MUST contain a summary of ALL minor release notes since last major
+- ✅ MUST contain a summary of ALL minor/patch release notes since last major
+- ✅ MUST contain a summary of ALL changelog items of minor/patch version bumps, also for merges without a release
 - ❌ Do NOT copy/paste the changelog entries verbatim
 - ✅ Review and create human-friendly summarized content
 - ⚠️ Consolidate related changes across minors into coherent themes
