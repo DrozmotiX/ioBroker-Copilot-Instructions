@@ -122,7 +122,7 @@ The [Initial Setup Template](https://raw.githubusercontent.com/DrozmotiX/ioBroke
 Your template version is automatically tracked in your `.github/copilot-instructions.md` file:
 
 ```markdown
-**Version:** 0.5.1
+**Version:** 0.5.2
 **Template Source:** https://github.com/DrozmotiX/ioBroker-Copilot-Instructions
 ```
 
@@ -166,6 +166,13 @@ The Copilot instruction template covers comprehensive guidance for:
 - Validation and error handling
 - User experience guidelines
 
+### 🌐 Translation Management
+- **Translation synchronization** - Keep admin/i18n files aligned with jsonConfig.json
+- **Validation scripts** - Automatic detection of orphaned and missing translation keys
+- **Multi-language support** - Best practices for maintaining 11 language translations
+- **Common pitfalls** - Lessons learned from real-world adapter development
+- **Workflow guidelines** - Step-by-step process for translation updates
+
 ### 🔧 Best Practices
 - Preference for native Node.js APIs (like `fetch` over `axios`)
 - Minimal dependency strategies
@@ -201,7 +208,7 @@ This script will:
 - Provide update guidance if your template is outdated
 - Show you what's changed in newer versions
 
-**Note**: The centralized automation system eliminates the need for manual scripts in your repository (avoiding patterns like validation scripts in package.json).
+**Note**: The centralized automation system eliminates the need for manual template update/version-check scripts in your repository. Adapter-level quality checks (like translation validation, linting, or testing) should still be added to package.json as needed.
 
 ### Repository Maintenance
 

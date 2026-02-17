@@ -182,10 +182,17 @@ main() {
     if [[ $# -gt 0 ]]; then
         run_test_file "$1"
     else
-        # Run all test files
+        # Run version change test FIRST (if it exists)
+        if [[ -f "$SCRIPT_DIR/test-version-changed.sh" ]]; then
+            echo -e "${YELLOW}📋 Running version change test first (MANDATORY)${NC}"
+            run_test_file "$SCRIPT_DIR/test-version-changed.sh"
+            echo ""
+        fi
+        
+        # Run all other test files
         for test_file in "$SCRIPT_DIR"/test-*.sh; do
-            # Skip the test-runner itself to avoid infinite recursion
-            if [[ "$(basename "$test_file")" != "test-runner.sh" && -f "$test_file" ]]; then
+            # Skip the test-runner itself and version-changed test (already run)
+            if [[ "$(basename "$test_file")" != "test-runner.sh" && "$(basename "$test_file")" != "test-version-changed.sh" && -f "$test_file" ]]; then
                 run_test_file "$test_file"
             fi
         done

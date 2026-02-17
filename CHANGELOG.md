@@ -11,6 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -->
 
 ## **WORK IN PROGRESS**
+- (copilot) **NEW**: Added comprehensive Translation Management section with validation workflow and best practices (Fixes #80)
+- (copilot) **NEW**: Included validation script for checking translation file synchronization with admin/jsonConfig.json
+- (copilot) **ENHANCED**: Documented common pitfalls and lessons learned from ioBroker.bambulab PR #248 regarding translation synchronization
+- (copilot) **ENHANCED**: Added checklist for translation validation before commits including orphaned key detection
+- (copilot) **ENHANCED**: Updated Pull Request Guidelines with mandatory version bumping instructions - STRICT requirement: every PR MUST bump PATCH version (+1) by default, with user validation for MINOR/MAJOR changes
+- (copilot) **ENHANCED**: Clarified version bump workflow with 3-step process: 1) Auto-bump PATCH, 2) User validates if MINOR/MAJOR needed, 3) Verify consistency
+- (copilot) **FIXED**: Clarified README.md to distinguish between template automation scripts (not needed) vs adapter quality checks (should be in package.json)
+- (copilot) **ENHANCED**: Updated template.md pretest example to show how to chain with existing hooks instead of overwriting
+- (copilot) **NEW**: Created test-version-changed.sh to verify version bump in PRs - runs FIRST before all other tests to fail fast
+- (copilot) **TESTING**: Updated test-runner.sh to execute version change test before all other tests
 - (copilot) **NEW**: Added comprehensive ESLint configuration and best practices section with official `@iobroker/eslint-config` guidance (Fixes #78)
 - (copilot) **ENHANCED**: Established lint-first validation workflow in CI/CD section - ESLint checks now explicitly run before all other tests
 - (copilot) **ENHANCED**: Added detailed ESLint setup instructions including package.json scripts, common issues, and auto-fix capabilities
