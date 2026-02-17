@@ -71,10 +71,16 @@ Before submitting PR:
 - [ ] Documentation updated if needed
 
 ## Release Process
-
 For minor/major releases:
 1. System creates issue with changelog data
 2. Assign to @copilot to create human-readable notes
 3. @copilot creates GitHub release
+4. minor releases must contain a summary of all patch version release notes
+5. major release must contain a summary of all minor realease notes
+6. thise summary should not be a copy/paste of the changelog, but reviews and himan friendly summarized by copilot
 
-Patch releases don't require GitHub releases.
+For patch releases:
+1. Patch releases don't require an automatically created issue
+2. Patch release notes must have a summary of changelog items between last release notes and all version bumps (can be multiple merges/tags) made. 
+3. Thise summary should not be a copy/paste of the changelog, but reviews and himan friendly summarized by copilot
+4. Conflicts in summary items ahould be avoided, as version 0.2.4 potentially solves an issue/removes functionality introduced in 0.2.2 before without having release in between
