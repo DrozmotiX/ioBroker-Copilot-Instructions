@@ -80,7 +80,7 @@ For minor/major releases:
 6. thise summary should not be a copy/paste of the changelog, but reviews and himan friendly summarized by copilot
 
 For patch releases:
-1. Patch releases don't require an automatically created issue
-2. Patch release notes must have a summary of changelog items between last release notes and all version bumps (can be multiple merges/tags) made. 
+1. Patch releases don't require an automatically created issue, but can be initated manually using the template
+2. Patch release notes must have a summary of changelog items between last release notes and all version bumps starting from last major/minor release (can be multiple merges/tags) made. 
 3. Thise summary should not be a copy/paste of the changelog, but reviews and himan friendly summarized by copilot
 4. Conflicts in summary items ahould be avoided, as version 0.2.4 potentially solves an issue/removes functionality introduced in 0.2.2 before without having release in between
