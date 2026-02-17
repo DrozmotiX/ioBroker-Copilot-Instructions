@@ -1,6 +1,6 @@
 # ioBroker Copilot Instructions Template Repository
 
-**Version:** 0.5.4
+**Version:** 0.5.5
 
 This file contains instructions for maintaining this template repository.
 
@@ -71,16 +71,122 @@ Before submitting PR:
 - [ ] Documentation updated if needed
 
 ## Release Process
-For minor/major releases:
-1. System creates issue with changelog data
-2. Assign to @copilot to create human-readable notes
-3. @copilot creates GitHub release
-4. minor releases must contain a summary of all patch version release notes
-5. major release must contain a summary of all minor realease notes
-6. thise summary should not be a copy/paste of the changelog, but reviews and himan friendly summarized by copilot
 
-For patch releases:
-1. Patch releases don't require an automatically created issue, but can be initated manually using the template
-2. Patch release notes must have a summary of changelog items between last release notes and all version bumps starting from last major/minor release (can be multiple merges/tags) made. 
-3. Thise summary should not be a copy/paste of the changelog, but reviews and himan friendly summarized by copilot
-4. Conflicts in summary items ahould be avoided, as version 0.2.4 potentially solves an issue/removes functionality introduced in 0.2.2 before without having release in between
+### Overview
+- **Automated**: Minor/major releases trigger automated issue creation via `create-release.yml` workflow
+- **Manual**: All release types can be initiated via `.github/ISSUE_TEMPLATE/release_creation.yml`
+- **Handler**: @copilot processes all release requests following the steps below
+
+### Step-by-Step Instructions for @copilot
+
+When assigned a release issue (either automated or manual), follow these steps:
+
+#### Step 1: Detect Version and Type
+1. Check the latest merged tags to main branch:
+   ```bash
+   git tag --sort=-v:refname | head -5
+   ```
+2. Check existing GitHub releases to identify unreleased versions:
+   ```bash
+   gh release list --limit 10
+   ```
+3. Identify the most recent version tag
+4. Determine version type by parsing the version number:
+   - **Patch release** (x.y.Z): Third number incremented
+   - **Minor release** (x.Y.0): Middle number incremented, third is 0
+   - **Major release** (X.0.0): First number incremented, others are 0
+5. **For patch releases**: Identify ALL patch versions since last GitHub release
+   - Example: If tags show v0.5.3, v0.5.2, v0.5.1, v0.5.0 but only v0.5.0 has a GitHub release, you need to summarize v0.5.1 + v0.5.2 + v0.5.3 combined
+
+#### Step 2: Extract Changelog Data
+Run the changelog extraction script to get all relevant entries:
+```bash
+./scripts/generate-release-notes.sh [DETECTED_VERSION]
+```
+This script automatically:
+- Extracts changelog entries for the target version
+- For minor releases: includes all patch releases since last minor
+- For major releases: includes all minor releases since last major
+
+#### Step 3: Create Human-Readable Summary (CRITICAL REQUIREMENTS)
+
+**Mandatory Guidelines:**
+
+##### For Minor Releases:
+- ✅ MUST contain a summary of ALL patch version release notes since last minor
+- ❌ Do NOT copy/paste the changelog entries verbatim
+- ✅ Review and create human-friendly summarized content
+- ⚠️ Avoid conflicts: If v0.5.4 solves an issue introduced in v0.5.2, consolidate appropriately (don't mention both)
+- 📊 Group related changes into themes/categories
+- 🎯 Focus on user impact, not technical implementation details
+
+##### For Major Releases:
+- ✅ MUST contain a summary of ALL minor release notes since last major
+- ❌ Do NOT copy/paste the changelog entries verbatim
+- ✅ Review and create human-friendly summarized content
+- ⚠️ Consolidate related changes across minors into coherent themes
+- 🎯 Highlight breaking changes and migration guidance
+- 📊 Emphasize major improvements and new capabilities
+
+##### For Patch Releases:
+- ✅ Summarize changelog items from ALL patch versions since last GitHub release (not just the current patch)
+- ⚠️ **IMPORTANT**: Multiple patch tags may exist without releases - you MUST combine all their changelog items
+  - Example: If v0.5.1, v0.5.2, v0.5.3 all exist as tags but v0.5.0 was the last GitHub release, summarize changes from ALL three patches
+  - Check `gh release list` to identify which versions have GitHub releases
+  - Combine all changelog entries from unreleased patch versions
+- ❌ Do NOT copy/paste the changelog entries verbatim
+- ⚠️ Handle conflicts properly: If later patches fix issues from earlier patches, consolidate appropriately
+- 🎯 Note: Patch releases can be manually initiated but typically don't get GitHub releases unless significant
+- 📋 When multiple patches are combined, organize by theme rather than chronologically
+
+#### Step 4: Format Release Notes
+
+Use this format for all releases:
+
+```markdown
+## What's New in v[VERSION]
+
+[2-3 paragraph human-readable summary that explains the overall theme,
+purpose, and impact of this release. Write for non-technical users.]
+
+### Key Improvements
+- [Summarized theme 1: consolidate related features/fixes with user impact]
+- [Summarized theme 2: group similar enhancements with benefits]
+- [Summarized theme 3: highlight important changes with value proposition]
+
+### Version Range
+This release includes changes from v[START_VERSION] through v[END_VERSION].
+
+---
+Full changelog: [CHANGELOG.md](https://github.com/DrozmotiX/ioBroker-Copilot-Instructions/blob/main/CHANGELOG.md)
+```
+
+#### Step 5: Create GitHub Release
+Execute the release creation command:
+```bash
+gh release create v[VERSION] --title "Release [VERSION]" --notes "[formatted_summary]"
+```
+
+#### Step 6: Report Completion
+Reply to the release issue with:
+- ✅ Version number and type
+- 🔗 Link to the created GitHub release
+- 📋 Brief summary of included version range
+- ✔️ Confirmation of guideline compliance
+
+### Quality Standards
+
+**Every release summary MUST:**
+1. Be written in clear, simple language for non-technical users
+2. Group related changes into meaningful themes
+3. Explain the impact and value, not just what changed
+4. Be 3-5 key points maximum (concise)
+5. Handle conflicts intelligently (consolidate related changes)
+6. Reference the full CHANGELOG.md for technical details
+
+**Every release summary MUST NOT:**
+1. Copy/paste raw changelog entries
+2. Use technical jargon without explanation
+3. List every minor detail
+4. Mention issues that were introduced and fixed in the same release cycle
+5. Exceed reasonable length (keep it scannable)
