@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -->
 
 ## **WORK IN PROGRESS**
+- (copilot) **NEW**: Added comprehensive Translation Management section with validation workflow and best practices (Fixes #80)
+- (copilot) **NEW**: Included validation script for checking translation file synchronization with admin/jsonConfig.json
+- (copilot) **ENHANCED**: Documented common pitfalls and lessons learned from ioBroker.bambulab PR #248 regarding translation synchronization
+- (copilot) **ENHANCED**: Added checklist for translation validation before commits including orphaned key detection
 - (copilot) **NEW**: Added comprehensive ESLint configuration and best practices section with official `@iobroker/eslint-config` guidance (Fixes #78)
 - (copilot) **ENHANCED**: Established lint-first validation workflow in CI/CD section - ESLint checks now explicitly run before all other tests
 - (copilot) **ENHANCED**: Added detailed ESLint setup instructions including package.json scripts, common issues, and auto-fix capabilities
