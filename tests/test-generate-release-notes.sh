@@ -367,8 +367,12 @@ main() {
     fi
 }
 
-# Run tests if script is executed directly
+# Run tests when the script is executed directly or sourced.
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    # Executed directly: run tests and exit with the result code.
     main
     exit $?
+else
+    # Sourced (e.g., by tests/test-runner.sh): run tests without exiting the shell.
+    main
 fi
