@@ -42,12 +42,15 @@ get_version_type() {
 
 # Function to extract changelog entries for a specific version
 extract_version_changelog() {
-    local version="$1"
+    # Escape regex metacharacters in version so it is treated literally in the regex
+    local escaped_version
+    escaped_version="$(printf '%s\n' "$version" | sed 's/[][\.^$*+?{}|()]/\\&/g')"
     local in_version=false
     local entries=""
     
     while IFS= read -r line; do
-        if [[ "$line" =~ ^\#\#[[:space:]]\[?${version}\]? ]]; then
+        # Check if we're starting the target version section
+        if [[ "$line" =~ ^\#\#[[:space:]]\[?${escaped_version}\]? ]]; then
             in_version=true
             continue
         fi
