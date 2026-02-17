@@ -1,5 +1,5 @@
 {
-  "version": "0.5.1",
+  "version": "0.5.2",
   "warning": "⚠️  CHANGING THE MAIN VERSION ABOVE WILL TRIGGER AUTOMATED PACKAGE UPDATE DEPLOYMENT",
   "repository": {
     "url": "https://github.com/DrozmotiX/ioBroker-Copilot-Instructions",
@@ -8,7 +8,7 @@
   "template": {
     "file": "template.md",
     "target_path": ".github/copilot-instructions.md",
-    "version": "0.5.1"
+    "version": "0.5.2"
   },
   "scripts": {
     "check_template_version": "scripts/check-template-version.sh",

@@ -2,7 +2,7 @@
 
 **Repository Purpose:** This repository maintains the template and best practices for GitHub Copilot instructions used in ioBroker adapter development.
 
-**Version:** 0.5.1
+**Version:** 0.5.2
 
 This file contains instructions specific to maintaining and improving this template repository, not for ioBroker adapter development (that's in `template.md`).
 
@@ -160,11 +160,17 @@ GitHub Copilot will automatically validate if new test cases should be created o
   - Types: **NEW** (features), **FIXED** (bugs), **ENHANCED** (improvements), **TESTING** (test additions), **CI/CD** (automation)
   - Focus on user impact, not technical implementation details
 - **ALWAYS update README.md** - When adding new functionality, infrastructure, or changing how users interact with the repository, update the relevant sections of README.md
-- PRs must update version numbers appropriately using the dynamic version management system
+- **ALWAYS bump version** - Every PR must increment the version using semantic versioning:
+  - **Default: PATCH bump** (0.5.1 → 0.5.2) - For bug fixes, documentation updates, minor improvements, and translations
+  - **MINOR bump** (0.5.1 → 0.6.0) - For new features or functionality that is backwards-compatible
+  - **MAJOR bump** (0.5.1 → 1.0.0) - For breaking changes or major architecture changes
+  - Use command: `./scripts/manage-versions.sh update X.Y.Z` to update all version files consistently
+  - **User must validate** - Review the suggested patch bump and adjust if needed (minor/major) based on the scope of changes
+  - Verify consistency after bumping: `./scripts/manage-versions.sh check`
+  - Version bumps trigger automated deployment workflow when merged to main
 - Include detailed CHANGELOG.md entries for user-facing changes with specific details about what was added/changed/fixed
 - Test changes against multiple ioBroker adapter projects when possible
 - Update README.md if usage instructions, new features, or repository structure changes
-- Verify dynamic version management system continues to work (`./scripts/manage-versions.sh check`)
 - **Run the complete test suite** (`./tests/test-runner.sh`) to ensure all tests pass
 - Reference the specific issue number in both commit messages and changelog entries
 - **Document new testing requirements** in TESTING.md when adding new scripts or functionality
