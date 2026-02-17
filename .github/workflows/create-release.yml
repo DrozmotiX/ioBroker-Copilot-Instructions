@@ -27,17 +27,32 @@ jobs:
         id: extract
         run: |
           TAG="${{ github.ref_name }}"
+          # Strip 'v' prefix
           VERSION="${TAG#v}"
+          # Strip any prerelease/build metadata for version type detection
+          VERSION_BASE="${VERSION%%-*}"
+          VERSION_BASE="${VERSION_BASE%%+*}"
+          
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "🏷️  Processing version: $VERSION"
+          echo "version_base=$VERSION_BASE" >> $GITHUB_OUTPUT
+          echo "🏷️  Processing tag: $TAG (version: $VERSION, base: $VERSION_BASE)"
       
       - name: Determine version type
         id: check-type
         run: |
+          VERSION_BASE="${{ steps.extract.outputs.version_base }}"
           VERSION="${{ steps.extract.outputs.version }}"
           
-          # Parse version components
-          IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
+          # Parse version components (using base version without prerelease)
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION_BASE"
+          
+          # Check for prerelease versions
+          if [[ "$VERSION" =~ - ]]; then
+            echo "⚠️  Prerelease version detected: $VERSION - skipping release proposal"
+            echo "version_type=prerelease" >> $GITHUB_OUTPUT
+            echo "should_create=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
           
           # Determine if this is a minor or major release
           if [[ "$PATCH" == "0" ]]; then

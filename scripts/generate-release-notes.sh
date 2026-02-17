@@ -15,7 +15,11 @@ CHANGELOG_FILE="$REPO_ROOT/CHANGELOG.md"
 # Function to parse version components
 parse_version() {
     local version="$1"
-    echo "$version" | sed 's/^v//' | tr '.' ' '
+    # Strip 'v' prefix and any prerelease/build metadata (e.g., v0.5.4-rc.1+build → 0.5.4)
+    version="${version#v}"
+    version="${version%%-*}"  # Remove prerelease suffix
+    version="${version%%+*}"  # Remove build metadata
+    echo "$version" | tr '.' ' '
 }
 
 # Function to get version type (patch, minor, major)
