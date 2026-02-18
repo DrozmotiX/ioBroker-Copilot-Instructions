@@ -113,10 +113,10 @@ This script automatically:
 **Mandatory Guidelines:**
 
 ##### For Minor Releases:
-- ✅ MUST contain a summary of ALL patch version release notes since last minor
-- ✅ MUST contain a summary of ALL changelog items of patch version bumps, also for merges without a release
+- ✅ MUST contain a summary of ALL changelog items from ALL patch version bumps since last minor, including merges without a release
 - ❌ Do NOT copy/paste the changelog entries verbatim
 - ✅ Review and create human-friendly summarized content
+- ⚠️ Avoid conflicts: If v0.5.4 solves an issue introduced in v0.5.2, consolidate appropriately (don't mention both)
 - ⚠️ Avoid conflicts: If v0.5.4 solves an issue introduced in v0.5.2, consolidate appropriately (don't mention both)
 - 📊 Group related changes into themes/categories
 - 🎯 Focus on user impact, not technical implementation details
