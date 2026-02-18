@@ -81,13 +81,13 @@ body:
         **Follow these mandatory guidelines from copilot-instructions.md:**
         
         #### For Minor Releases:
-        - ✅ MUST contain a summary of ALL patch version release notes since last minor
+        - ✅ MUST contain a summary of ALL changelog items from ALL patch version bumps since last minor, including merges without a release
         - ❌ Do NOT copy/paste the changelog entries
         - ✅ Review and create human-friendly summarized content
         - ⚠️ Avoid conflicts: e.g., if v0.5.4 solves an issue introduced in v0.5.2, don't mention the original issue
         
         #### For Major Releases:
-        - ✅ MUST contain a summary of ALL minor release notes since last major
+        - ✅ MUST contain a summary of ALL changelog items from ALL minor/patch version bumps since last major, including merges without a release
         - ❌ Do NOT copy/paste the changelog entries
         - ✅ Review and create human-friendly summarized content
         - ⚠️ Consolidate related changes across minors into coherent themes
