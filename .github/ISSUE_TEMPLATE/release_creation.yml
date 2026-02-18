@@ -87,7 +87,8 @@ body:
         - ⚠️ Avoid conflicts: e.g., if v0.5.4 solves an issue introduced in v0.5.2, don't mention the original issue
         
         #### For Major Releases:
-        - ✅ MUST contain a summary of ALL changelog items from ALL minor/patch version bumps since last major, including merges without a release
+        - ✅ MUST contain a summary of ALL changelog items from ALL minor version bumps since last major, including merges without a release
+        - ✅ NOTE: Minor release summaries already include their patch releases, so summarizing minors covers all changes
         - ❌ Do NOT copy/paste the changelog entries
         - ✅ Review and create human-friendly summarized content
         - ⚠️ Consolidate related changes across minors into coherent themes

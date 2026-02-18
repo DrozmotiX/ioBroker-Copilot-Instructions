@@ -106,7 +106,7 @@ Run the changelog extraction script to get all relevant entries:
 This script automatically:
 - Extracts changelog entries for the target version
 - For minor releases: includes all patch releases since last minor
-- For major releases: includes all minor and patch releases since last major
+- For major releases: includes all minor releases since last major (minor releases already include their patches)
 
 #### Step 3: Create Human-Readable Summary (CRITICAL REQUIREMENTS)
 
@@ -121,7 +121,8 @@ This script automatically:
 - 🎯 Focus on user impact, not technical implementation details
 
 ##### For Major Releases:
-- ✅ MUST contain a summary of ALL changelog items from ALL minor/patch version bumps since last major, including merges without a release
+- ✅ MUST contain a summary of ALL changelog items from ALL minor version bumps since last major, including merges without a release
+- ✅ NOTE: Minor release summaries already include their patch releases, so summarizing minors covers all changes
 - ❌ Do NOT copy/paste the changelog entries verbatim
 - ✅ Review and create human-friendly summarized content
 - ⚠️ Consolidate related changes across minors into coherent themes

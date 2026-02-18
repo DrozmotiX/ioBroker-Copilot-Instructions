@@ -14,11 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.5.6] - 2026-02-18
 - (copilot) **ENHANCED**: Updated release guidelines to clarify changelog aggregation for all version types (Fixes #91, supersedes #90)
-- (copilot) **FIXED**: Removed duplicate conflict avoidance line in release guidelines
 - (copilot) **ENHANCED**: Clarified that minor releases include changelog items from patch version bumps, including merges without release
-- (copilot) **ENHANCED**: Clarified that major releases include changelog items from minor/patch version bumps, including merges without release
-- (copilot) **ENHANCED**: Updated script documentation to accurately reflect that major releases extract both minor and patch versions
+- (copilot) **ENHANCED**: Clarified that major releases include changelog items from minor version bumps (which already include patches)
+- (copilot) **ENHANCED**: Updated script documentation to accurately reflect extraction behavior
 - (copilot) **ENHANCED**: Synchronized release_creation.yml template with updated guidelines from copilot-instructions.md
+- (copilot) **FIXED**: Corrected inconsistency between script behavior and guidelines for major releases
 
 ## [0.5.5] - 2026-02-17
 - (copilot) **ENHANCED**: Updated release_creation.yml template to follow Release Process guidelines from copilot-instructions.md (Fixes #89)
