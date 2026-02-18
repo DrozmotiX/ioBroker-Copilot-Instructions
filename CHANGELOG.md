@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - (copilot) **ENHANCED**: Clarified that major releases include changelog items from minor version bumps (which already include patches)
 - (copilot) **ENHANCED**: Updated script documentation to accurately reflect extraction behavior
 - (copilot) **ENHANCED**: Synchronized release_creation.yml template with updated guidelines from copilot-instructions.md
+- (copilot) **ENHANCED**: Standardized terminology to use "changelog items" consistently throughout documentation
 - (copilot) **FIXED**: Corrected inconsistency between script behavior and guidelines for major releases
 
 ## [0.5.5] - 2026-02-17
