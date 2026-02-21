@@ -12,8 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## **WORK IN PROGRESS**
 
+## [0.5.7] - 2026-02-21
 - (copilot) **ENHANCED**: Updated ESLint instructions to use `--max-warnings 0` flag, treating warnings as errors consistent with CI behavior (Fixes #94)
-- (copilot) **ENHANCED**: Added best practice to run `./node_modules/.bin/eslint --max-warnings 0 .` locally to match CI behavior
+- (copilot) **ENHANCED**: Added best practice note that CI treats ESLint warnings as errors and `npm run lint` already includes `--max-warnings 0`
 
 ## [0.5.6] - 2026-02-18
 - (copilot) **ENHANCED**: Updated release guidelines to clarify changelog aggregation for all version types (Fixes #91, supersedes #90)
