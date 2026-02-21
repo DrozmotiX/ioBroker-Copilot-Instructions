@@ -122,7 +122,7 @@ The [Initial Setup Template](https://raw.githubusercontent.com/DrozmotiX/ioBroke
 Your template version is automatically tracked in your `.github/copilot-instructions.md` file:
 
 ```markdown
-**Version:** 0.5.6
+**Version:** 0.5.7
 **Template Source:** https://github.com/DrozmotiX/ioBroker-Copilot-Instructions
 ```
 
