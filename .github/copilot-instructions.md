@@ -1,6 +1,6 @@
 # ioBroker Copilot Instructions Template Repository
 
-**Version:** 0.5.6
+**Version:** 0.5.7
 
 This file contains instructions for maintaining this template repository.
 
